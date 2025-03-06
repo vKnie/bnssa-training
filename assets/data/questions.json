@@ -1,0 +1,2320 @@
+{
+    "themes": [
+        {
+            "theme_name": "Connaissance du milieu",
+            "questions": [
+                {
+                    "question": "Choix de la flamme ?",
+                    "options": [
+                        "Pour un vent de force 4 à 5, il est recommandé de mettre la flamme orange",
+                        "En cas de brume intense ne permettant pas la surveillance, il faut mettre la flamme verte",
+                        "Pour un vent de force inférieure à 3, il est recommandé de mettre la flamme verte"
+                    ],
+                    "correct_answers": [
+                        "Pour un vent de force 4 à 5, il est recommandé de mettre la flamme orange",
+                        "Pour un vent de force inférieure à 3, il est recommandé de mettre la flamme verte"
+                    ]
+                },
+                {
+                    "question": "Les analyses des eaux ?",
+                    "options": [
+                        "Peuvent entraîner la fermeture d’une baignade si elles sont mauvaises",
+                        "Sont effectuées sous contrôle de l’agence régionale de santé",
+                        "Sont uniquement réalisées en piscine"
+                    ],
+                    "correct_answers": [
+                        "Peuvent entraîner la fermeture d’une baignade si elles sont mauvaises",
+                        "Sont effectuées sous contrôle de l’agence régionale de santé"
+                    ]
+                },
+                {
+                    "question": "L’affichage météo au poste de secours comprend entre autre ?",
+                    "options": [
+                        "Les observations météorologiques du jour",
+                        "La durée d’ensoleillement du jour",
+                        "Les heures de marées et coefficients du jour"
+                    ],
+                    "correct_answers": [
+                        "Les observations météorologiques du jour",
+                        "Les heures de marées et coefficients du jour"
+                    ]
+                },
+                {
+                    "question": "En mer :",
+                    "options": [
+                        "Avec une flamme orange hissée, j’interdis la baignade",
+                        "Avec une flamme rouge hissée, j’interdis la baignade",
+                        "Avec une échelle de Beaufort qui indique force 6, je hisse la flamme verte"
+                    ],
+                    "correct_answers": [
+                        "Avec une flamme rouge hissée, j’interdis la baignade"
+                    ]
+                },
+                {
+                    "question": "Pour la force du vent, l’échelle de Beaufort va de :",
+                    "options": [
+                        "0 à 9",
+                        "0 à 12",
+                        "0 à 15",
+                        "0 à 30"
+                    ],
+                    "correct_answers": [
+                        "0 à 12"
+                    ]
+                },
+                {
+                    "question": "La flamme orange peut être hissée lorsque la différence de température entre l'air et l'eau est trop importante.",
+                    "options": [
+                        "Vrai",
+                        "Faux, la température n’intervient pas dans le choix de la flamme",
+                        "Faux, c’est la flamme rouge qui doit être hissée",
+                        "Faux, c’est l’échelle de Beaufort qui détermine la couleur de la flamme"
+                    ],
+                    "correct_answers": [
+                        "Vrai"
+                    ]
+                },
+                {
+                    "question": "L’échelle de Beaufort est ?",
+                    "options": [
+                        "Une grille de lecture qui indique la force du vent et l’état de la mer",
+                        "Une échelle de valeur qui informe de la hauteur des marées",
+                        "Un indicateur dans le choix de la flamme à hisser"
+                    ],
+                    "correct_answers": [
+                        "Une grille de lecture qui indique la force du vent et l’état de la mer",
+                        "Un indicateur dans le choix de la flamme à hisser"
+                    ]
+                },
+                {
+                    "question": "Une piqûre de vive ?",
+                    "options": [
+                        "Peut provoquer une violente douleur",
+                        "Peut occasionner des nécroses de la peau",
+                        "Est provoquée par un animal de la classe des physalies"
+                    ],
+                    "correct_answers": [
+                        "Peut provoquer une violente douleur",
+                        "Peut occasionner des nécroses de la peau"
+                    ]
+                },
+                {
+                    "question": "Une baïne ?",
+                    "options": [
+                        "Représente l’amplitude de la mer",
+                        "Est une sorte de cuvette remplie d’eau",
+                        "Peut être dangereuse pour la baignade",
+                        "Se trouve exclusivement en Méditerranée"
+                    ],
+                    "correct_answers": [
+                        "Est une sorte de cuvette remplie d’eau",
+                        "Peut être dangereuse pour la baignade"
+                    ]
+                },
+                {
+                    "question": "Les analyses de qualité de l’eau en piscine ?",
+                    "options": [
+                        "Sont confidentielles et ne doivent pas être vues du public",
+                        "Doivent être affichées et visibles par le public",
+                        "Sont réalisées au moins 4 fois par mois par l’agence régionale de santé"
+                    ],
+                    "correct_answers": [
+                        "Doivent être affichées et visibles par le public"
+                    ]
+                },
+                {
+                    "question": "En atlantique, les dangers liés aux marées sont à prendre au sérieux :",
+                    "options": [
+                        "Surtout en présence de Baïnes",
+                        "En marée montante uniquement",
+                        "Lors des marées de fort coefficient"
+                    ],
+                    "correct_answers": [
+                        "Surtout en présence de Baïnes.",
+                        "Lors des marées de fort coefficient"
+                    ]
+                },
+                {
+                    "question": "Le balisage ?",
+                    "options": [
+                        "Il existe différents types de marques (latérales, dangers isolés, eaux saines, spéciales, cardinales...)",
+                        "Les marques latérales peuvent être rouges ou vertes",
+                        "Le sens conventionnel est du port vers la haute mer",
+                        "Les marques Nord, Sud, Est, Ouest sont des marques de dangers isolés"
+                    ],
+                    "correct_answers": [
+                        "Il existe différents types de marques (latérales, dangers isolés, eaux saines, spéciales, cardinales...)",
+                        "Les marques latérales peuvent être rouges ou vertes"
+                    ]
+                },
+                {
+                    "question": "En piscine, les analyses d’eau effectuées par le personnel ?",
+                    "options": [
+                        "Peuvent entraîner la fermeture d’une baignade si elles sont mauvaises",
+                        "Sont obligatoires 1 fois par mois",
+                        "Doivent être effectuées au moins deux fois par jour"
+                    ],
+                    "correct_answers": [
+                        "Peuvent entraîner la fermeture d’une baignade si elles sont mauvaises",
+                        "Doivent être effectuées au moins deux fois par jour"
+                    ]
+                },
+                {
+                    "question": "Une noyade ?",
+                    "options": [
+                        "Peut être provoquée par un malaise dans l’eau",
+                        "Peut être provoquée par un traumatisme violent",
+                        "Peut être provoquée par une hypothermie",
+                        "Est toujours le fait d’un mauvais nageur"
+                    ],
+                    "correct_answers": [
+                        "Peut être provoquée par un malaise dans l’eau",
+                        "Peut être provoquée par un traumatisme violent",
+                        "Peut être provoquée par une hypothermie"
+                    ]
+                },
+                {
+                    "question": "L’ARS ?",
+                    "options": [
+                        "Est l’Agence Régionale de Sécurité",
+                        "Est l’Agence Régionale de Santé",
+                        "A, dans le cadre de ses missions, uniquement le contrôle de la qualité de l’eau des piscines"
+                    ],
+                    "correct_answers": [
+                        "Est l’Agence Régionale de Santé"
+                    ]
+                },
+                {
+                    "question": "L’échelle de Beaufort est ?",
+                    "options": [
+                        "Une grille de notation des sauveteurs en fin de saison",
+                        "Une grille qui indique la force du vent et les effets sur l’état de la mer",
+                        "Une échelle de valeur qui informe de la hauteur des marées",
+                        "Internationale et permet à tous les marins de la comprendre"
+                    ],
+                    "correct_answers": [
+                        "Une grille qui indique la force du vent et les effets sur l’état de la mer",
+                        "Internationale et permet à tous les marins de la comprendre"
+                    ]
+                },
+                {
+                    "question": "En mer les bâches ?",
+                    "options": [
+                        "Se trouvent principalement sur les côtes de la Manche et de la Bretagne",
+                        "Sont toujours en Méditerranée",
+                        "Ne sont absolument pas dangereuses"
+                    ],
+                    "correct_answers": [
+                        "Se trouvent principalement sur les côtes de la Manche et de la Bretagne"
+                    ]
+                },
+                {
+                    "question": "Vous avez un vent de terre sous petite brise, que faites-vous ?",
+                    "options": [
+                        "Je peux hisser une flamme spécifique lorsqu'elle est arrêtée par la réglementation locale",
+                        "Je hisse uniquement la flamme rouge",
+                        "Je peux hisser la flamme verte ou orange",
+                        "Je ferme la baignade"
+                    ],
+                    "correct_answers": [
+                        "Je peux hisser une flamme spécifique lorsqu'elle est arrêtée par la réglementation locale",
+                        "Je peux hisser la flamme verte ou orange"
+                    ]
+                },
+                {
+                    "question": "La météo marine annonce force 10 sur l’échelle de Beaufort ?",
+                    "options": [
+                        "C’est une tempête",
+                        "C’est un coup de vent",
+                        "Je devrais interdire la baignade en raison du danger",
+                        "Je mets la flamme orange"
+                    ],
+                    "correct_answers": [
+                        "C’est une tempête",
+                        "Je devrais interdire la baignade en raison du danger"
+                    ]
+                },
+                {
+                    "question": "Sur une plage ou il n’y a pas de poste de secours ?",
+                    "options": [
+                        "La baignade est aux risques et périls des usagers",
+                        "La baignade est autorisée mais il n’y a pas de surveillance",
+                        "Le maire est obligé de mettre en place une surveillance"
+                    ],
+                    "correct_answers": [
+                        "La baignade est aux risques et périls des usagers",
+                        "La baignade est autorisée mais il n’y a pas de surveillance"
+                    ]
+                },
+                {
+                    "question": "Les baïnes ?",
+                    "options": [
+                        "Doivent être situées dans la zone de baignade pour être sécurisée au maximum",
+                        "Sont dangereuse pour la baignade",
+                        "Peuvent entraîner un nageur au large",
+                        "Peuvent amener les sauveteurs à rétrécir la zone de baignade"
+                    ],
+                    "correct_answers": [
+                        "Sont dangereuse pour la baignade",
+                        "Peuvent entraîner un nageur au large",
+                        "Peuvent amener les sauveteurs à rétrécir la zone de baignade"
+                    ]
+                },
+                {
+                    "question": "Le balisage en navigation comprend ?",
+                    "options": [
+                        "Des marques latérales",
+                        "Des marques cardinales",
+                        "Des marques transversales",
+                        "Des marques d’eaux saines"
+                    ],
+                    "correct_answers": [
+                        "Des marques latérales",
+                        "Des marques cardinales",
+                        "Des marques d’eaux saines"
+                    ]
+                },
+                {
+                    "question": "Sur le territoire métropolitain, lorsque l’on vient du large, les chenaux traversiers ?",
+                    "options": [
+                        "Sont matérialisés par des bouées cylindriques à bâbord et coniques à tribord",
+                        "Sont matérialisés par des bouées de couleur verte à bâbord et rouge à tribord",
+                        "Peuvent être autorisés à la baignade"
+                    ],
+                    "correct_answers": [
+                        "Sont matérialisés par des bouées cylindriques à bâbord et coniques à tribord"
+                    ]
+                },
+                {
+                    "question": "Il existe, dans la réglementation française, plusieurs catégories de baignades :",
+                    "options": [
+                        "Les baignades interdites, aux risques et périls des usagers, autorisées et aménagées",
+                        "Les baignades aux risques et périls des usagers, autorisées et surveillées",
+                        "Les baignades aux risques et périls des usagers, surveillées et non-surveillées"
+                    ],
+                    "correct_answers": [
+                        "Les baignades interdites, aux risques et périls des usagers, autorisées et aménagées"
+                    ]
+                },
+                {
+                    "question": "Une zone de bain est balisée ?",
+                    "options": [
+                        "Avec des bouées sphériques jaunes",
+                        "Avec des bouées cylindriques jaunes",
+                        "Obligatoirement avec des bouées rouges"
+                    ],
+                    "correct_answers": [
+                        "Avec des bouées sphériques jaunes"
+                    ]
+                },
+                {
+                    "question": "Les unités de mesure en mer ?",
+                    "options": [
+                        "L’unité de mesure de la distance est mile (1609 m)",
+                        "L’unité de mesure de la vitesse est le nœud",
+                        "Un bateau naviguant à 5 nœuds circule à une vitesse approximative de 9km/h",
+                        "1 mille nautique est équivalent à 1852 m"
+                    ],
+                    "correct_answers": [
+                        "L’unité de mesure de la vitesse est le nœud",
+                        "Un bateau naviguant à 5 nœuds circule à une vitesse approximative de 9km/h",
+                        "1 mille nautique est équivalent à 1852 m"
+                    ]
+                },
+                {
+                    "question": "Sur l’échelle de Beaufort ?",
+                    "options": [
+                        "Le chiffre 10 correspond à une tempête",
+                        "Le chiffre 0 correspond à une mer calme",
+                        "Les chiffres correspondent à la hauteur des vagues mesurées en mètre",
+                        "L’échelle de Beaufort va de 0 à 20"
+                    ],
+                    "correct_answers": [
+                        "Le chiffre 10 correspond à une tempête",
+                        "Le chiffre 0 correspond à une mer calme"
+                    ]
+                },
+                {
+                    "question": "Pour prendre la météo marine, vous pouvez ?",
+                    "options": [
+                        "Faire le 112",
+                        "Consulter l’application mobile ou le site internet de Météo France",
+                        "Ecouter le bulletin météo émis par les CROSS et les Sémaphores sur canal VHF"
+                    ],
+                    "correct_answers": [
+                        "Consulter l’application mobile ou le site internet de Météo France",
+                        "Ecouter le bulletin météo émis par les CROSS et les Sémaphores sur canal VHF"
+                    ]
+                },
+                {
+                    "question": "Les analyses d’eau ?",
+                    "options": [
+                        "Sont obligatoirement affichées",
+                        "Sont uniquement réalisées en piscine",
+                        "Sont effectuées sous le contrôle de l’agence régionale de santé",
+                        "Sont également réalisées en lac et en mer"
+                    ],
+                    "correct_answers": [
+                        "Sont obligatoirement affichées",
+                        "Sont effectuées sous le contrôle de l’agence régionale de santé",
+                        "Sont également réalisées en lac et en mer"
+                    ]
+                },
+                {
+                    "question": "Lorsque l’on vient du large, les chenaux traversiers ?",
+                    "options": [
+                        "Sont matérialisés par des bouées cylindriques à bâbord",
+                        "Sont matérialisés par des bouées cylindriques à tribord",
+                        "Sont matérialisés par des boués de couleur jaune"
+                    ],
+                    "correct_answers": [
+                        "Sont matérialisés par des bouées cylindriques à bâbord",
+                        "Sont matérialisés par des boués de couleur jaune"
+                    ]
+                },
+                {
+                    "question": "S’il n’y a pas d’interdiction, il est possible de se baigner en plan d’eau ou rivière ?",
+                    "options": [
+                        "Oui",
+                        "Non, il faut obligatoirement un poste de secours à proximité",
+                        "Le maire doit d’abord faire une demande d’ouverture de baignade à la préfecture"
+                    ],
+                    "correct_answers": [
+                        "Oui"
+                    ]
+                },
+                {
+                    "question": "Il est possible de se baigner dans les plans d’eau ?",
+                    "options": [
+                        "Qui sont autorisés par le Maire",
+                        "Où il n’y a pas de panneau baignade interdite",
+                        "Seulement s’il y a un poste de secours",
+                        "Seulement s’il y a un panneau baignade à vos risques et périls"
+                    ],
+                    "correct_answers": [
+                        "Qui sont autorisés par le Maire",
+                        "Où il n’y a pas de panneau baignade interdite"
+                    ]
+                },
+                {
+                    "question": "Sur chaque lieu de baignade",
+                    "options": [
+                        "Il est obligatoire d'avoir un poste de secours",
+                        "La décision d'implantation d'un poste de secours est en premier ressort de la compétence du maire",
+                        "En l'absence de surveillance, la baignade est aux risques et périls de l'usager"
+                    ],
+                    "correct_answers": [
+                        "La décision d'implantation d'un poste de secours est en premier ressort de la compétence du maire",
+                        "En l'absence de surveillance, la baignade est aux risques et périls de l'usager"
+                    ]
+                },
+                {
+                    "question": "Les bouées coniques jaunes servent à baliser ?",
+                    "options": [
+                        "Un chenal traversier",
+                        "La limite des 300m",
+                        "La limite de la zone de baignade",
+                        "Le côté gauche d’un chenal traversier lorsque je regarde de la plage"
+                    ],
+                    "correct_answers": [
+                        "Un chenal traversier",
+                        "Le côté gauche d’un chenal traversier lorsque je regarde de la plage"
+                    ]
+                },
+                {
+                    "question": "Le marnage ?",
+                    "options": [
+                        "Représente la différence de hauteur d’eau entre une basse mer et une haute mer",
+                        "Ne concerne que les zones qui ne sont pas soumises aux marées",
+                        "Donne la hauteur des vagues"
+                    ],
+                    "correct_answers": [
+                        "Représente la différence de hauteur d’eau entre une basse mer et une haute mer"
+                    ]
+                },
+                {
+                    "question": "Dès que l’on détecte des méduses, la fermeture de la baignade est obligatoire ?",
+                    "options": [
+                        "Oui",
+                        "Non, les méduses sont régulièrement présentes dans la mer",
+                        "Oui, si les autorités sanitaires l'exigent"
+                    ],
+                    "correct_answers": [
+                        "Non, les méduses sont régulièrement présentes dans la mer",
+                        "Oui, si les autorités sanitaires l'exigent"
+                    ]
+                },
+                {
+                    "question": "En cas de vent de terre important",
+                    "options": [
+                        "Les enfants voient s'envoler leurs jouets vers le large",
+                        "Une vigilance particulière doit être observée",
+                        "Il peut exister une flamme spécifique en cas de danger lié au vent de terre",
+                        "La flamme rouge doit obligatoirement être hissée"
+                    ],
+                    "correct_answers": [
+                        "Les enfants voient s'envoler leurs jouets vers le large",
+                        "Une vigilance particulière doit être observée",
+                        "Il peut exister une flamme spécifique en cas de danger lié au vent de terre"
+                    ]
+                },
+                {
+                    "question": "Une baignade est surveillée dès lors qu’il y a ?",
+                    "options": [
+                        "Un poste de secours",
+                        "Un arrêté d’ouverture de la baignade",
+                        "Des sauveteurs sur la plage",
+                        "Une flamme verte sur le mat du poste de secours"
+                    ],
+                    "correct_answers": [
+                        "Une flamme verte sur le mat du poste de secours"
+                    ]
+                },
+                {
+                    "question": "Une interdiction de baignade est affichée uniquement en cas d’eau polluée ?",
+                    "options": [
+                        "Vrai, c’est la seule raison",
+                        "Vrai, mais l’affichage peut être fait uniquement à la mairie",
+                        "Faux, d’autres raisons sont possibles",
+                        "Faux, c’est le maire qui peut l’avoir affichée pour être déchargé de la surveillance"
+                    ],
+                    "correct_answers": [
+                        "Faux, d’autres raisons sont possibles"
+                    ]
+                },
+                {
+                    "question": "Quelle est l'unité de mesure de la vitesse en milieu maritime",
+                    "options": [
+                        "Le noeud",
+                        "Le kilomètre par heure",
+                        "Le mile par heure"
+                    ],
+                    "correct_answers": [
+                        "Le noeud"
+                    ]
+                },
+                {
+                    "question": "Une zone de baignade surveillée ?",
+                    "options": [
+                        "Peut être délimité par des piquets avec un fanion bleu",
+                        "N’a pas de limite qui détermine la zone de surveillance",
+                        "Est toujours limitée à 300m à droite et à gauche du poste de secours",
+                        "Peut être amovible en fonction de l’état de la mer"
+                    ],
+                    "correct_answers": [
+                        "Peut être délimité par des piquets avec un fanion bleu",
+                        "Peut être amovible en fonction de l’état de la mer"
+                    ]
+                },
+                {
+                    "question": "Qui détermine la couleur de la flamme ?",
+                    "options": [
+                        "L’échelle de Beaufort",
+                        "Le maire de la commune",
+                        "Le chef de poste",
+                        "Le responsable local de Météo France"
+                    ],
+                    "correct_answers": [
+                        "Le chef de poste"
+                    ]
+                },
+                {
+                    "question": "Les baïnes ?",
+                    "options": [
+                        "Se trouvent exclusivement en Méditerranée",
+                        "Sont idéales pour la baignade des enfants",
+                        "Sont dangereuses pour la baignade",
+                        "Servent à amarrer un navire"
+                    ],
+                    "correct_answers": [
+                        "Sont dangereuses pour la baignade"
+                    ]
+                },
+                {
+                    "question": "Lorsque aucune flamme n’est hissée durant les heures de surveillance ?",
+                    "options": [
+                        "La baignade n’est plus surveillée",
+                        "Tous les sauveteurs sont peut être en intervention",
+                        "Les sauveteurs doivent interdire l’accès à la baignade"
+                    ],
+                    "correct_answers": [
+                        "La baignade n’est plus surveillée",
+                        "Tous les sauveteurs sont peut être en intervention"
+                    ]
+                }
+            ]
+        },
+        {
+            "theme_name": "Diplômes, compétences et obligations",
+            "questions": [
+                {
+                    "question": "Un BNSSA peut surveiller seul et sans dérogation préfectorale ?",
+                    "options": [
+                        "Un plan d’eau d’accès gratuit",
+                        "Une piscine payante",
+                        "Un centre de vacances dans une piscine privée du centre",
+                        "Une baignade en mer"
+                    ],
+                    "correct_answers": [
+                        "Un plan d’eau d’accès gratuit",
+                        "Un centre de vacances dans une piscine privée du centre",
+                        "Une baignade en mer"
+                    ]
+                },
+                {
+                    "question": "Qui a autorité pour intervenir en premier dans le cas d’une pollution sur la plage ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Préfet du département",
+                        "Le Préfet Maritime",
+                        "Le Ministre de l’Intérieur"
+                    ],
+                    "correct_answers": [
+                        "Le Maire"
+                    ]
+                },
+                {
+                    "question": "Combien y a-t-il de CROSS principaux en Méditerranée ?",
+                    "options": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ],
+                    "correct_answers": [
+                        "1"
+                    ]
+                },
+                {
+                    "question": "Dans le cas d’une concession à un plagiste ?",
+                    "options": [
+                        "La responsabilité du Maire pourra toujours être recherchée en cas d’accident",
+                        "Le Maire est déchargé de la sécurité",
+                        "Un poste de secours est obligatoire"
+                    ],
+                    "correct_answers": [
+                        "La responsabilité du Maire pourra toujours être recherchée en cas d’accident"
+                    ]
+                },
+                {
+                    "question": "Quelle est la durée de la dérogation préfectorale pour un employeur qui ne trouve pas de MNS ?",
+                    "options": [
+                        "1 mois mini à 4 mois maxi",
+                        "2 mois mini à 6 mois maxi",
+                        "1 an maxi"
+                    ],
+                    "correct_answers": [
+                        "1 mois mini à 4 mois maxi"
+                    ]
+                },
+                {
+                    "question": "Un BNSSA peut enseigner contre rémunération ?",
+                    "options": [
+                        "Oui, l’aquagym",
+                        "Oui, la natation",
+                        "Non, il ne peut rien enseigner"
+                    ],
+                    "correct_answers": [
+                        "Non, il ne peut rien enseigner"
+                    ]
+                },
+                {
+                    "question": "A partir de quel âge peut-on conduire un scooter des mers, avec le permis ?",
+                    "options": [
+                        "14 ans",
+                        "16 ans",
+                        "18 ans"
+                    ],
+                    "correct_answers": [
+                        "16 ans"
+                    ]
+                },
+                {
+                    "question": "Qui a autorité pour intervenir dans le cas d’une personne disparue en haute mer ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Préfet du département",
+                        "Le Préfet Maritime",
+                        "Le CROSS"
+                    ],
+                    "correct_answers": [
+                        "Le Préfet Maritime",
+                        "Le CROSS"
+                    ]
+                },
+                {
+                    "question": "Combien existe t-il de permis de plaisance pour naviguer en mer ?",
+                    "options": [
+                        "4",
+                        "3",
+                        "2"
+                    ],
+                    "correct_answers": [
+                        "2"
+                    ]
+                },
+                {
+                    "question": "Un surveillant de baignade peut travailler ?",
+                    "options": [
+                        "En piscine comme assistant d’un MNS",
+                        "Dans le cadre d’un accueil de loisirs pour la surveillance de mineurs",
+                        "en lieu et place d’un BNSSA, dans un poste de secours"
+                    ],
+                    "correct_answers": [
+                        "Dans le cadre d’un accueil de loisirs pour la surveillance de mineurs"
+                    ]
+                },
+                {
+                    "question": "Avec le BNSSA, contre rémunération, je peux ?",
+                    "options": [
+                        "Encadrer des élèves en club et enseigner la natation",
+                        "Assurer des cours d'aquagym",
+                        "Surveiller des enfants en accueil de loisirs",
+                        "Surveiller un plan d’eau d’accès gratuit sans dérogation préfectorale"
+                    ],
+                    "correct_answers": [
+                        "Surveiller des enfants en accueil de loisirs",
+                        "Surveiller un plan d’eau d’accès gratuit sans dérogation préfectorale"
+                    ]
+                },
+                {
+                    "question": "En mer, dans la zone des 300 mètres et en l'absence de balisage :",
+                    "options": [
+                        "Je peux pratiquer le ski nautique",
+                        "Je ne dois pas dépasser les 3 nœuds",
+                        "Je ne dois pas dépasser les 5 nœuds",
+                        "Il n’y a pas de limitation"
+                    ],
+                    "correct_answers": [
+                        "Je ne dois pas dépasser les 5 nœuds"
+                    ]
+                },
+                {
+                    "question": "Dans un club de natation sportive, contre rémunération ?",
+                    "options": [
+                        "un BNSSA peut assurer la surveillance des adhérents",
+                        "Un BNSSA peut encadrer les activités et assurer certains cours",
+                        "un titulaire du titre de MNS peut assurer l'enseignement de la natation",
+                        "un titulaire du titre de Surveillant de Baignade peut assurer l'enseignement de la natation"
+                    ],
+                    "correct_answers": [
+                        "un BNSSA peut assurer la surveillance des adhérents",
+                        "un titulaire du titre de MNS peut assurer l'enseignement de la natation"
+                    ]
+                },
+                {
+                    "question": "Avec un permis « bateau de plaisance option côtière », je peux naviguer ?",
+                    "options": [
+                        "De jour uniquement",
+                        "De nuit uniquement",
+                        "De jour comme de nuit"
+                    ],
+                    "correct_answers": [
+                        "De jour comme de nuit"
+                    ]
+                },
+                {
+                    "question": "Qui est responsable de la zone des 300 mètres sur le littoral maritime ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Ministre de l’Intérieur",
+                        "Le Préfet Maritime"
+                    ],
+                    "correct_answers": [
+                        "Le Maire",
+                        "Le Préfet Maritime"
+                    ]
+                },
+                {
+                    "question": "Les CROSS principaux sont au nombre de ?",
+                    "options": [
+                        "2 en outre-mer",
+                        "8 en métropole",
+                        "5 en métropole",
+                        "4 en outre-mer"
+                    ],
+                    "correct_answers": [
+                        "2 en outre-mer",
+                        "5 en métropole"
+                    ]
+                },
+                {
+                    "question": "Un Surveillant de baignade peut ?",
+                    "options": [
+                        "Travailler seul dans une piscine municipale avec une dérogation préfectorale",
+                        "Surveiller uniquement les lieux d’accès gratuits",
+                        "Surveiller la baignade dans les accueils de loisirs"
+                    ],
+                    "correct_answers": [
+                        "Surveiller la baignade dans les accueils de loisirs"
+                    ]
+                },
+                {
+                    "question": "J’ai 16 ans ?",
+                    "options": [
+                        "Je peux passer le permis mer option côtier",
+                        "Je peux passer le permis plaisance en eaux intérieures",
+                        "Je dois attendre d’avoir 18 ans pour passer le permis mer option côtier",
+                        "Je dois attendre d’avoir 18 ans pour passer le permis plaisance en eaux intérieures"
+                    ],
+                    "correct_answers": [
+                        "Je peux passer le permis mer option côtier",
+                        "Je peux passer le permis plaisance en eaux intérieures"
+                    ]
+                },
+                {
+                    "question": "Une dérogation préfectorale, sollicitée par un employeur qui ne trouve pas de MNS ?",
+                    "options": [
+                        "Permet de travailler seul en qualité de BNSSA sur un accès payant",
+                        "A une durée maximale de 6 mois",
+                        "Doit avoir une durée minimale d’un mois"
+                    ],
+                    "correct_answers": [
+                        "Permet de travailler seul en qualité de BNSSA sur un accès payant",
+                        "Doit avoir une durée minimale d’un mois"
+                    ]
+                },
+                {
+                    "question": "Un BNSSA peut-il surveiller seul une baignade d’accès payant ?",
+                    "options": [
+                        "Non, jamais",
+                        "Oui, à condition d’avoir plus de deux ans d’ancienneté",
+                        "Oui, à condition d’avoir obtenu une dérogation préfectorale"
+                    ],
+                    "correct_answers": [
+                        "Oui, à condition d’avoir obtenu une dérogation préfectorale"
+                    ]
+                },
+                {
+                    "question": "Un titulaire du surveillant de baignade peut ?",
+                    "options": [
+                        "Surveiller un groupe de 50 enfants en baignade non aménagée mais autorisée",
+                        "Surveiller un groupe de 30 enfants de moins de 6 ans en baignade non aménagée mais autorisée",
+                        "Surveiller un groupe de 30 enfants de plus de 6 ans en baignade non aménagée mais autorisée",
+                        "Surveiller un groupe de 15 enfants de moins de 6 ans en baignade non aménagée mais autorisée"
+                    ],
+                    "correct_answers": [
+                        "Surveiller un groupe de 30 enfants de plus de 6 ans en baignade non aménagée mais autorisée",
+                        "Surveiller un groupe de 15 enfants de moins de 6 ans en baignade non aménagée mais autorisée"
+                    ]
+                },
+                {
+                    "question": "Dans la zone des 300 mètres ?",
+                    "options": [
+                        "Le Préfet Maritime est le seul responsable",
+                        "Le Préfet Maritime peut intervenir en cas de forte pollution",
+                        "Le Maire exerce la police des baignades"
+                    ],
+                    "correct_answers": [
+                        "Le Préfet Maritime peut intervenir en cas de forte pollution",
+                        "Le Maire exerce la police des baignades"
+                    ]
+                },
+                {
+                    "question": "La natation scolaire peut être surveillée par ?",
+                    "options": [
+                        "Un parent d’élève agréé",
+                        "Un BPJEPS AAN",
+                        "Une personne qui porte le titre de MNS",
+                        "Une personne qui porte le titre de surveillant de baignade"
+                    ],
+                    "correct_answers": [
+                        "Un BPJEPS AAN",
+                        "Une personne qui porte le titre de MNS"
+                    ]
+                },
+                {
+                    "question": "Suite à une noyade dans un lieu surveillé, la responsabilité civile d’un BNSSA ?",
+                    "options": [
+                        "Peut être engagée",
+                        "Ne peut jamais être engagée",
+                        "N’est pas engagée si un BEESAN est présent"
+                    ],
+                    "correct_answers": [
+                        "Peut être engagée"
+                    ]
+                },
+                {
+                    "question": "La demande de dérogation équivaut à ?",
+                    "options": [
+                        "Pouvoir travailler sans maître nageur sauveteur",
+                        "Une déclaration d’exercice dans une piscine",
+                        "Etre autorisé à faire des cours de natation"
+                    ],
+                    "correct_answers": [
+                        "Pouvoir travailler sans maître nageur sauveteur"
+                    ]
+                },
+                {
+                    "question": "Qui peut assurer l’enseignement contre rémunération de l’aquagym ?",
+                    "options": [
+                        "Un BPJEPS AAN",
+                        "Un BNSSA",
+                        "Un MNS",
+                        "Aucun diplôme n’est requis"
+                    ],
+                    "correct_answers": [
+                        "Un BPJEPS AAN",
+                        "Un MNS"
+                    ]
+                },
+                {
+                    "question": "Un BNSSA peut surveiller seul, sans dérogation préfectorale dans ?",
+                    "options": [
+                        "Un plan d’eau d’accès gratuit",
+                        "Une piscine d’accès payant",
+                        "Un plan d’eau d’accès payant",
+                        "Une baignade en accueil de loisirs"
+                    ],
+                    "correct_answers": [
+                        "Un plan d’eau d’accès gratuit",
+                        "Une baignade en accueil de loisirs"
+                    ]
+                },
+                {
+                    "question": "Sans dérogation préfectorale, un BNSSA ?",
+                    "options": [
+                        "Peut assurer la surveillance d’un accès payant, en assistance d’un MNS",
+                        "Peut assurer la surveillance d’un plan d’eau d’accès gratuit",
+                        "Peut assurer la surveillance d’une baignade pour les besoins d’un accueil collectif de mineurs",
+                        "Peut surveiller seul une piscine d’accès payant"
+                    ],
+                    "correct_answers": [
+                        "Peut assurer la surveillance d’un accès payant, en assistance d’un MNS",
+                        "Peut assurer la surveillance d’un plan d’eau d’accès gratuit",
+                        "Peut assurer la surveillance d’une baignade pour les besoins d’un accueil collectif de mineurs"
+                    ]
+                },
+                {
+                    "question": "Lorsqu’un BNSSA travaille en piscine dans 2 départements au cours de l’année, il doit faire ?",
+                    "options": [
+                        "Une seule déclaration dans le département de son choix",
+                        "Une déclaration au préfet du lieu de sa principale activité",
+                        "Une déclaration à la région qui gère les 2 départements"
+                    ],
+                    "correct_answers": [
+                        "Une déclaration au préfet du lieu de sa principale activité"
+                    ]
+                },
+                {
+                    "question": "Avec un BNSSA je peux, sans dérogation ?",
+                    "options": [
+                        "Surveiller une baignade pour un club de natation",
+                        "Surveiller seul un plan d’eau d’accès payant",
+                        "Assurer la sécurité des centres d’accueils de loisirs pour mineurs",
+                        "Enseigner contrer rémunération la natation en assistance d’un maître nageur"
+                    ],
+                    "correct_answers": [
+                        "Surveiller une baignade pour un club de natation",
+                        "Assurer la sécurité des centres d’accueils de loisirs pour mineurs"
+                    ]
+                },
+                {
+                    "question": "Un BNSSA qui travaille dans une piscine municipale, peut surveiller :",
+                    "options": [
+                        "Seul toute l’année avec dérogation",
+                        "Seul entre 1 mois minimum et 4 mois maximum avec dérogation",
+                        "Seul, uniquement s’il a réussi un concours dans la fonction publique"
+                    ],
+                    "correct_answers": [
+                        "Seul entre 1 mois minimum et 4 mois maximum avec dérogation"
+                    ]
+                },
+                {
+                    "question": "Dans un lieu d’accès payant, un BNSSA doit obligatoirement être déclaré en préfecture ?",
+                    "options": [
+                        "Pour travail seul",
+                        "Pour travailler en présence d’un MNS",
+                        "Pour avoir une carte professionnelle",
+                        "N’a pas de déclaration à faire, seuls les maîtres nageurs doivent se déclarer"
+                    ],
+                    "correct_answers": [
+                        "Pour travail seul",
+                        "Pour travailler en présence d’un MNS"
+                    ]
+                },
+                {
+                    "question": "Avec un BNSSA et par dérogation, vous pouvez ?",
+                    "options": [
+                        "Entraîner contre rémunération, des nageurs dans un club de natation",
+                        "Surveiller une piscine municipale",
+                        "Donner des cours de natation dans la piscine d’un camping"
+                    ],
+                    "correct_answers": [
+                        "Surveiller une piscine municipale"
+                    ]
+                },
+                {
+                    "question": "Un BNSSA peut piloter un bateau à moteur qui est à sa disposition au poste de secours ?",
+                    "options": [
+                        "Sans permis, quelle que soit la puissance du moteur s’il ne dépasse pas une vitesse de 5 nœuds",
+                        "Sans permis, quelle que soit la puissance du moteur, c’est un engin de secours",
+                        "Sans permis, uniquement si la puissance du moteur est inférieure à 6 CV",
+                        "Avec permis de plaisance, option côtière, quelle que soit la puissance du moteur à une distance maximum de 6 milles d’un abri"
+                    ],
+                    "correct_answers": [
+                        "Sans permis, uniquement si la puissance du moteur est inférieure à 6 CV",
+                        "Avec permis de plaisance, option côtière, quelle que soit la puissance du moteur à une distance maximum de 6 milles d’un abri"
+                    ]
+                },
+                {
+                    "question": "Avec un permis mer côtier, vous pouvez ?",
+                    "options": [
+                        "Naviguer jusqu’à 6 milles d’un abri de jour comme de nuit",
+                        "Naviguer jusqu’à 10 milles des côtes de jour uniquement",
+                        "Naviguer sans limitation de distance",
+                        "Naviguer sans limite de vitesse au-delà des 300 mètres"
+                    ],
+                    "correct_answers": [
+                        "Naviguer jusqu’à 6 milles d’un abri de jour comme de nuit",
+                        "Naviguer sans limite de vitesse au-delà des 300 mètres"
+                    ]
+                },
+                {
+                    "question": "Parmi ces obligations, lesquelles sont applicables au BNSSA souhaitant exercer en piscine ?",
+                    "options": [
+                        "Etre titulaire du certificat de compétence PSE 2",
+                        "Le récépissé de déclaration de la préfecture (ou DDCS / DDCSPP)",
+                        "Le certificat de vaccination pour l’hépatite B",
+                        "L’affichage du diplôme"
+                    ],
+                    "correct_answers": [
+                        "Le récépissé de déclaration de la préfecture (ou DDCS / DDCSPP)",
+                        "L’affichage du diplôme"
+                    ]
+                },
+                {
+                    "question": "Pour une navigation de plaisance avec un bateau classé en catégorie de type C ?",
+                    "options": [
+                        "Je dois naviguer à proximité des côtes et à moins de 6 milles d’un abri",
+                        "Le navire doit pouvoir résister à un vent pouvant aller jusqu’à force 6 et à des vagues de 4 m",
+                        "Les fusées de détresse ne sont pas obligatoires"
+                    ],
+                    "correct_answers": [
+                        "Je dois naviguer à proximité des côtes et à moins de 6 milles d’un abri",
+                        "Le navire doit pouvoir résister à un vent pouvant aller jusqu’à force 6 et à des vagues de 4 m"
+                    ]
+                },
+                {
+                    "question": "La responsabilité civile d’un BNSSA peut être engagée pour une faute dont l’origine est considérée comme ?",
+                    "options": [
+                        "Uniquement volontaire",
+                        "Uniquement non volontaire",
+                        "Volontaire et non volontaire"
+                    ],
+                    "correct_answers": [
+                        "Volontaire et non volontaire"
+                    ]
+                },
+                {
+                    "question": "Un titulaire du permis 'eaux intérieures' ?",
+                    "options": [
+                        "Peut assurer la conduite, en eaux intérieures, d’un bateau de plaisance dont la longueur est limitée à 20 m",
+                        "Peut naviguer en mer dans la limite des 300 mètres",
+                        "Doit se soumettre à un recyclage tous les 5 ans",
+                        "Est limité à une puissance moteur de 20 Cv"
+                    ],
+                    "correct_answers": [
+                        "Peut assurer la conduite, en eaux intérieures, d’un bateau de plaisance dont la longueur est limitée à 20 m"
+                    ]
+                },
+                {
+                    "question": "Une activité de gym aquatique peut-elle être encadrée par un BNSSA légalement déclaré et rémunéré ?",
+                    "options": [
+                        "Oui, sans condition",
+                        "Oui, avec dérogation",
+                        "Non"
+                    ],
+                    "correct_answers": [
+                        "Non"
+                    ]
+                },
+                {
+                    "question": "Les zones de navigation ?",
+                    "options": [
+                        "Il existe trois zones de navigation",
+                        "Il existe deux zones de navigation",
+                        "La première zone de navigation se limite à moins de 6 milles d’un abri"
+                    ],
+                    "correct_answers": [
+                        "Il existe deux zones de navigation",
+                        "La première zone de navigation se limite à moins de 6 milles d’un abri"
+                    ]
+                },
+                {
+                    "question": "Avec un permis hauturier, on peut naviguer ?",
+                    "options": [
+                        "En rivière uniquement",
+                        "De jour comme de nuit",
+                        "Au-dela de 6 milles d'un abri"
+                    ],
+                    "correct_answers": [
+                        "De jour comme de nuit",
+                        "Au-dela de 6 milles d'un abri"
+                    ]
+                }
+            ]
+        },
+        {
+            "theme_name": "Organisation administrative",
+            "questions": [
+                {
+                    "question": "En combien de catégories sont classifiées les baignades en eau libre ?",
+                    "options": [
+                        "1 catégorie",
+                        "2 catégories",
+                        "3 catégories",
+                        "4 catégories"
+                    ],
+                    "correct_answers": [
+                        "3 catégories"
+                    ]
+                },{
+                    "question": "Qui a autorité pour intervenir dans le cas d’un bateau immatriculé, à la dérive ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Préfet du département",
+                        "Le Préfet Maritime",
+                        "Le Ministre de l’Intérieur"
+                    ],
+                    "correct_answers": [
+                        "Le Préfet Maritime"
+                    ]
+                },
+                {
+                    "question": "Le Maire ?",
+                    "options": [
+                        "Recrute le personnel de surveillance des plages",
+                        "Détermine la couleur de la flamme à hisser",
+                        "Fait afficher un arrêté municipal pour la baignade",
+                        "Dispose des pouvoirs de police spéciale"
+                    ],
+                    "correct_answers": [
+                        "Recrute le personnel de surveillance des plages",
+                        "Fait afficher un arrêté municipal pour la baignade",
+                        "Dispose des pouvoirs de police spéciale"
+                    ]
+                },
+                {
+                    "question": "Combien y a-t-il de CROSS principaux en France métropolitaine ?",
+                    "options": [
+                        "3",
+                        "4",
+                        "5",
+                        "6"
+                    ],
+                    "correct_answers": [
+                        "5"
+                    ]
+                },
+                {
+                    "question": "Le SAMU est ?",
+                    "options": [
+                        "Un service hospitalier",
+                        "Rattaché aux sapeurs pompiers",
+                        "Un service de la préfecture"
+                    ],
+                    "correct_answers": [
+                        "Un service hospitalier"
+                    ]
+                },
+                {
+                    "question": "Dans un lieu de baignade, avec un accueil de loisirs accompagné d’un surveillant de baignade ?",
+                    "options": [
+                        "Les enfants peuvent se baigner dans un lieu aménagé et surveillé",
+                        "Les enfants peuvent se baigner dans un lieu non aménagé et non surveillé",
+                        "Les enfants peuvent se baigner dans un lieu signalé comme dangereux"
+                    ],
+                    "correct_answers": [
+                        "Les enfants peuvent se baigner dans un lieu aménagé et surveillé",
+                        "Les enfants peuvent se baigner dans un lieu non aménagé et non surveillé"
+                    ]
+                },
+                {
+                    "question": "Les limites de zone de bain ?",
+                    "options": [
+                        "Peuvent être délimitées par des flammes bleues",
+                        "Déterminent la limite de réglementation du Maire",
+                        "Peuvent bouger au cours de la journée",
+                        "En mer, vers le large la responsabilité administrative du Maire s’arrête à 300 m"
+                    ],
+                    "correct_answers": [
+                        "Peuvent être délimitées par des flammes bleues",
+                        "Peuvent bouger au cours de la journée",
+                        "En mer, vers le large la responsabilité administrative du Maire s’arrête à 300 m"
+                    ]
+                },
+                {
+                    "question": "Il existe différentes catégories de baignade qui sont ?",
+                    "options": [
+                        "Les zones dangereuses, ou il est interdit de se baigner",
+                        "Les zones ou le public peut se baigner à ses risques et périls",
+                        "Les zones de baignades aménagées et surveillées",
+                        "Les zones de baignades aménagées et non surveillées"
+                    ],
+                    "correct_answers": [
+                        "Les zones dangereuses, ou il est interdit de se baigner",
+                        "Les zones ou le public peut se baigner à ses risques et périls",
+                        "Les zones de baignades aménagées et surveillées"
+                    ]
+                },
+                {
+                    "question": "Le Préfet Maritime peut intervenir dans la zone des 300 mètres ?",
+                    "options": [
+                        "Si l’ampleur de la catastrophe est trop importante pour être gérée par le Maire",
+                        "Seulement si le Maire donne son accord",
+                        "Si la zone n’est pas aménagée pour la baignade"
+                    ],
+                    "correct_answers": [
+                        "Si l’ampleur de la catastrophe est trop importante pour être gérée par le Maire"
+                    ]
+                },
+                {
+                    "question": "Le CROSS ?",
+                    "options": [
+                        "Est sous l'autorité du Préfet Maritime",
+                        "Est sous l'autorité du Préfet de région",
+                        "Assure des missions de surveillance et de sauvetage"
+                    ],
+                    "correct_answers": [
+                        "Est sous l'autorité du Préfet Maritime",
+                        "Assure des missions de surveillance et de sauvetage"
+                    ]
+                },
+                {
+                    "question": "Les analyses bactériologiques d’une zone de baignade sont ordonnées ?",
+                    "options": [
+                        "Par le Maire",
+                        "Par un laboratoire agréé",
+                        "Par l’Agence régionale de la Santé",
+                        "Par le chef de poste"
+                    ],
+                    "correct_answers": [
+                        "Par l’Agence régionale de la Santé"
+                    ]
+                },
+                {
+                    "question": "Le droit des baignades est de la responsabilité :",
+                    "options": [
+                        "Du Directeur de l’agence régionale de l’eau",
+                        "Du Maire",
+                        "Du président du syndicat d’eau",
+                        "Du président d’une communauté de communes"
+                    ],
+                    "correct_answers": [
+                        "Du Maire"
+                    ]
+                },
+                {
+                    "question": "Quels sont les principaux recruteurs de personnel dans les postes de secours ?",
+                    "options": [
+                        "Les maires",
+                        "Les services départementaux d'incendie et secours",
+                        "Les compagnies républicaines de sécurité",
+                        "Les conseils départementaux"
+                    ],
+                    "correct_answers": [
+                        "Les maires"
+                    ]
+                },
+                {
+                    "question": "Le CROSS veille 24h/24 les appels de détresses, en VHF sur :",
+                    "options": [
+                        "Le canal 16",
+                        "Le canal 15",
+                        "Le canal 17"
+                    ],
+                    "correct_answers": [
+                        "Le canal 16"
+                    ]
+                },
+                {
+                    "question": "Le SAMU :",
+                    "options": [
+                        "Est le Service d'Aide Médicale Urgente",
+                        "Est le service d'Assistance Médicalisé d'Urgence",
+                        "Dispose de SMUR"
+                    ],
+                    "correct_answers": [
+                        "Est le Service d'Aide Médicale Urgente",
+                        "Dispose de SMUR"
+                    ]
+                },
+                {
+                    "question": "Le Préfet peut prendre la décision d'interdire une baignade :",
+                    "options": [
+                        "Lorsque le Maire ne respecte pas ses obligations",
+                        "Lorsqu'un conflit politique oppose le Maire et le Préfet",
+                        "Ne peut pas l'interdire, mais c'est le Maire qui sera responsable devant la justice",
+                        "Sur avis, de la direction départementale de la cohésion sociale (DDCS ou DDCSPP)"
+                    ],
+                    "correct_answers": [
+                        "Lorsque le Maire ne respecte pas ses obligations"
+                    ]
+                },
+                {
+                    "question": "Au-delà de la bande des 300m, un plaisancier appelle à l’aide. Les sauveteurs ?",
+                    "options": [
+                        "Ne doivent pas intervenir car c’est de la responsabilité du Préfet maritime",
+                        "Ne doivent pas intervenir car ils peuvent se mettre en péril eux-mêmes",
+                        "Doivent porter secours même en dehors de leur zone de surveillance",
+                        "Doivent informer le CROSS"
+                    ],
+                    "correct_answers": [
+                        "Doivent porter secours même en dehors de leur zone de surveillance",
+                        "Doivent informer le CROSS"
+                    ]
+                },
+                {
+                    "question": "Lorsqu’une baignade en milieu naturel est ouverte, les analyses de l’eau sont faites ?",
+                    "options": [
+                        "A la convenance du Maire",
+                        "Au minimum une fois par mois",
+                        "Uniquement en cas d’aspect inquiétant de l’eau"
+                    ],
+                    "correct_answers": [
+                        "Au minimum une fois par mois"
+                    ]
+                },
+                {
+                    "question": "Dans un établissement de bain d’accès payant ?",
+                    "options": [
+                        "L’affichage des diplômes est obligatoire",
+                        "L’affichage des diplômes n’est pas obligatoire",
+                        "Le personnel chargé de la surveillance doit être déclaré auprès de la préfecture"
+                    ],
+                    "correct_answers": [
+                        "L’affichage des diplômes est obligatoire",
+                        "Le personnel chargé de la surveillance doit être déclaré auprès de la préfecture"
+                    ]
+                },
+                {
+                    "question": "Où le POSS doit-il obligatoirement être installé ?",
+                    "options": [
+                        "Dans tous les établissements de bain d’accès payant",
+                        "Dans les lieux de baignades autorisés et d’accès payant",
+                        "Dans les piscines de copropriétés"
+                    ],
+                    "correct_answers": [
+                        "Dans tous les établissements de bain d’accès payant",
+                        "Dans les lieux de baignades autorisés et d’accès payant"
+                    ]
+                },
+                {
+                    "question": "Sur une commune du littoral, le Maire reste responsable de la baignade ?",
+                    "options": [
+                        "Durant toute l’année",
+                        "Uniquement pendant la période estivale",
+                        "N’est jamais responsable tant qu’il n’a pas installé de poste de secours"
+                    ],
+                    "correct_answers": [
+                        "Durant toute l’année"
+                    ]
+                },
+                {
+                    "question": "En cas de noyade dans la bande des 300m, au-delà de leur zone de surveillance, les sauveteurs ?",
+                    "options": [
+                        "Ne doivent pas intervenir car ils quittent leur zone de surveillance",
+                        "Doivent intervenir en mettant en œuvre les moyens dont ils disposent",
+                        "Doivent prévenir le Maire avant de porter secours",
+                        "Doivent prévenir le CROSS avant de porter secours"
+                    ],
+                    "correct_answers": [
+                        "Doivent intervenir en mettant en œuvre les moyens dont ils disposent"
+                    ]
+                },
+                {
+                    "question": "Qui a autorité pour intervenir en premier lieu, en cas de faible pollution, en bordure de plage ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Préfet du département",
+                        "Le Préfet Maritime",
+                        "Le Ministère de l’Intérieur"
+                    ],
+                    "correct_answers": [
+                        "Le Maire"
+                    ]
+                },
+                {
+                    "question": "Sur une plage, en dehors de la saison estivale, un Maire peut interdire la baignade pour être déchargé de sa responsabilité en cas de noyade ?",
+                    "options": [
+                        "Vrai, car la baignade est interdite",
+                        "Vrai, même si les personnes se baignent à leurs risques et périls",
+                        "Faux, un maire reste responsable de sa plage en toutes circonstances"
+                    ],
+                    "correct_answers": [
+                        "Faux, un maire reste responsable de sa plage en toutes circonstances"
+                    ]
+                },
+                {
+                    "question": "Comment se nomme le document affiché dans un poste de secours pour réglementer la plage ?",
+                    "options": [
+                        "Une loi",
+                        "Un décret ministériel",
+                        "Un arrêté municipal",
+                        "Une circulaire ministérielle"
+                    ],
+                    "correct_answers": [
+                        "Un arrêté municipal"
+                    ]
+                },
+                {
+                    "question": "Le Maire peut salarier, dans un poste de secours, un sauveteur comme :",
+                    "options": [
+                        "Travailleur indépendant",
+                        "Employé communal",
+                        "Auto-entrepreneur"
+                    ],
+                    "correct_answers": [
+                        "Employé communal"
+                    ]
+                },
+                {
+                    "question": "Qui recrute le personnel pour armer les postes de secours ?",
+                    "options": [
+                        "Le Maire",
+                        "Le Préfet du département",
+                        "Le Préfet maritime"
+                    ],
+                    "correct_answers": [
+                        "Le Maire"
+                    ]
+                },
+                {
+                    "question": "Un surveillant de baignade :",
+                    "options": [
+                        "Peut organiser une baignade de mineurs sur une plage surveillée",
+                        "Peut organiser une baignade de mineurs sur une plage non surveillée",
+                        "Peut assurer la surveillance de mineurs uniquement en assistance d'un MNS"
+                    ],
+                    "correct_answers": [
+                        "Peut organiser une baignade de mineurs sur une plage surveillée",
+                        "Peut organiser une baignade de mineurs sur une plage non surveillée"
+                    ]
+                }
+            ]
+        },
+        {
+            "theme_name": "Organisation de la sécurité",
+            "questions": [
+                {
+                    "question": "Le CROSS :",
+                    "options": [
+                        "Coordonne les opérations de sauvetage",
+                        "Met en place les zones aménagées de baignade",
+                        "Recrute les équipes qui assurent la surveillance des plages",
+                        "Assure la surveillance et la police des pêches maritimes"
+                    ],
+                    "correct_answers": [
+                        "Coordonne les opérations de sauvetage",
+                        "Assure la surveillance et la police des pêches maritimes"
+                    ]
+                },
+                {
+                    "question": "Les flammes de couleur ?",
+                    "options": [
+                        "Sont au nombre de 3 (verte / orange / rouge)",
+                        "Sont obligatoires en piscine",
+                        "Doivent être hissées à une hauteur de 10m minimum",
+                        "Doivent toujours être hissées en cas d’intervention des sauveteurs"
+                    ],
+                    "correct_answers": [
+                        "Sont au nombre de 3 (verte / orange / rouge)",
+                        "Doivent être hissées à une hauteur de 10m minimum"
+                    ]
+                },
+                {
+                    "question": "Suite à un appel du CROSS tous les sauveteurs doivent partir en mer porter secours. Avant de quitter la surveillance de la plage :",
+                    "options": [
+                        "Ils hissent la flamme rouge",
+                        "Il abaissent la flamme",
+                        "Ils informent les usagers de la suspension de la surveillance"
+                    ],
+                    "correct_answers": [
+                        "Il abaissent la flamme",
+                        "Ils informent les usagers de la suspension de la surveillance"
+                    ]
+                },
+                {
+                    "question": "Les CROSS ?",
+                    "options": [
+                        "Coordonnent les missions de sauvetage en mer",
+                        "Disposent entre autres des moyens de la SNSM",
+                        "Le CROSS Etel assure la couverture de toute la zone Atlantique"
+                    ],
+                    "correct_answers": [
+                        "Coordonnent les missions de sauvetage en mer",
+                        "Disposent entre autres des moyens de la SNSM"
+                    ]
+                },
+                {
+                    "question": "Un poste de secours doit être de couleur ?",
+                    "options": [
+                        "Bleue",
+                        "Blanche",
+                        "Rouge",
+                        "Indifférent"
+                    ],
+                    "correct_answers": [
+                        "Blanche"
+                    ]
+                },
+                {
+                    "question": "Le POSS est obligatoire ?",
+                    "options": [
+                        "Dans tous les lieux de baignade",
+                        "Dans les piscines uniquement",
+                        "Uniquement dans les lieux d’accès payant",
+                        "Uniquement lorsqu’il y a un maître nageur sauveteur"
+                    ],
+                    "correct_answers": [
+                        "Uniquement dans les lieux d’accès payant"
+                    ]
+                },
+                {
+                    "question": "En zone métropolitaine, lorsque l'on vient du large, en entrant dans un port :",
+                    "options": [
+                        "On trouve à tribord des balises vertes",
+                        "On trouve à bâbord des balises rouges",
+                        "On trouve à tribord des balises rouges",
+                        "On trouve à bâbord des balises vertes"
+                    ],
+                    "correct_answers": [
+                        "On trouve à tribord des balises vertes",
+                        "On trouve à bâbord des balises rouges"
+                    ]
+                },
+                {
+                    "question": "Les analyses de qualité de l’eau doivent être affichées ?",
+                    "options": [
+                        "Non, c’est une information confidentielle",
+                        "Oui, au poste de secours, et visible par le public",
+                        "Uniquement à l’office du tourisme et en Mairie"
+                    ],
+                    "correct_answers": [
+                        "Oui, au poste de secours, et visible par le public"
+                    ]
+                },
+                {
+                    "question": "Qui coordonne les secours en mer ?",
+                    "options": [
+                        "Les CRS",
+                        "Le SDIS",
+                        "Le CROSS",
+                        "La SNSM"
+                    ],
+                    "correct_answers": [
+                        "Le CROSS"
+                    ]
+                },
+                {
+                    "question": "Pour fermer un poste, la flamme est baissée ?",
+                    "options": [
+                        "Avant le rangement de tout le matériel",
+                        "Après le rangement de tout le matériel",
+                        "A l’heure fixée par les horaires de surveillance"
+                    ],
+                    "correct_answers": [
+                        "Avant le rangement de tout le matériel",
+                        "A l’heure fixée par les horaires de surveillance"
+                    ]
+                },
+                {
+                    "question": "La zone de bain ?",
+                    "options": [
+                        "Doit toujours se situer au même endroit",
+                        "Le Maire est responsable de sa matérialisation",
+                        "Le Préfet maritime est responsable de sa matérialisation",
+                        "Lorsqu’elle est signalée par des limites amovibles, le Chef de Poste est responsable de sa matérialisation"
+                    ],
+                    "correct_answers": [
+                        "Le Maire est responsable de sa matérialisation",
+                        "Lorsqu’elle est signalée par des limites amovibles, le Chef de Poste est responsable de sa matérialisation"
+                    ]
+                },
+                {
+                    "question": "Une zone de baignade surveillée peut être délimitée ?",
+                    "options": [
+                        "Par des fanions verts montés sur des piquets qui peuvent être mobiles",
+                        "Par des fanions bleus montés sur des piquets qui peuvent être mobiles",
+                        "Par des bouées sphériques jaunes",
+                        "Par des panneaux fixes à fond blanc et inscriptions en rouge"
+                    ],
+                    "correct_answers": [
+                        "Par des fanions bleus montés sur des piquets qui peuvent être mobiles",
+                        "Par des bouées sphériques jaunes"
+                    ]
+                },
+                {
+                    "question": "Véhicules nautiques à moteur (VNM) ?",
+                    "options": [
+                        "A une puissance propulsive dépassant 4CV",
+                        "Peux être conduit, seul, sans permis",
+                        "Dois contenir dans son équipement un gilet de sauvetage",
+                        "N’a pas obligatoire de coupe-circuit"
+                    ],
+                    "correct_answers": [
+                        "A une puissance propulsive dépassant 4CV",
+                        "Dois contenir dans son équipement un gilet de sauvetage"
+                    ]
+                },
+                {
+                    "question": "Les bouées ?",
+                    "options": [
+                        "Les marques cardinales signalent un danger particulier",
+                        "Le maire peut poser des bouées dans la zone de 300m",
+                        "Une bouée triangulaire est une marque latérale tribord"
+                    ],
+                    "correct_answers": [
+                        "Les marques cardinales signalent un danger particulier",
+                        "Le maire peut poser des bouées dans la zone de 300m"
+                    ]
+                },
+                {
+                    "question": "La flamme rouge est hissée ?",
+                    "options": [
+                        "Elle signale que la zone de baignade est interdite et surveillée",
+                        "Elle permet au sauveteur de quitter le poste",
+                        "Elle indique que la baignade est dangereuse mais surveillée",
+                        "Elle peut l’être en présence d’un orage"
+                    ],
+                    "correct_answers": [
+                        "Elle signale que la zone de baignade est interdite et surveillée",
+                        "Elle peut l’être en présence d’un orage"
+                    ]
+                },
+                {
+                    "question": "Le POSS ?",
+                    "options": [
+                        "Doit être affiché dans un endroit visible au public",
+                        "N’est pas obligatoirement affiché",
+                        "Recense notamment tous les risques potentiels que peut présenter le lieu ou il s’applique",
+                        "Ne recense que les risques liés à l’eau"
+                    ],
+                    "correct_answers": [
+                        "Doit être affiché dans un endroit visible au public",
+                        "Recense notamment tous les risques potentiels que peut présenter le lieu ou il s’applique"
+                    ]
+                },
+                {
+                    "question": "Le chef de poste ?",
+                    "options": [
+                        "Détient la responsabilité du choix de la flamme",
+                        "Le maire peut lui imposer la couleur de la flamme",
+                        "Peut voir sa responsabilité pénale engagée en cas d'homicide par noyade dans la zone surveillée",
+                        "Doit régulièrement envoyer des patrouilles pour surveiller les zones non surveillées"
+                    ],
+                    "correct_answers": [
+                        "Détient la responsabilité du choix de la flamme",
+                        "Peut voir sa responsabilité pénale engagée en cas d'homicide par noyade dans la zone surveillée"
+                    ]
+                },
+                {
+                    "question": "Le POSS ?",
+                    "options": [
+                        "Doit comprendre un descriptif des installations",
+                        "N’est pas obligatoire en piscine",
+                        "Est un Plan d’Organisation de la Surveillance et des Secours"
+                    ],
+                    "correct_answers": [
+                        "Doit comprendre un descriptif des installations",
+                        "Est un Plan d’Organisation de la Surveillance et des Secours"
+                    ]
+                },
+                {
+                    "question": "Lors de sa 1ère prise de service en milieu naturel, un BNSSA ?",
+                    "options": [
+                        "Doit consulter le Plan de Secours s’il existe",
+                        "Doit vérifier l’ensemble du matériel",
+                        "Doit détenir le permis bateau"
+                    ],
+                    "correct_answers": [
+                        "Doit consulter le Plan de Secours s’il existe",
+                        "Doit vérifier l’ensemble du matériel"
+                    ]
+                },
+                {
+                    "question": "Le SDIS dépêche sur les lieux d’un accident ?",
+                    "options": [
+                        "Un Véhicule de Secours aux Blessés",
+                        "Un Véhicule de Secours et d’Assistance aux Victimes",
+                        "Un Véhicule d’Assistance de Secours et de Soins Urgents",
+                        "Une Ambulance de réanimation"
+                    ],
+                    "correct_answers": [
+                        "Un Véhicule de Secours et d’Assistance aux Victimes"
+                    ]
+                },
+                {
+                    "question": "Le POSS c’est ?",
+                    "options": [
+                        "Le Plan d’Organisation de la Surveillance et des Secours",
+                        "Le Plan d’Occupation du Sauvetage et des Secours",
+                        "Le Préfet Opérationnel pour la Sécurité et le Sauvetage"
+                    ],
+                    "correct_answers": [
+                        "Le Plan d’Organisation de la Surveillance et des Secours"
+                    ]
+                },
+                {
+                    "question": "L’entretien des baignades surveillées nécessite que ?",
+                    "options": [
+                        "Des pancartes rappellent aux usagers les mesures d’hygiène auxquelles ils doivent se conformer",
+                        "C’est le chef de poste qui est responsable de l’hygiène du nettoyage de la plage",
+                        "Les communes doivent disposer des douches, WC et réceptacles de déchets sur la plage"
+                    ],
+                    "correct_answers": [
+                        "Des pancartes rappellent aux usagers les mesures d’hygiène auxquelles ils doivent se conformer",
+                        "Les communes doivent disposer des douches, WC et réceptacles de déchets sur la plage"
+                    ]
+                },
+                {
+                    "question": "Les sauveteurs abaissent la flamme ?",
+                    "options": [
+                        "Quand une intervention importante le nécessite",
+                        "Pour aller manger",
+                        "A la fermeture du poste de secours",
+                        "Quand la mer est dangereuse"
+                    ],
+                    "correct_answers": [
+                        "Quand une intervention importante le nécessite",
+                        "A la fermeture du poste de secours"
+                    ]
+                },
+                {
+                    "question": "Les CROSS sont sous l'autorité :",
+                    "options": [
+                        "Des préfectures de département",
+                        "Des préfectures maritimes",
+                        "Des sous-préfectures"
+                    ],
+                    "correct_answers": [
+                        "Des préfectures maritimes"
+                    ]
+                },
+                {
+                    "question": "Le CODIS gère les interventions de secours sur ?",
+                    "options": [
+                        "L’arrondissement",
+                        "Le département",
+                        "La région"
+                    ],
+                    "correct_answers": [
+                        "Le département"
+                    ]
+                },
+                {
+                    "question": "Dans une baignade surveillée, l’aménagement d’une zone dite 'petit bain' ?",
+                    "options": [
+                        "Est obligatoire",
+                        "Est souhaitable, dès que possible",
+                        "Voit sa profondeur d’eau limitée à 2m"
+                    ],
+                    "correct_answers": [
+                        "Est souhaitable, dès que possible"
+                    ]
+                },
+                {
+                    "question": "Dans une piscine intercommunale et ouverte au public, le POSS :",
+                    "options": [
+                        "Est obligatoire",
+                        "Est un document interne et ne doit pas être affiché",
+                        "N’est pas obligatoire mais recommandé"
+                    ],
+                    "correct_answers": [
+                        "Est obligatoire"
+                    ]
+                },
+                {
+                    "question": "Les engins de plage ?",
+                    "options": [
+                        "Doivent naviguer dans la zone des 300m",
+                        "Peuvent naviguer jusqu'à 1 mille d'un abri",
+                        "Nécessitent une surveillance accrue par vent de terre"
+                    ],
+                    "correct_answers": [
+                        "Doivent naviguer dans la zone des 300m",
+                        "Nécessitent une surveillance accrue par vent de terre"
+                    ]
+                },
+                {
+                    "question": "Le CROSS veille ?",
+                    "options": [
+                        "Au respect des règlements maritimes nationaux",
+                        "A la sécurité des gens de la mer",
+                        "Au respect des règles de plongée en mer"
+                    ],
+                    "correct_answers": [
+                        "Au respect des règlements maritimes nationaux",
+                        "A la sécurité des gens de la mer"
+                    ]
+                }
+            ]
+        },
+        {
+            "theme_name": "Surveillance et sécurité des activités spécifiques",
+            "questions": [
+                {
+                    "question": "La chasse sous marine ?",
+                    "options": [
+                        "Est autorisée avec des bouteilles de plongée",
+                        "Est autorisée de jour comme de nuit",
+                        "Il est interdit de détenir un fusil chargé hors de l'eau",
+                        "Le produit de la pêche peut être vendu"
+                    ],
+                    "correct_answers": [
+                        "Il est interdit de détenir un fusil chargé hors de l'eau"
+                    ]
+                },
+                {
+                    "question": "Les bateaux gonflables et les matelas pneumatiques sont ?",
+                    "options": [
+                        "Uniquement utilisés dans la bande des 300m",
+                        "Ne sont pas considérés comme des engins de plages",
+                        "Doivent être utilisés dans le chenal traversier",
+                        "Sont utilisables jusqu’à 1 mille des côtes"
+                    ],
+                    "correct_answers": [
+                        "Uniquement utilisés dans la bande des 300m"
+                    ]
+                },
+                {
+                    "question": "En mer, un véhicule nautique à moteur de 100 CV, peut être piloté avec :",
+                    "options": [
+                        "Le permis de conduire automobile catégorie A",
+                        "Le permis mer option côtier",
+                        "Aucun permis",
+                        "Le permis hauturier"
+                    ],
+                    "correct_answers": [
+                        "Le permis mer option côtier",
+                        "Le permis hauturier"
+                    ]
+                },
+                {
+                    "question": "Quelle est la vitesse maximale autorisée avec un bateau à moteur dans la zone des 300 mètres ?",
+                    "options": [
+                        "3 noeuds",
+                        "5 noeuds",
+                        "Non limitée"
+                    ],
+                    "correct_answers": [
+                        "5 noeuds"
+                    ]
+                },
+                {
+                    "question": "Si un groupe de 40 enfants de plus de 6 ans et de moins de 12 ans est sur une plage « non surveillée » mais autorisée avec 1 surveillant de baignade et 8 animateurs",
+                    "options": [
+                        "Le surveillant de baignade peut organiser une baignade",
+                        "La baignade doit être matérialisée",
+                        "Il n’y a pas d’obligation de matérialisation ou de balisage"
+                    ],
+                    "correct_answers": [
+                        "Le surveillant de baignade peut organiser une baignade",
+                        "La baignade doit être matérialisée"
+                    ]
+                },
+                {
+                    "question": "La planche à voile peut se pratiquer ?",
+                    "options": [
+                        "Dans la bande des 300m",
+                        "Dans la zone de baignade surveillée",
+                        "Uniquement en dehors de la zone de baignade",
+                        "Uniquement en dehors de la bande des 300m"
+                    ],
+                    "correct_answers": [
+                        "Dans la bande des 300m",
+                        "Uniquement en dehors de la zone de baignade"
+                    ]
+                },
+                {
+                    "question": "Une activité de plongeur peut être signalée par ?",
+                    "options": [
+                        "Un pavillon bleu et blanc Alpha",
+                        "Un pavillon rouge et blanc nommé 'Croix de St André'",
+                        "Un pavillon rouge barré d’une bande blanche nommé 'CMAS'",
+                        "Aucun de ces pavillons"
+                    ],
+                    "correct_answers": [
+                        "Un pavillon bleu et blanc Alpha",
+                        "Un pavillon rouge et blanc nommé 'Croix de St André'",
+                        "Un pavillon rouge barré d’une bande blanche nommé 'CMAS'"
+                    ]
+                },
+                {
+                    "question": "Avec un centre de vacances, vous pouvez vous baigner :",
+                    "options": [
+                        "Où vous voulez",
+                        "En dehors des zones surveillées et en dehors des zones dangereuses",
+                        "Sur des plages surveillées"
+                    ],
+                    "correct_answers": [
+                        "En dehors des zones surveillées et en dehors des zones dangereuses",
+                        "Sur des plages surveillées"
+                    ]
+                },
+                {
+                    "question": "Concernant les groupes d’enfants en centre de vacances ?",
+                    "options": [
+                        "Les enfants de plus de 6 ans peuvent être 20 dans l’eau au maximum",
+                        "Pour les enfants de plus de 6 ans, un animateur pour 8 doit être présent dans l'eau",
+                        "Les enfants de moins de 6 ans peuvent être au maximum 40 dans l’eau",
+                        "Pour les enfants de moins de 6 ans, un animateur pour 5 doit être présent dans l’eau"
+                    ],
+                    "correct_answers": [
+                        "Pour les enfants de moins de 6 ans, un animateur pour 5 doit être présent dans l’eau"
+                    ]
+                },
+                {
+                    "question": "Pour pratiquer la chasse sous marine il faut ?",
+                    "options": [
+                        "Chasser la nuit",
+                        "Utiliser un scaphandre autonome",
+                        "Avoir 16 ans"
+                    ],
+                    "correct_answers": [
+                        "Avoir 16 ans"
+                    ]
+                },
+                {
+                    "question": "Pour pratiquer la chasse sous marine il faut ?",
+                    "options": [
+                        "Être âgé de 16 ans au moins",
+                        "Signaler sa présence au moyen d’une bouée surmontée d’un pavillon",
+                        "Chasser entre le coucher et le lever du soleil"
+                    ],
+                    "correct_answers": [
+                        "Être âgé de 16 ans au moins",
+                        "Signaler sa présence au moyen d’une bouée surmontée d’un pavillon"
+                    ]
+                },
+                {
+                    "question": "Les plongeurs en scaphandre autonome ?",
+                    "options": [
+                        "Peuvent pratiquer la chasse sous-marine",
+                        "Utilisent le pavillon Bravo pour se signaler",
+                        "N’ont pas besoin de se signaler en surface",
+                        "Utilisent le pavillon Alpha pour se signaler"
+                    ],
+                    "correct_answers": [
+                        "Utilisent le pavillon Alpha pour se signaler"
+                    ]
+                },
+                {
+                    "question": "Avec une planche aérotractéee (Kitesurf), je peux naviguer ?",
+                    "options": [
+                        "Au maximum jusqu’à 1 mille d’un abri",
+                        "Jusqu’à 2 milles d’un abri, au maximum",
+                        "Jusqu’à 6 milles d’un abri, au maximum",
+                        "Sans limitation de distance, si je suis expérimenté"
+                    ],
+                    "correct_answers": [
+                        "Jusqu’à 2 milles d’un abri, au maximum"
+                    ]
+                },
+                {
+                    "question": "Sur une plage, aménagée et surveillée, on doit trouver obligatoirement ?",
+                    "options": [
+                        "Un panneau journalier d’information",
+                        "Un panneau permanent d’information",
+                        "Un panneau de l’office du tourisme"
+                    ],
+                    "correct_answers": [
+                        "Un panneau journalier d’information",
+                        "Un panneau permanent d’information"
+                    ]
+                },
+                {
+                    "question": "La pêche à la ligne, en milieu maritime :",
+                    "options": [
+                        "Est autorisée dans les zones de baignade",
+                        "Est interdite dans les ports",
+                        "Doit respecter la réglementation sur les tailles des poissons"
+                    ],
+                    "correct_answers": [
+                        "Est interdite dans les ports",
+                        "Doit respecter la réglementation sur les tailles des poissons"
+                    ]
+                },
+                {
+                    "question": "Pour pratiquer le ski nautique ?",
+                    "options": [
+                        "Je dois porter un gilet de sauvetage",
+                        "En rivière, je peux pratiquer n’importe ou",
+                        "En mer, je dois pratiquer au-delà de la zone des 300 mètres"
+                    ],
+                    "correct_answers": [
+                        "Je dois porter un gilet de sauvetage",
+                        "En mer, je dois pratiquer au-delà de la zone des 300 mètres"
+                    ]
+                },
+                {
+                    "question": "Les surfeurs doivent ?",
+                    "options": [
+                        "Evoluer si elle existe dans une zone délimitée par une flamme verte avec un rond rouge",
+                        "Evoluer si elle existe dans une zone délimitée par une flamme rouge avec un rond vert",
+                        "Interrompre leur activité par flamme rouge"
+                    ],
+                    "correct_answers": [
+                        "Evoluer si elle existe dans une zone délimitée par une flamme verte avec un rond rouge"
+                    ]
+                },
+                {
+                    "question": "Une piscine privée et réservée aux enfants d’un centre de vacances ?",
+                    "options": [
+                        "Peut être surveillée par un SB",
+                        "Peut être surveillée par un BNSSA",
+                        "Doit être obligatoirement surveillée par un MNS"
+                    ],
+                    "correct_answers": [
+                        "Peut être surveillée par un SB",
+                        "Peut être surveillée par un BNSSA"
+                    ]
+                },
+                {
+                    "question": "Pour les particuliers, la pêche en mer ?",
+                    "options": [
+                        "Est réglementée",
+                        "Peut être réalisée en toute zone",
+                        "Ne nécessite pas de permis de pêche en zone maritime"
+                    ],
+                    "correct_answers": [
+                        "Est réglementée",
+                        "Ne nécessite pas de permis de pêche en zone maritime"
+                    ]
+                },
+                {
+                    "question": "La chasse sous marine est autorisée :",
+                    "options": [
+                        "Avec des bouteilles de plongée",
+                        "Dans les ports",
+                        "A l'aide d'un fusil à armement manuel"
+                    ],
+                    "correct_answers": [
+                        "A l'aide d'un fusil à armement manuel"
+                    ]
+                },
+                {
+                    "question": "La peche des coquillages ?",
+                    "options": [
+                        "Est libre",
+                        "Est réglementée",
+                        "Ne fait l’objet d’aucune veille sanitaire spécifique"
+                    ],
+                    "correct_answers": [
+                        "Est réglementée"
+                    ]
+                },
+                {
+                    "question": "Un scooter des mers :",
+                    "options": [
+                        "Peut naviguer, en l'absence de balisage, à la vitesse de 5 noeuds pour sortir de la bande des 300 m.",
+                        "Peut naviguer à pleine vitesse dès lors qu'il ne s'agit pas d’une zone de baignade",
+                        "Ne peut pas naviguer dans la bande des 300m"
+                    ],
+                    "correct_answers": [
+                        "Peut naviguer, en l'absence de balisage, à la vitesse de 5 noeuds pour sortir de la bande des 300 m."
+                    ]
+                },
+                {
+                    "question": "Un kayak de mer ?",
+                    "options": [
+                        "Ne peut évoluer qu’en présence d’une embarcation",
+                        "Doit disposer d’un dispositif permettant le remorquage",
+                        "Ne doit pas obligatoirement avoir un gilet de sauvetage doté d’une réserve de flottabilité"
+                    ],
+                    "correct_answers": [
+                        "Doit disposer d’un dispositif permettant le remorquage"
+                    ]
+                },
+                {
+                    "question": "Pour la sécurité des plongeurs, un club ou une structure professionnelle doit ?",
+                    "options": [
+                        "Disposer de matériel de secours",
+                        "Avoir un directeur de plongée sur place",
+                        "Se signaler au moyen du pavillon Afma"
+                    ],
+                    "correct_answers": [
+                        "Disposer de matériel de secours",
+                        "Avoir un directeur de plongée sur place"
+                    ]
+                },
+                {
+                    "question": "Les engins pneumatiques tractés pour les particuliers ?",
+                    "options": [
+                        "Doivent avoir une personne à bord en plus du pilote pour surveiller l’activité",
+                        "Doivent, arborer une flamme fluorescente orange de 2 mètres",
+                        "Les personnes embarquées sur l’engin pneumatique n’ont pas besoin de gilets"
+                    ],
+                    "correct_answers": [
+                        "Doivent avoir une personne à bord en plus du pilote pour surveiller l’activité",
+                        "Doivent, arborer une flamme fluorescente orange de 2 mètres"
+                    ]
+                },
+                {
+                    "question": "Quelle est la vitesse maximale autorisée avec un bateau à moteur dans un chenal traversier ?",
+                    "options": [
+                        "3 noeuds",
+                        "5 noeuds",
+                        "Non limitée"
+                    ],
+                    "correct_answers": [
+                        "5 noeuds"
+                    ]
+                },
+                {
+                    "question": "Pour pratiquer le ski nautique, vous pouvez être seul à bord du bateau, si ?",
+                    "options": [
+                        "Vous êtes titulaire du brevet d’Etat de ski nautique et équipé d’un rétroviseur",
+                        "Vous avez un rétroviseur sur votre embarcation",
+                        "Vous êtes seul sur le plan d’eau"
+                    ],
+                    "correct_answers": [
+                        "Vous êtes titulaire du brevet d’Etat de ski nautique et équipé d’un rétroviseur"
+                    ]
+                },
+                {
+                    "question": "Pour pratiquer la planche à voile ?",
+                    "options": [
+                        "Il faut pratiquer de jour uniquement",
+                        "On peut le faire de jour comme de nuit",
+                        "Le port du gilet de sauvetage est recommandé"
+                    ],
+                    "correct_answers": [
+                        "Il faut pratiquer de jour uniquement",
+                        "Le port du gilet de sauvetage est recommandé"
+                    ]
+                },
+                {
+                    "question": "Le surf se pratique :",
+                    "options": [
+                        "Uniquement dans la zone de baignade",
+                        "Uniquement hors de la zone de baignade",
+                        "Dans une zone qui peut être délimité par une flamme verte comportant un disque rouge"
+                    ],
+                    "correct_answers": [
+                        "Uniquement hors de la zone de baignade",
+                        "Dans une zone qui peut être délimité par une flamme verte comportant un disque rouge"
+                    ]
+                }
+            ]
+        },
+        {
+            "theme_name": "Conduite à tenir en cas d’accident - Premiers secours",
+            "questions": [
+                {
+                    "question": "La noyade ?",
+                    "options": [
+                        "Est une asphyxie",
+                        "A toujours pour origine une défaillance physique (épuisement, manque de techniques de nage…)",
+                        "Nécessite un suivi médical après inhalation",
+                        "Se présente avec 3 stades dans le tableau clinique"
+                    ],
+                    "correct_answers": [
+                        "Est une asphyxie",
+                        "Nécessite un suivi médical après inhalation"
+                    ]
+                },
+                {
+                    "question": "Lors d’un accident de plongée ?",
+                    "options": [
+                        "Il suffit d’organiser la prise en charge du plongeur accidenté",
+                        "Il faut organiser la prise en charge de la palanquée complète",
+                        "En mer, le CROSS doit être informé",
+                        "En lac, Voies Navigables de France doit être informé"
+                    ],
+                    "correct_answers": [
+                        "Il faut organiser la prise en charge de la palanquée complète",
+                        "En mer, le CROSS doit être informé"
+                    ]
+                },
+                {
+                    "question": "Le chlore utilisé en piscine pour le traitement de l’eau ?",
+                    "options": [
+                        "Peut s’avérer très toxique",
+                        "Peut être conditionné sous forme liquide, solide ou gazeuse",
+                        "A des propriétés spécifiques pour ne pas brûler au contact avec la peau",
+                        "A des propriétés spécifiques pour ne pas exploser en cas de mauvaise manipulation"
+                    ],
+                    "correct_answers": [
+                        "Peut s’avérer très toxique",
+                        "Peut être conditionné sous forme liquide, solide ou gazeuse"
+                    ]
+                },
+                {
+                    "question": "Dans le cas d’un enfant en arrêt cardiaque, suite à une noyade ?",
+                    "options": [
+                        "Il faut commencer immédiatement par faire 5 insufflations",
+                        "Il faut commencer immédiatement par faire le massage cardiaque",
+                        "Il faut masser au moins à 100 compressions à la minute",
+                        "Il faut masser au moins à 150 compressions à la minute"
+                    ],
+                    "correct_answers": [
+                        "Il faut commencer immédiatement par faire 5 insufflations",
+                        "Il faut masser au moins à 100 compressions à la minute"
+                    ]
+                },
+                {
+                    "question": "Un malaise dû à une exposition trop prolongée au soleil ?",
+                    "options": [
+                        "Peut avoir des répercussions neurologiques",
+                        "Peut être le signe d’une atteinte grave",
+                        "impose au sauveteur de faire boire la personne"
+                    ],
+                    "correct_answers": [
+                        "Peut avoir des répercussions neurologiques",
+                        "Peut être le signe d’une atteinte grave"
+                    ]
+                },
+                {
+                    "question": "Pour un adulte sous inhalation d’oxygène avec un masque haute concentration, on règle le débit initial à ?",
+                    "options": [
+                        "15 l/min",
+                        "6 l/min",
+                        "9 l/min"
+                    ],
+                    "correct_answers": [
+                        "15 l/min"
+                    ]
+                },
+                {
+                    "question": "A la suite d’une piqûre de vive ?",
+                    "options": [
+                        "Je dois nettoyer la plaie",
+                        "Le venin est thermolabile, je dois approcher une source de chaleur pour le détruire",
+                        "La victime peut se baigner sitôt la plaie désinfectée"
+                    ],
+                    "correct_answers": [
+                        "Je dois nettoyer la plaie",
+                        "Le venin est thermolabile, je dois approcher une source de chaleur pour le détruire"
+                    ]
+                },
+                {
+                    "question": "Le matériel de réanimation cardio-pulmonaire est composé ?",
+                    "options": [
+                        "D’un ballon auto remplisseur",
+                        "D’une bouteille d’air comprimé",
+                        "D’un aspirateur de mucosités",
+                        "D’un défibrillateur"
+                    ],
+                    "correct_answers": [
+                        "D’un ballon auto remplisseur",
+                        "D’un aspirateur de mucosités",
+                        "D’un défibrillateur"
+                    ]
+                },
+                {
+                    "question": "Les stades de la noyade ?",
+                    "options": [
+                        "Permettent de simplifier la communication entre les sauveteurs",
+                        "Sont au nombre de cinq tableaux cliniques",
+                        "Lorsque vous êtes en présence d’un stade 2, la victime est inconsciente"
+                    ],
+                    "correct_answers": [
+                        "Permettent de simplifier la communication entre les sauveteurs"
+                    ]
+                },
+                {
+                    "question": "Soins apportés ?",
+                    "options": [
+                        "Une personne suspectée d’avoir inhalée de l’eau doit être hospitalisée",
+                        "Une personne inconsciente qui ne ventile pas doit être placée en PLS",
+                        "La défibrillation précoce augmente les chances de survie lors d’une réanimation cardio-pulmonaire",
+                        "Certains malaises ou maladies graves peuvent entraîner une détresse vitale dans l’eau"
+                    ],
+                    "correct_answers": [
+                        "Une personne suspectée d’avoir inhalée de l’eau doit être hospitalisée",
+                        "La défibrillation précoce augmente les chances de survie lors d’une réanimation cardio-pulmonaire",
+                        "Certains malaises ou maladies graves peuvent entraîner une détresse vitale dans l’eau"
+                    ]
+                },
+                {
+                    "question": "Evaluation des fonctions vitales ?",
+                    "options": [
+                        "Il existe 4 fonctions vitales",
+                        "Dans l’ordre, le sauveteur contrôle la ventilation, l’inconscience, la circulation",
+                        "L’évaluation de la fonction circulatoire ne doit pas excéder 10 secondes",
+                        "Même en cas d’hémorragie visible, le sauveteur effectue d’abord le contrôle des fonctions vitales"
+                    ],
+                    "correct_answers": [
+                        "L’évaluation de la fonction circulatoire ne doit pas excéder 10 secondes"
+                    ]
+                },
+                {
+                    "question": "Lors d’un accident de plongée ?",
+                    "options": [
+                        "Une des raisons peut être une remontée trop rapide",
+                        "Les paramètres de durée et de profondeur ne rentrent pas en ligne de compte",
+                        "Il est utile de préciser le nombre de plongeurs dans la palanquée",
+                        "l’administration d’oxygène et d’aspirine sont déconseillés"
+                    ],
+                    "correct_answers": [
+                        "Une des raisons peut être une remontée trop rapide",
+                        "Il est utile de préciser le nombre de plongeurs dans la palanquée"
+                    ]
+                },
+                {
+                    "question": "Lors d’un traumatisme du rachis survenant dans l’eau en piscine ?",
+                    "options": [
+                        "Il est préférable d'extraire la victime rapidement, et ce même si elle est consciente",
+                        "Il est préférable de stabiliser la victime dans l’eau en attendant les secours",
+                        "Un des facteurs aggravant peut être l’hypothermie"
+                    ],
+                    "correct_answers": [
+                        "Il est préférable de stabiliser la victime dans l’eau en attendant les secours",
+                        "Un des facteurs aggravant peut être l’hypothermie"
+                    ]
+                },
+                {
+                    "question": "Une personne que vous trouvez assise se plaint de douleurs dorsales en sortant d’un toboggan aquatique. Etant un sauveteur isolé ?",
+                    "options": [
+                        "Vous assurez un maintien de la tête en attendant l’arrivée des secours extérieurs",
+                        "Vous demandez à la personne de se relever pour se rendre à l’infirmerie",
+                        "Vous placez seul un collier cervical en attendant l’arrivée des secours extérieur"
+                    ],
+                    "correct_answers": [
+                        "Vous assurez un maintien de la tête en attendant l’arrivée des secours extérieurs"
+                    ]
+                },
+                {
+                    "question": "Lors d’une noyade ?",
+                    "options": [
+                        "Chez l’adulte, il n'est pas nécessaire de réaliser 5 insufflations avant de débuter une réanimation",
+                        "Chez l’enfant, il est nécessaire de réaliser 5 insufflations avant de débuter une réanimation",
+                        "On peut effectuer une RCP dans l’eau, lors d'un remorquage"
+                    ],
+                    "correct_answers": [
+                        "Chez l’enfant, il est nécessaire de réaliser 5 insufflations avant de débuter une réanimation"
+                    ]
+                },
+                {
+                    "question": "Lors d’une piqûre de vive au pied, le venin étant thermolabile ?",
+                    "options": [
+                        "Vous frottez la piqûre de vive avec du sable",
+                        "Vous conseillez à la personne de marcher dans le sable chaud",
+                        "Vous préparez une bassine d’eau chaude",
+                        "Vous informez immédiatement le centre anti-poison"
+                    ],
+                    "correct_answers": [
+                        "Vous conseillez à la personne de marcher dans le sable chaud",
+                        "Vous préparez une bassine d’eau chaude"
+                    ]
+                },
+                {
+                    "question": "Utilisation de l’oxygène ?",
+                    "options": [
+                        "L’utilisation d’une bouteille d’oxygène demande des précautions particulières",
+                        "Je peux utiliser un masque d’inhalation pour délivrer l’oxygène",
+                        "Fumer à proximité d’une bouteille d’oxygène n’est pas dangereux",
+                        "Je ne dois pas laisser une bouteille d’oxygène en plein soleil l’été"
+                    ],
+                    "correct_answers": [
+                        "L’utilisation d’une bouteille d’oxygène demande des précautions particulières",
+                        "Je peux utiliser un masque d’inhalation pour délivrer l’oxygène",
+                        "Je ne dois pas laisser une bouteille d’oxygène en plein soleil l’été"
+                    ]
+                }
+            ]
+        }
+    ]
+}
