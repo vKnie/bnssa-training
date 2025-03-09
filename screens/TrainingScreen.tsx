@@ -44,10 +44,12 @@ export default function TrainingScreen() {
     );
   };
 
+  const isButtonDisabled = selectedThemes.length === 0;
+
   return (
     <View style={styles.container}>
-
       <Text style={styles.dropdownTitle}>Sélectionner les thèmes</Text>
+      <Text style={styles.descriptionTitle}>*Sélectionner au moins un thème pour commencer un entraînement.</Text>
 
       <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
         <Text style={styles.dropdownText}>{isExpanded ? "Réduire" : "Déployer"}</Text>
@@ -75,70 +77,33 @@ export default function TrainingScreen() {
           Sélectionnés : {selectedThemes.join(', ')}
         </Text>
       )}
+
+      <TouchableOpacity
+        style={[styles.button, isButtonDisabled && styles.disabledButton]}
+        onPress={() => {}}
+        disabled={isButtonDisabled}
+      >
+        <Text style={[styles.buttonText, isButtonDisabled && styles.disabledButtonText]}>Commencer l'entraînement</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-    justifyContent: 'center',
-  },
-  dropdownTitle: {
-    color: '#000',
-    fontSize: 20,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  dropdownButton: {
-    width: '100%',
-    paddingVertical: 12,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center', // Centre le texte horizontalement
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    elevation: 3,
-  },
-  dropdownText: {
-    color: '#000',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center', // Centre le texte
-  },
-  dropdownContainer: {
-    overflow: 'hidden',
-    width: '100%',
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  themeBox: {
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    elevation: 3,
-  },
-  itemContainer: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  item: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-  },
-  selectedItem: {
-    backgroundColor: 'lightblue',
-  },
-  selectedText: {
-    marginTop: 20,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-  },
+  container: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
+  dropdownTitle: { color: '#000', fontSize: 20, textAlign: 'center' },
+  button: { backgroundColor: '#007BFF', padding: 10, borderRadius: 5, marginVertical: 5, width: '60%', alignItems: 'center' },
+  disabledButton: { backgroundColor: '#ccc' },
+  buttonText: { color: '#FFFFFF', fontSize: 16 },
+  disabledButtonText: { color: '#999' },
+  descriptionTitle: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
+  dropdownButton: { width: '100%', paddingVertical: 12, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
+  dropdownText: { color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' },
+  dropdownContainer:{ overflow: 'hidden', width: '100%', borderRadius: 5, marginTop: 10 },
+  themeBox: { backgroundColor: '#ffffff', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
+  itemContainer: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
+  item: { fontSize: 16, paddingHorizontal: 10 },
+  selectedItem: { backgroundColor: 'lightblue' },
+  selectedText: { marginTop: 20, fontSize: 16, fontWeight: 'bold', color: '#333' },
 });
