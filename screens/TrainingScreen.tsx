@@ -19,7 +19,7 @@ export default function TrainingScreen() {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const animationHeight = useState(new Animated.Value(0))[0];
 
-  const screenHeight = Dimensions.get('window').height;
+  const { height: screenHeight } = Dimensions.get('window');
   const maxDropdownHeight = screenHeight * 0.5;
   const itemHeight = 50;
 
@@ -37,9 +37,9 @@ export default function TrainingScreen() {
   };
 
   const toggleSelection = (themeName: string) => {
-    setSelectedThemes((prevSelected) =>
+    setSelectedThemes(prevSelected =>
       prevSelected.includes(themeName)
-        ? prevSelected.filter((name) => name !== themeName)
+        ? prevSelected.filter(name => name !== themeName)
         : [...prevSelected, themeName]
     );
   };
@@ -47,63 +47,59 @@ export default function TrainingScreen() {
   const isButtonDisabled = selectedThemes.length === 0;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.dropdownTitle}>Sélectionner les thèmes</Text>
-      <Text style={styles.descriptionTitle}>*Sélectionner au moins un thème pour commencer un entraînement.</Text>
+    <View style={styles.screenContainer}>
+      <Text style={styles.titleText}>Sélectionner les thèmes</Text>
+      <Text style={styles.descriptionText}>*Sélectionner au moins un thème pour commencer un entraînement.</Text>
 
-      <TouchableOpacity style={styles.dropdownButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownText}>{isExpanded ? "Réduire" : "Déployer"}</Text>
+      <TouchableOpacity style={styles.dropdownToggleButton} onPress={toggleDropdown}>
+        <Text style={styles.dropdownToggleText}>{isExpanded ? "Réduire" : "Déployer"}</Text>
       </TouchableOpacity>
 
-      <Animated.View style={[styles.dropdownContainer, { height: animationHeight }]}>
-        <View style={styles.themeBox}>
-          {themes.map((item, index) => (
+      <Animated.View style={[styles.dropdownListContainer, { height: animationHeight }]}>
+        <View style={styles.themeListBox}>
+          {themes.map(({ theme_name }, index) => (
             <TouchableOpacity
               key={index}
-              onPress={() => toggleSelection(item.theme_name)}
-              style={[
-                styles.itemContainer,
-                selectedThemes.includes(item.theme_name) && styles.selectedItem,
-              ]}
+              onPress={() => toggleSelection(theme_name)}
+              style={[styles.themeItemContainer, selectedThemes.includes(theme_name) && styles.themeItemSelected]}
             >
-              <Text style={styles.item}>{item.theme_name}</Text>
+              <Text style={styles.themeItemText}>{theme_name}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </Animated.View>
 
       {selectedThemes.length > 0 && (
-        <Text style={styles.selectedText}>
+        <Text style={styles.selectedThemesText}>
           Sélectionnés : {selectedThemes.join(', ')}
         </Text>
       )}
 
       <TouchableOpacity
-        style={[styles.button, isButtonDisabled && styles.disabledButton]}
+        style={[styles.startButton, isButtonDisabled && styles.startButtonDisabled]}
         onPress={() => {}}
         disabled={isButtonDisabled}
       >
-        <Text style={[styles.buttonText, isButtonDisabled && styles.disabledButtonText]}>Commencer l'entraînement</Text>
+        <Text style={[styles.startButtonText, isButtonDisabled && styles.startButtonTextDisabled]}>Commencer l'entraînement</Text>
       </TouchableOpacity>
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
-  dropdownTitle: { color: '#000', fontSize: 20, textAlign: 'center' },
-  button: { backgroundColor: '#007BFF', padding: 10, borderRadius: 5, marginVertical: 5, width: '60%', alignItems: 'center' },
-  disabledButton: { backgroundColor: '#ccc' },
-  buttonText: { color: '#FFFFFF', fontSize: 16 },
-  disabledButtonText: { color: '#999' },
-  descriptionTitle: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
-  dropdownButton: { width: '100%', paddingVertical: 12, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
-  dropdownText: { color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' },
-  dropdownContainer:{ overflow: 'hidden', width: '100%', borderRadius: 5, marginTop: 10 },
-  themeBox: { backgroundColor: '#ffffff', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
-  itemContainer: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
-  item: { fontSize: 16, paddingHorizontal: 10 },
-  selectedItem: { backgroundColor: 'lightblue' },
-  selectedText: { marginTop: 20, fontSize: 16, fontWeight: 'bold', color: '#333' },
+  screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
+  titleText: { color: '#000', fontSize: 20, textAlign: 'center' },
+  startButton: { backgroundColor: '#3099EF', padding: 10, borderRadius: 5, marginVertical: 5, width: '100%', alignItems: 'center' },
+  startButtonDisabled: { backgroundColor: '#ccc' },
+  startButtonText: { color: '#FFFFFF', fontSize: 16 },
+  startButtonTextDisabled: { color: '#999' },
+  descriptionText: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
+  dropdownToggleButton: { width: '100%', padding: 10, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
+  dropdownToggleText: { color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' },
+  dropdownListContainer: { overflow: 'hidden', width: '100%', borderRadius: 5, marginTop: 10 },
+  themeListBox: { backgroundColor: '#ffffff', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
+  themeItemContainer: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
+  themeItemText: { fontSize: 16, paddingHorizontal: 10 },
+  themeItemSelected: { backgroundColor: '#289938' },
+  selectedThemesText: { marginTop: 20, fontSize: 16, fontWeight: 'bold', color: '#333' },
 });
