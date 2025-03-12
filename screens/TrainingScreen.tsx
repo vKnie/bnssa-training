@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
+import { RootStackParamList } from '../App'; // Importer le type depuis App.tsx
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Question {
   question: string;
@@ -13,11 +16,14 @@ interface Theme {
   questions: Question[];
 }
 
-export default function TrainingScreen() {
+type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Entrainement'>;
+
+const TrainingScreen: React.FC = () => {
   const [themes] = useState<Theme[]>(questionsData.themes);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const animationHeight = useState(new Animated.Value(0))[0];
+  const navigation = useNavigation<TrainingScreenNavigationProp>();
 
   const { height: screenHeight } = Dimensions.get('window');
   const maxDropdownHeight = screenHeight * 0.5;
@@ -46,6 +52,10 @@ export default function TrainingScreen() {
 
   const isButtonDisabled = selectedThemes.length === 0;
 
+  const startTraining = () => {
+    navigation.navigate('TrainingSession', { selectedThemes });
+  };
+
   return (
     <View style={styles.screenContainer}>
       <Text style={styles.titleText}>Sélectionner les thèmes</Text>
@@ -69,22 +79,16 @@ export default function TrainingScreen() {
         </View>
       </Animated.View>
 
-      {selectedThemes.length > 0 && (
-        <Text style={styles.selectedThemesText}>
-          Sélectionnés : {selectedThemes.join(', ')}
-        </Text>
-      )}
-
       <TouchableOpacity
         style={[styles.startButton, isButtonDisabled && styles.startButtonDisabled]}
-        onPress={() => {}}
+        onPress={startTraining}
         disabled={isButtonDisabled}
       >
         <Text style={[styles.startButtonText, isButtonDisabled && styles.startButtonTextDisabled]}>Commencer l'entraînement</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
@@ -103,3 +107,5 @@ const styles = StyleSheet.create({
   themeItemSelected: { backgroundColor: '#289938' },
   selectedThemesText: { marginTop: 20, fontSize: 16, fontWeight: 'bold', color: '#333' },
 });
+
+export default TrainingScreen;
