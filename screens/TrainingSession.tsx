@@ -123,46 +123,15 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   questionContainer: { width: '100%' },
   questionText: { fontSize: 18, marginBottom: 20, textAlign: 'center' },
-  optionButton: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    marginVertical: 5,
-    width: '100%',
-    alignItems: 'center',
-  },
-  selectedOptionButton: {
-    backgroundColor: '#289938',
-    borderColor: '#289938',
-  },
+  optionButton: { padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 5, marginVertical: 5, width: '100%', alignItems: 'center' },
+  selectedOptionButton: { backgroundColor: '#289938', borderColor: '#289938' },
   optionText: { fontSize: 16, textAlign: 'center' },
-  nextButton: {
-    padding: 15,
-    backgroundColor: '#3099EF',
-    borderRadius: 5,
-    width: '100%',
-    alignItems: 'center',
-  },
+  nextButton: { padding: 15, backgroundColor: '#3099EF', borderRadius: 5, width: '100%', alignItems: 'center' },
   nextButtonText: { color: '#FFFFFF', fontSize: 16 },
-  progressBarContainer: {
-    width: '100%',
-    height: 20,
-    backgroundColor: '#e0e0e0',
-    borderRadius: 5,
-    overflow: 'hidden',
-    marginBottom: 10,
-  },
-  progressBar: {
-    height: '100%',
-    backgroundColor: '#3099EF',
-    borderRadius: 5,
-  },
-  progressText: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
+  progressBarContainer: { width: '100%', height: 20, backgroundColor: '#e0e0e0', borderRadius: 5, overflow: 'hidden', marginBottom: 10 },
+  progressBar: { height: '100%', backgroundColor: '#3099EF', borderRadius: 5 },
+  progressText: { fontSize: 16, marginBottom: 20, textAlign: 'center' },
 });
+
 
 export default TrainingSession;
