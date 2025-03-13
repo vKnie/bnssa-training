@@ -1,9 +1,10 @@
 // HomeScreen.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ViewStyle, TextStyle, ImageStyle } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Button from '../components/Button';
 
-// Définir les types pour les props de navigation
+// Définition des types pour la navigation
 type RootStackParamList = {
   Examen: undefined;
   Entrainement: undefined;
@@ -17,37 +18,39 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const buttons = [
+    { title: "Examen", screen: "Examen", color: "#3099EF", icon: "assignment" },
+    { title: "Entrainement", screen: "Entrainement", color: "#4CAF50", icon: "fitness-center" },
+    { title: "Historique", screen: "Historique", color: "#FF9800", icon: "history" },
+  ];
+
   return (
     <View style={styles.screenContainer}>
       <Image source={require('../assets/icons/logo_app_512.png')} style={styles.appLogo} resizeMode="contain" />
       <Text style={styles.appTitle}>BNSSA Training</Text>
-      <TouchableOpacity style={styles.navigationButton} onPress={() => navigation.navigate('Examen')}>
-        <Text style={styles.buttonLabel}>Examen</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigationButton} onPress={() => navigation.navigate('Entrainement')}>
-        <Text style={styles.buttonLabel}>Entrainement</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.navigationButton} onPress={() => navigation.navigate('Historique')}>
-        <Text style={styles.buttonLabel}>Historique</Text>
-      </TouchableOpacity>
+
+      <View style={styles.buttonContainer}>
+        {buttons.map(({ title, screen, color, icon }) => (
+          <Button
+            key={screen}
+            title={title}
+            onPress={() => navigation.navigate(screen as keyof RootStackParamList)}
+            backgroundColor={color}
+            textColor="#FFFFFF"
+            width={250}
+            iconName={icon}
+          />
+        ))}
+      </View>
     </View>
   );
 };
 
-interface Styles {
-  screenContainer: ViewStyle;
-  appTitle: TextStyle;
-  navigationButton: ViewStyle;
-  buttonLabel: TextStyle;
-  appLogo: ImageStyle;
-}
-
-const styles = StyleSheet.create<Styles>({
+const styles = StyleSheet.create({
   screenContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   appTitle: { fontSize: 20, marginBottom: 20 },
-  navigationButton: { backgroundColor: '#3099EF', padding: 10, borderRadius: 5, marginVertical: 5, width: '60%', alignItems: 'center' },
-  buttonLabel: { color: '#FFFFFF',  fontSize: 16 },
   appLogo: { width: 128, height: 128, marginBottom: 20 },
+  buttonContainer: { gap: 10, alignItems: 'center' }, // Utilisation de `gap` pour espacer les boutons
 });
 
 export default HomeScreen;
