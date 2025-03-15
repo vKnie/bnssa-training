@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet, DimensionValue } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface ButtonProps {
@@ -7,13 +7,14 @@ interface ButtonProps {
   onPress: () => void;
   backgroundColor: string;
   textColor: string;
-  width?: number;
-  iconName?: string; // Nouveau prop pour l'icône
+  width?: string | number;
+  iconName?: string;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({ title, onPress, backgroundColor, textColor, width, iconName }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor, width }]}>
+    <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor, width: width as DimensionValue }]}>
       <View style={styles.buttonContent}>
         {iconName && <Icon name={iconName} size={24} color={textColor} style={styles.icon} />}
         <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
@@ -34,7 +35,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
   icon: {
     marginRight: 8, // Espacement entre l'icône et le texte
