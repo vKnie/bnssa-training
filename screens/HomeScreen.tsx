@@ -20,8 +20,8 @@ interface HomeScreenProps {
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const buttons = [
     { title: "Examen", screen: "Examen", color: "#3099EF", icon: "assignment" },
-    { title: "Entrainement", screen: "Entrainement", color: "#4CAF50", icon: "fitness-center" },
-    { title: "Historique", screen: "Historique", color: "#FF9800", icon: "history" },
+    { title: "Entrainement", screen: "Entrainement", color: "#3099EF", icon: "fitness-center" },
+    { title: "Historique", screen: "Historique", color: "#3099EF", icon: "history" },
   ];
 
   return (
