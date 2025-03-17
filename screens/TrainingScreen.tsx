@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
@@ -17,26 +17,30 @@ interface Theme {
   questions: Question[];
 }
 
-type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Entrainement'>;
+type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TrainingScreen'>;
 
 const TrainingScreen: React.FC = () => {
   const [themes] = useState<Theme[]>(questionsData.themes);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const navigation = useNavigation<TrainingScreenNavigationProp>();
 
-  const isButtonDisabled = selectedThemes.length === 0;
+  const isButtonDisabled = useMemo(() => selectedThemes.length === 0, [selectedThemes]);
 
-  const toggleSelection = (themeName: string) => {
+  const toggleSelection = useCallback((themeName: string) => {
     setSelectedThemes(prevSelected =>
       prevSelected.includes(themeName)
         ? prevSelected.filter(name => name !== themeName)
         : [...prevSelected, themeName]
     );
-  };
+  }, []);
 
-  const startTraining = () => {
+  const startTraining = useCallback(() => {
     navigation.navigate('TrainingSession', { selectedThemes });
-  };
+  }, [navigation, selectedThemes]);
+
+  useLayoutEffect(() => {
+      navigation.setOptions({ title: 'Entrainement' });
+  }, [navigation]);
 
   return (
     <View style={styles.screenContainer}>
@@ -51,7 +55,7 @@ const TrainingScreen: React.FC = () => {
             key={index}
             title={theme_name}
             onPress={() => toggleSelection(theme_name)}
-            backgroundColor={selectedThemes.includes(theme_name) ? '#4CAF50' : '#d3d3d3'}
+            backgroundColor={selectedThemes.includes(theme_name) ? '#3099EF' : '#d3d3d3'}
             textColor={selectedThemes.includes(theme_name) ? '#fff' : '#000'}
             width={'100%'}
           />
@@ -75,11 +79,11 @@ const TrainingScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'space-between' },
-  header: { alignItems: 'center', width: '100%', paddingVertical: 20 },
+  header: { alignItems: 'center', width: '100%' },
   titleText: { color: '#000', fontSize: 20, textAlign: 'center' },
   descriptionText: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
   buttonContainer: { flex: 1, alignItems: 'center', width: '100%', justifyContent: 'center', gap: 10 },
-  footer: { width: '100%', paddingVertical: 20 },
+  footer: { width: '100%' },
 });
 
 export default TrainingScreen;

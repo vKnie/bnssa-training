@@ -1,4 +1,3 @@
-// TrainingSession.tsx - Mise à jour pour enregistrer les résultats dans SQLite
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
@@ -19,6 +18,8 @@ interface Question {
 
 const TrainingSession: React.FC<{ route: TrainingSessionScreenRouteProp }> = ({ route }) => {
   const { selectedThemes } = route.params;
+  const navigation = useNavigation();
+
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -26,72 +27,94 @@ const TrainingSession: React.FC<{ route: TrainingSessionScreenRouteProp }> = ({ 
   const navigation = useNavigation();
 
   useEffect(() => {
-    const initializeDatabase = async () => {
-      const db = await dbPromise;
-      db.transaction((tx: SQLite.Transaction) => {
-        tx.executeSql(
-          'CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, mode TEXT, score INTEGER, total INTEGER, date TEXT);'
-        );
-      });
-    };
-
-    initializeDatabase();
-  }, []);
-
-  useEffect(() => {
     const allQuestions = getQuestionsByThemes(selectedThemes);
     const shuffledQuestions = shuffleQuestions(allQuestions);
     setSelectedQuestions(shuffledQuestions.slice(0, 40));
-  }, [selectedThemes]);
+
+    const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
+    return () => unsubscribe();
+  }, [navigation, selectedThemes]);
 
   const getQuestionsByThemes = (themes: string[]) => {
     return themes.flatMap(themeName =>
       questionsData.themes.find(theme => theme.theme_name === themeName)?.questions || []
     );
-  };
+  }, [selectedThemes]);
 
   const shuffleQuestions = (questions: Question[]) => {
     return questions.sort(() => 0.5 - Math.random());
   };
 
+  const handleBeforeRemove = (e: any) => {
+    e.preventDefault();
+    Alert.alert(
+      'Quitter l\'entraînement',
+      'Êtes-vous sûr de vouloir quitter l\'entraînement ?',
+      [
+        { text: 'Non', style: 'cancel' },
+        { text: 'Oui', style: 'destructive', onPress: () => navigation.dispatch(e.data.action) },
+      ]
+    );
+  };
+
+  const handleAnswerSelection = (answer: string) => {
+    setSelectedAnswers(prevAnswers =>
+      prevAnswers.includes(answer)
+        ? prevAnswers.filter(a => a !== answer)
+        : [...prevAnswers, answer]
+    );
+  };
+
   const handleNextQuestion = () => {
+    const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
+      selectedAnswers.includes(answer)
+    );
+    
+    if (isCorrect) setScore(prev => prev + 1);
+
     if (currentQuestionIndex < selectedQuestions.length - 1) {
-      const isCorrect = selectedQuestions[currentQuestionIndex].correct_answers.every(answer =>
-        selectedAnswers.includes(answer)
-      );
-      setScore(prevScore => (isCorrect ? prevScore + 1 : prevScore));
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswers([]);
     } else {
-      saveResult();
+      Alert.alert(
+        'Questionnaire terminé !',
+        `Votre score est de ${score}/${selectedQuestions.length}`,
+        [{ text: 'OK', onPress: () => navigation.goBack() }]
+      );
     }
   };
 
-  const saveResult = () => {
-    const date = new Date().toISOString();
-    dbPromise.then(db => {
-      db.transaction((tx: SQLite.Transaction) => {
-        tx.executeSql(
-          'INSERT INTO history (mode, score, total, date) VALUES (?, ?, ?, ?)',
-          ['entrainement', score, selectedQuestions.length, date],
-          () => console.log('Résultat enregistré !'),
-          (error: any) => {
-            console.log(error);
-          }
-        );
-      });
-    });
-    Alert.alert('Entraînement terminé !', `Votre score est de ${score}/${selectedQuestions.length}`, [
-      { text: 'OK', onPress: () => navigation.goBack() }
-    ]);
-  };
+  const currentQuestion = selectedQuestions[currentQuestionIndex];
+  const progress = (currentQuestionIndex + 1) / selectedQuestions.length;
 
   return (
     <View style={styles.container}>
+      <View style={styles.progressBarContainer}>
+        <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
+      </View>
+      <Text style={styles.progressText}>
+        {currentQuestionIndex + 1}/{selectedQuestions.length}
+      </Text>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {selectedQuestions[currentQuestionIndex] && (
           <View style={styles.questionContainer}>
-            <Text style={styles.questionText}>{selectedQuestions[currentQuestionIndex].question}</Text>
+            <Text style={styles.questionText}>{currentQuestion.question}</Text>
+            {currentQuestion.options.map((option, optionIndex) => {
+              const isSelected = selectedAnswers.includes(option);
+              return (
+                <View key={optionIndex} style={styles.optionButton}>
+                  <Button
+                    title={option}
+                    onPress={() => handleAnswerSelection(option)}
+                    backgroundColor={isSelected ? '#4CAF50' : 'transparent'}
+                    textColor={isSelected ? '#FFFFFF' : '#000'}
+                    width="100%"
+                    borderColor={isSelected ? 'transparent' : '#ccc'}
+                    borderWidth={isSelected ? 0 : 1}
+                  />
+                </View>
+              );
+            })}
           </View>
         )}
       </ScrollView>
