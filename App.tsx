@@ -7,28 +7,34 @@ import ExamenScreen from './screens/ExamenScreen';
 import TrainingScreen from './screens/TrainingScreen';
 import HistoricScreen from './screens/HistoricScreen';
 import TrainingSession from './screens/TrainingSession';
+import ExamenSession from './screens/ExamenSession';
 
 // Définir les types pour les paramètres de navigation
 export type RootStackParamList = {
-  Accueil: undefined;
-  Examen: undefined;
-  Entrainement: undefined;
+  HomeScreen: undefined;
+  ExamenScreen: undefined;
+  TrainingScreen: undefined;
   Historique: undefined;
   TrainingSession: { selectedThemes: string[] };
+  ExamenSession: undefined;
 };
 
+// Créer une instance du Stack Navigator
 const Stack = createStackNavigator<RootStackParamList>();
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Accueil" component={HomeScreen} />
-        <Stack.Screen name="Examen" component={ExamenScreen} />
-        <Stack.Screen name="Entrainement" component={TrainingScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="ExamenScreen" component={ExamenScreen} />
+        <Stack.Screen name="TrainingScreen" component={TrainingScreen} />
         <Stack.Screen name="Historique" component={HistoricScreen} />
         <Stack.Screen name="TrainingSession" component={TrainingSession} />
+        <Stack.Screen name="ExamenSession" component={ExamenSession} />
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default App;

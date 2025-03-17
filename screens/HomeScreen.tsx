@@ -1,13 +1,12 @@
-// HomeScreen.tsx
-import React from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Button from '../components/Button';
 
 // Définition des types pour la navigation
 type RootStackParamList = {
-  Examen: undefined;
-  Entrainement: undefined;
+  ExamenScreen: undefined;
+  TrainingScreen: undefined;
   Historique: undefined;
 };
 
@@ -19,10 +18,18 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const buttons = [
-    { title: "Examen", screen: "Examen", color: "#3099EF", icon: "assignment" },
-    { title: "Entrainement", screen: "Entrainement", color: "#4CAF50", icon: "fitness-center" },
-    { title: "Historique", screen: "Historique", color: "#FF9800", icon: "history" },
+    { title: "Examen", screen: "ExamenScreen", color: "#3099EF", icon: "assignment" },
+    { title: "Entrainement", screen: "TrainingScreen", color: "#3099EF", icon: "fitness-center" },
+    { title: "Historique", screen: "Historique", color: "#3099EF", icon: "history" },
   ];
+
+  const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
+    navigation.navigate(screen);
+  }, [navigation]);
+
+  useLayoutEffect(() => {
+      navigation.setOptions({ title: 'Accueil' });
+  }, [navigation]);
 
   return (
     <View style={styles.screenContainer}>
@@ -34,7 +41,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Button
             key={screen}
             title={title}
-            onPress={() => navigation.navigate(screen as keyof RootStackParamList)}
+            onPress={() => handleNavigation(screen as keyof RootStackParamList)}
             backgroundColor={color}
             textColor="#FFFFFF"
             width={250}

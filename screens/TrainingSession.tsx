@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
@@ -15,75 +15,76 @@ interface Question {
 
 const TrainingSession: React.FC<{ route: TrainingSessionScreenRouteProp }> = ({ route }) => {
   const { selectedThemes } = route.params;
+  const navigation = useNavigation();
+
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [score, setScore] = useState(0);
-  const navigation = useNavigation();
 
-  useEffect(() => {
-    const allQuestions = getQuestionsByThemes(selectedThemes);
-    const shuffledQuestions = shuffleQuestions(allQuestions);
-    setSelectedQuestions(shuffledQuestions.slice(0, 40));
+  // Définir le titre de la page
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: 'Session d\'entrainement' });
+  }, [navigation]);
 
-    const unsubscribe = navigation.addListener('beforeRemove', handleBeforeRemove);
-    return () => unsubscribe();
-  }, [navigation, selectedThemes]);
-
-  const getQuestionsByThemes = (themes: string[]) => {
-    return themes.flatMap(themeName =>
+  // Sélectionner et mélanger les questions
+  const allQuestions = useMemo(() => {
+    return selectedThemes.flatMap(themeName =>
       questionsData.themes.find(theme => theme.theme_name === themeName)?.questions || []
     );
-  };
+  }, [selectedThemes]);
 
-  const shuffleQuestions = (questions: Question[]) => {
-    return questions.sort(() => 0.5 - Math.random());
-  };
+  useEffect(() => {
+    const shuffledQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 40);
+    setSelectedQuestions(shuffledQuestions);
 
-  const handleBeforeRemove = (e: any) => {
-    e.preventDefault();
-    Alert.alert(
-      'Quitter l\'entraînement',
-      'Êtes-vous sûr de vouloir quitter l\'entraînement ?',
-      [
-        { text: 'Non', style: 'cancel' },
-        { text: 'Oui', style: 'destructive', onPress: () => navigation.dispatch(e.data.action) },
-      ]
-    );
-  };
+    const unsubscribe = navigation.addListener('beforeRemove', e => {
+      e.preventDefault();
+      Alert.alert(
+        'Quitter l\'entraînement',
+        'Êtes-vous sûr de vouloir quitter l\'entraînement ?',
+        [
+          { text: 'Non', style: 'cancel' },
+          { text: 'Oui', style: 'destructive', onPress: () => navigation.dispatch(e.data.action) },
+        ]
+      );
+    });
+
+    return () => unsubscribe();
+  }, [navigation, allQuestions]);
 
   const handleAnswerSelection = (answer: string) => {
-    setSelectedAnswers(prevAnswers =>
-      prevAnswers.includes(answer)
-        ? prevAnswers.filter(a => a !== answer)
-        : [...prevAnswers, answer]
+    setSelectedAnswers(prev =>
+      prev.includes(answer) ? prev.filter(a => a !== answer) : [...prev, answer]
     );
   };
 
   const handleNextQuestion = () => {
+    const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
+      selectedAnswers.includes(answer)
+    );
+    
+    if (isCorrect) setScore(prev => prev + 1);
+
     if (currentQuestionIndex < selectedQuestions.length - 1) {
-      const isCorrect = selectedQuestions[currentQuestionIndex].correct_answers.every(answer =>
-        selectedAnswers.includes(answer)
-      );
-      setScore(prevScore => (isCorrect ? prevScore + 1 : prevScore));
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswers([]);
     } else {
       Alert.alert(
         'Questionnaire terminé !',
-        `Votre score est de ${score}/${selectedQuestions.length}`,
+        `Votre score est de ${score + (isCorrect ? 1 : 0)}/${selectedQuestions.length}`,
         [{ text: 'OK', onPress: () => navigation.goBack() }]
       );
     }
   };
 
   const currentQuestion = selectedQuestions[currentQuestionIndex];
-  const progress = (currentQuestionIndex + 1) / selectedQuestions.length;
+  const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
 
   return (
     <View style={styles.container}>
       <View style={styles.progressBarContainer}>
-        <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
+        <View style={[styles.progressBar, { width: `${progress}%` }]} />
       </View>
       <Text style={styles.progressText}>
         {currentQuestionIndex + 1}/{selectedQuestions.length}
@@ -92,22 +93,19 @@ const TrainingSession: React.FC<{ route: TrainingSessionScreenRouteProp }> = ({ 
         {currentQuestion && (
           <View style={styles.questionContainer}>
             <Text style={styles.questionText}>{currentQuestion.question}</Text>
-            {currentQuestion.options.map((option, optionIndex) => {
-              const isSelected = selectedAnswers.includes(option);
-              return (
-                <View key={optionIndex} style={styles.optionButton}>
-                  <Button
-                    title={option}
-                    onPress={() => handleAnswerSelection(option)}
-                    backgroundColor={isSelected ? '#4CAF50' : 'transparent'}
-                    textColor={isSelected ? '#FFFFFF' : '#000'}
-                    width="100%"
-                    borderColor={isSelected ? 'transparent' : '#ccc'}
-                    borderWidth={isSelected ? 0 : 1}
-                  />
-                </View>
-              );
-            })}
+            {currentQuestion.options.map((option, index) => (
+              <View key={index} style={styles.optionButton}>
+                <Button
+                  title={option}
+                  onPress={() => handleAnswerSelection(option)}
+                  backgroundColor={selectedAnswers.includes(option) ? '#4CAF50' : '#FFFFFF'}
+                  textColor={selectedAnswers.includes(option) ? '#FFFFFF' : '#000'}
+                  width="100%"
+                  borderColor={selectedAnswers.includes(option) ? '#4CAF50' : '#ccc'}
+                  borderWidth={selectedAnswers.includes(option) ? 1 : 1}
+                />
+              </View>
+            ))}
           </View>
         )}
       </ScrollView>
