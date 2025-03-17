@@ -51,7 +51,7 @@ const TrainingScreen: React.FC = () => {
             key={index}
             title={theme_name}
             onPress={() => toggleSelection(theme_name)}
-            backgroundColor={selectedThemes.includes(theme_name) ? '#4CAF50' : '#d3d3d3'}
+            backgroundColor={selectedThemes.includes(theme_name) ? '#3099EF' : '#d3d3d3'}
             textColor={selectedThemes.includes(theme_name) ? '#fff' : '#000'}
             width={'100%'}
           />
@@ -75,11 +75,11 @@ const TrainingScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'space-between' },
-  header: { alignItems: 'center', width: '100%', paddingVertical: 20 },
+  header: { alignItems: 'center', width: '100%' },
   titleText: { color: '#000', fontSize: 20, textAlign: 'center' },
   descriptionText: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
   buttonContainer: { flex: 1, alignItems: 'center', width: '100%', justifyContent: 'center', gap: 10 },
-  footer: { width: '100%', paddingVertical: 20 },
+  footer: { width: '100%' },
 });
 
 export default TrainingScreen;
