@@ -7,6 +7,7 @@ import ExamenScreen from './screens/ExamenScreen';
 import TrainingScreen from './screens/TrainingScreen';
 import HistoricScreen from './screens/HistoricScreen';
 import TrainingSession from './screens/TrainingSession';
+import ExamenSession from './screens/ExamenSession';
 
 // Définir les types pour les paramètres de navigation
 export type RootStackParamList = {
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Entrainement: undefined;
   Historique: undefined;
   TrainingSession: { selectedThemes: string[] };
+  ExamenSession: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -28,6 +30,7 @@ export default function App() {
         <Stack.Screen name="Entrainement" component={TrainingScreen} />
         <Stack.Screen name="Historique" component={HistoricScreen} />
         <Stack.Screen name="TrainingSession" component={TrainingSession} />
+        <Stack.Screen name="ExamenSession" component={ExamenSession} />
       </Stack.Navigator>
     </NavigationContainer>
   );
