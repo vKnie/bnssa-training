@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
@@ -17,26 +17,30 @@ interface Theme {
   questions: Question[];
 }
 
-type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Entrainement'>;
+type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TrainingScreen'>;
 
 const TrainingScreen: React.FC = () => {
   const [themes] = useState<Theme[]>(questionsData.themes);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const navigation = useNavigation<TrainingScreenNavigationProp>();
 
-  const isButtonDisabled = selectedThemes.length === 0;
+  const isButtonDisabled = useMemo(() => selectedThemes.length === 0, [selectedThemes]);
 
-  const toggleSelection = (themeName: string) => {
+  const toggleSelection = useCallback((themeName: string) => {
     setSelectedThemes(prevSelected =>
       prevSelected.includes(themeName)
         ? prevSelected.filter(name => name !== themeName)
         : [...prevSelected, themeName]
     );
-  };
+  }, []);
 
-  const startTraining = () => {
+  const startTraining = useCallback(() => {
     navigation.navigate('TrainingSession', { selectedThemes });
-  };
+  }, [navigation, selectedThemes]);
+
+  useLayoutEffect(() => {
+      navigation.setOptions({ title: 'Entrainement' });
+  }, [navigation]);
 
   return (
     <View style={styles.screenContainer}>

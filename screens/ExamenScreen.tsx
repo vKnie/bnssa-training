@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Button from '../components/Button';
@@ -6,15 +6,18 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Entrainement'>;
+type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenScreen'>;
 
-export default function ExamenScreen() {
-
+const ExamenScreen: React.FC = () => {
   const navigation = useNavigation<TrainingScreenNavigationProp>();
 
-  const startTraining = () => {
-    navigation.navigate('ExamenSession'); // Remplacez 'TrainingScreen' par le nom de votre écran cible
-  };
+  const startTraining = useCallback(() => {
+    navigation.navigate('ExamenSession');
+  }, [navigation]);
+
+  useLayoutEffect(() => {
+      navigation.setOptions({ title: 'Examen' });
+  }, [navigation]);
 
   return (
     <View style={styles.screenContainer}>
@@ -58,7 +61,7 @@ export default function ExamenScreen() {
 
       <View style={styles.footer}>
         <Button
-          title="Commencer l'entraînement"
+          title="Commencer l'examen"
           onPress={startTraining}
           backgroundColor='#007AFF'
           textColor='#FFF'
@@ -66,17 +69,18 @@ export default function ExamenScreen() {
           iconName="play-arrow"
         />
       </View>
-
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   screenContainer: { flex: 1, alignItems: 'center', padding: 20, backgroundColor: '#F9F9F9' },
   header: { alignItems: 'center', width: '100%', marginBottom: 20 },
   titleText: { color: '#333', fontSize: 24, textAlign: 'center', fontWeight: 'bold' },
-  rulesContainer: { width: '100%', paddingHorizontal: 10 },
+  rulesContainer: { width: '100%', padding: 10 },
   ruleItem: { flexDirection: 'row', alignItems: 'center', marginBottom: 10, backgroundColor: '#FFF', padding: 10, borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.1, shadowOffset: { width: 0, height: 2 }, shadowRadius: 4, elevation: 3 },
   ruleText: { color: '#333', fontSize: 14, marginLeft: 10, flexShrink: 1 },
   footer: { width: '100%' },
 });
+
+export default ExamenScreen;
