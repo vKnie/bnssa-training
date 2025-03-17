@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
-import { RootStackParamList } from '../App'; // Importer le type depuis App.tsx
+import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
+import Button from '../components/Button';
 
 interface Question {
   question: string;
@@ -21,26 +22,9 @@ type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Ent
 const TrainingScreen: React.FC = () => {
   const [themes] = useState<Theme[]>(questionsData.themes);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const animationHeight = useState(new Animated.Value(0))[0];
   const navigation = useNavigation<TrainingScreenNavigationProp>();
 
-  const { height: screenHeight } = Dimensions.get('window');
-  const maxDropdownHeight = screenHeight * 0.5;
-  const itemHeight = 50;
-
-  const toggleDropdown = () => {
-    const newState = !isExpanded;
-    const calculatedHeight = newState ? Math.min(themes.length * itemHeight, maxDropdownHeight) : 0;
-
-    Animated.timing(animationHeight, {
-      toValue: calculatedHeight,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-
-    setIsExpanded(newState);
-  };
+  const isButtonDisabled = selectedThemes.length === 0;
 
   const toggleSelection = (themeName: string) => {
     setSelectedThemes(prevSelected =>
@@ -50,62 +34,52 @@ const TrainingScreen: React.FC = () => {
     );
   };
 
-  const isButtonDisabled = selectedThemes.length === 0;
-
   const startTraining = () => {
     navigation.navigate('TrainingSession', { selectedThemes });
   };
 
   return (
     <View style={styles.screenContainer}>
-      <Text style={styles.titleText}>Sélectionner les thèmes</Text>
-      <Text style={styles.descriptionText}>*Sélectionner au moins un thème pour commencer un entraînement.</Text>
+      <View style={styles.header}>
+        <Text style={styles.titleText}>Sélectionner les thèmes</Text>
+        <Text style={styles.descriptionText}>*Sélectionner au moins un thème pour commencer un entraînement.</Text>
+      </View>
 
-      <TouchableOpacity style={styles.dropdownToggleButton} onPress={toggleDropdown}>
-        <Text style={styles.dropdownToggleText}>{isExpanded ? "Réduire" : "Déployer"}</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        {themes.map(({ theme_name }, index) => (
+          <Button
+            key={index}
+            title={theme_name}
+            onPress={() => toggleSelection(theme_name)}
+            backgroundColor={selectedThemes.includes(theme_name) ? '#4CAF50' : '#d3d3d3'}
+            textColor={selectedThemes.includes(theme_name) ? '#fff' : '#000'}
+            width={'100%'}
+          />
+        ))}
+      </View>
 
-      <Animated.View style={[styles.dropdownListContainer, { height: animationHeight }]}>
-        <View style={styles.themeListBox}>
-          {themes.map(({ theme_name }, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => toggleSelection(theme_name)}
-              style={[styles.themeItemContainer, selectedThemes.includes(theme_name) && styles.themeItemSelected]}
-            >
-              <Text style={styles.themeItemText}>{theme_name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </Animated.View>
-
-      <TouchableOpacity
-        style={[styles.startButton, isButtonDisabled && styles.startButtonDisabled]}
-        onPress={startTraining}
-        disabled={isButtonDisabled}
-      >
-        <Text style={[styles.startButtonText, isButtonDisabled && styles.startButtonTextDisabled]}>Commencer l'entraînement</Text>
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        <Button
+          title="Commencer l'entraînement"
+          onPress={startTraining}
+          backgroundColor={isButtonDisabled ? '#ccc' : '#3099EF'}
+          textColor={isButtonDisabled ? '#999' : '#fff'}
+          width={'100%'}
+          iconName="play-arrow"
+          disabled={isButtonDisabled}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'center' },
+  screenContainer: { flex: 1, alignItems: 'center', padding: 20, justifyContent: 'space-between' },
+  header: { alignItems: 'center', width: '100%', paddingVertical: 20 },
   titleText: { color: '#000', fontSize: 20, textAlign: 'center' },
-  startButton: { backgroundColor: '#3099EF', padding: 10, borderRadius: 5, marginVertical: 5, width: '100%', alignItems: 'center' },
-  startButtonDisabled: { backgroundColor: '#ccc' },
-  startButtonText: { color: '#FFFFFF', fontSize: 16 },
-  startButtonTextDisabled: { color: '#999' },
   descriptionText: { color: '#000', fontSize: 13, textAlign: 'center', marginBottom: 20 },
-  dropdownToggleButton: { width: '100%', padding: 10, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
-  dropdownToggleText: { color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center' },
-  dropdownListContainer: { overflow: 'hidden', width: '100%', borderRadius: 5, marginTop: 10 },
-  themeListBox: { backgroundColor: '#ffffff', borderRadius: 5, borderWidth: 1, borderColor: '#ccc', elevation: 3 },
-  themeItemContainer: { paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' },
-  themeItemText: { fontSize: 16, paddingHorizontal: 10 },
-  themeItemSelected: { backgroundColor: '#289938' },
-  selectedThemesText: { marginTop: 20, fontSize: 16, fontWeight: 'bold', color: '#333' },
+  buttonContainer: { flex: 1, alignItems: 'center', width: '100%', justifyContent: 'center', gap: 10 },
+  footer: { width: '100%', paddingVertical: 20 },
 });
 
 export default TrainingScreen;
