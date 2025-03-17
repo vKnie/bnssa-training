@@ -98,11 +98,11 @@ const TrainingSession: React.FC<{ route: TrainingSessionScreenRouteProp }> = ({ 
                 <Button
                   title={option}
                   onPress={() => handleAnswerSelection(option)}
-                  backgroundColor={selectedAnswers.includes(option) ? '#4CAF50' : 'transparent'}
+                  backgroundColor={selectedAnswers.includes(option) ? '#4CAF50' : '#FFFFFF'}
                   textColor={selectedAnswers.includes(option) ? '#FFFFFF' : '#000'}
                   width="100%"
-                  borderColor={selectedAnswers.includes(option) ? 'transparent' : '#ccc'}
-                  borderWidth={selectedAnswers.includes(option) ? 0 : 1}
+                  borderColor={selectedAnswers.includes(option) ? '#4CAF50' : '#ccc'}
+                  borderWidth={selectedAnswers.includes(option) ? 1 : 1}
                 />
               </View>
             ))}
