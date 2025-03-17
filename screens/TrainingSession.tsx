@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   questionContainer: { width: '100%' },
   questionText: { fontSize: 18, marginBottom: 20, textAlign: 'center' },
-  optionButton: { marginVertical: 5 },
+  optionButton: { padding: 5 },
   progressBarContainer: { width: '100%', height: 20, backgroundColor: '#e0e0e0', borderRadius: 5, overflow: 'hidden', marginBottom: 10 },
   progressBar: { height: '100%', backgroundColor: '#3099EF', borderRadius: 5 },
   progressText: { fontSize: 16, marginBottom: 20, textAlign: 'center' },
