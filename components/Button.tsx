@@ -10,11 +10,28 @@ interface ButtonProps {
   width?: string | number;
   iconName?: string;
   disabled?: boolean;
+  borderColor?: string;
+  borderWidth?: number;
 }
 
-const Button: React.FC<ButtonProps> = ({ title, onPress, backgroundColor, textColor, width, iconName }) => {
+const Button: React.FC<ButtonProps> = ({
+  title,
+  onPress,
+  backgroundColor,
+  textColor,
+  width,
+  iconName,
+  borderColor = 'transparent',
+  borderWidth = 0,
+}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.button, { backgroundColor, width: width as DimensionValue }]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.button,
+        { backgroundColor, width: width as DimensionValue, borderColor, borderWidth },
+      ]}
+    >
       <View style={styles.buttonContent}>
         {iconName && <Icon name={iconName} size={24} color={textColor} style={styles.icon} />}
         <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
@@ -28,6 +45,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
+    borderStyle: 'solid',
   },
   buttonContent: {
     flexDirection: 'row',
