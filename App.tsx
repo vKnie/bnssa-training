@@ -8,6 +8,7 @@ import TrainingScreen from './screens/TrainingScreen';
 import HistoricScreen from './screens/HistoricScreen';
 import TrainingSession from './screens/TrainingSession';
 import ExamenSession from './screens/ExamenSession';
+import ExamenSessionNote from './screens/ExamenSessionNote';
 
 // Définir les types pour les paramètres de navigation
 export type RootStackParamList = {
@@ -17,6 +18,12 @@ export type RootStackParamList = {
   Historique: undefined;
   TrainingSession: { selectedThemes: string[] };
   ExamenSession: undefined;
+  ExamenSessionNote: {
+    score: number;
+    totalQuestions: number;
+    selectedQuestions: Question[];
+    selectedAnswers: string[][];
+  };
 };
 
 // Créer une instance du Stack Navigator
@@ -32,6 +39,7 @@ const App: React.FC = () => {
         <Stack.Screen name="Historique" component={HistoricScreen} />
         <Stack.Screen name="TrainingSession" component={TrainingSession} />
         <Stack.Screen name="ExamenSession" component={ExamenSession} />
+        <Stack.Screen name="ExamenSessionNote" component={ExamenSessionNote} />
       </Stack.Navigator>
     </NavigationContainer>
   );
