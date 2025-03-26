@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useLayoutEffect, useMemo } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
 import Button from '../components/Button';
+import Timer from '../components/Timer';
 
 interface Question {
   question: string;
@@ -25,6 +26,8 @@ const ExamenSession: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [score, setScore] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(45 * 60); // 45 minutes in seconds
+  const [isExamFinished, setIsExamFinished] = useState(false);
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
@@ -38,6 +41,31 @@ const ExamenSession: React.FC = () => {
     setSelectedQuestions(shuffledQuestions);
   }, []);
 
+  useEffect(() => {
+    if (timeLeft > 0 && !isExamFinished) {
+      const timer = setTimeout(() => {
+        setTimeLeft(timeLeft - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      setIsExamFinished(true);
+      finishExam();
+    }
+  }, [timeLeft, isExamFinished]);
+
+  const finishExam = () => {
+    const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
+      selectedAnswers.includes(answer)
+    );
+    setScore(prev => prev + (isCorrect ? 1 : 0));
+
+    Alert.alert(
+      'Examen terminé !',
+      `Votre score est de ${score + (isCorrect ? 1 : 0)}/${selectedQuestions.length}`,
+      [{ text: 'OK', onPress: () => navigation.goBack() }]
+    );
+  };
+
   const handleAnswerSelection = (answer: string) => {
     setSelectedAnswers(prev =>
       prev.includes(answer) ? prev.filter(a => a !== answer) : [...prev, answer]
@@ -48,18 +76,14 @@ const ExamenSession: React.FC = () => {
     const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
       selectedAnswers.includes(answer)
     );
-    
+
     if (isCorrect) setScore(prev => prev + 1);
 
     if (currentQuestionIndex < selectedQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswers([]);
     } else {
-      Alert.alert(
-        'Examen terminé !',
-        `Votre score est de ${score + (isCorrect ? 1 : 0)}/${selectedQuestions.length}`,
-        [{ text: 'OK', onPress: () => navigation.goBack() }]
-      );
+      finishExam();
     }
   };
 
@@ -74,6 +98,7 @@ const ExamenSession: React.FC = () => {
       <Text style={styles.progressText}>
         {currentQuestionIndex + 1}/{selectedQuestions.length}
       </Text>
+      <Timer timeLeft={timeLeft} totalTime={45 * 60} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {currentQuestion && (
           <View style={styles.questionContainer}>
