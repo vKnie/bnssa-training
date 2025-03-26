@@ -16,8 +16,20 @@ const ExamenScreen: React.FC = () => {
   }, [navigation]);
 
   useLayoutEffect(() => {
-      navigation.setOptions({ title: 'Examen' });
+    navigation.setOptions({ title: 'Accueil Examen' });
+  
+    const handleBackPress = (e: any) => {
+      e.preventDefault();
+      navigation.navigate('HomeScreen');
+    };
+  
+    const unsubscribe = navigation.addListener('beforeRemove', handleBackPress);
+  
+    return () => {
+      unsubscribe();
+    };
   }, [navigation]);
+  
 
   return (
     <View style={styles.screenContainer}>

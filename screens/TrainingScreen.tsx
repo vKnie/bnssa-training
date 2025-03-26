@@ -39,7 +39,7 @@ const TrainingScreen: React.FC = () => {
   }, [navigation, selectedThemes]);
 
   useLayoutEffect(() => {
-      navigation.setOptions({ title: 'Entrainement' });
+      navigation.setOptions({ title: 'Accueil Entrainement' });
   }, [navigation]);
 
   return (

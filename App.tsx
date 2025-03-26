@@ -10,6 +10,13 @@ import TrainingSession from './screens/TrainingSession';
 import ExamenSession from './screens/ExamenSession';
 import ExamenSessionNote from './screens/ExamenSessionNote';
 
+interface Question {
+  question: string;
+  options: string[];
+  correct_answers: string[];
+  theme_name: string;
+}
+
 // Définir les types pour les paramètres de navigation
 export type RootStackParamList = {
   HomeScreen: undefined;

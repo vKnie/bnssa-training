@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { RootStackParamList } from '../App';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Question {
   question: string;
@@ -10,17 +12,13 @@ interface Question {
   theme_name: string;
 }
 
-interface ExamenSessionNoteProps {
-  score: number;
-  totalQuestions: number;
-  selectedQuestions: Question[];
-  selectedAnswers: string[][];
-}
+type ExamenSessionNoteScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenSessionNote'>;
+type ExamenSessionNoteScreenRouteProp = RouteProp<RootStackParamList, 'ExamenSessionNote'>;
 
 const ExamenSessionNote: React.FC = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { score, totalQuestions, selectedQuestions, selectedAnswers } = route.params as ExamenSessionNoteProps;
+  const navigation = useNavigation<ExamenSessionNoteScreenNavigationProp>();
+  const route = useRoute<ExamenSessionNoteScreenRouteProp>();
+  const { score, totalQuestions, selectedQuestions, selectedAnswers } = route.params;
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
@@ -29,6 +27,10 @@ const ExamenSessionNote: React.FC = () => {
     });
 
     return unsubscribe;
+  }, [navigation]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: 'Recapitulatif Examen' });
   }, [navigation]);
 
   return (
@@ -55,7 +57,12 @@ const ExamenSessionNote: React.FC = () => {
                 </View>
               );
             })}
-            <Text style={styles.userAnswerText}>Vos réponses : {selectedAnswers[index].join(', ')}</Text>
+            <Text style={styles.userAnswerLabel}>Vos réponses :</Text>
+            {selectedAnswers[index].map((answer, ansIndex) => (
+              <Text key={ansIndex} style={styles.userAnswerText}>
+                - {answer}
+              </Text>
+            ))}
           </View>
         ))}
       </ScrollView>
@@ -64,9 +71,9 @@ const ExamenSessionNote: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
-  title: { fontSize: 24, marginBottom: 20 },
-  scoreText: { fontSize: 18, marginBottom: 20 },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 10 },
+  title: { fontSize: 24, marginBottom: 10 },
+  scoreText: { fontSize: 18, marginBottom: 10 },
   scrollContainer: { flexGrow: 1, alignItems: 'center', paddingRight: 10 },
   questionContainer: {
     width: '98%',
@@ -77,13 +84,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
-  
   questionText: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
   answerContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
   answerText: { fontSize: 16, marginLeft: 10 },
   correctAnswer: { color: 'green' },
   wrongAnswer: { textDecorationLine: 'line-through', color: 'red' },
-  userAnswerText: { fontSize: 16, marginTop: 10, fontStyle: 'italic', color: 'gray' },
+  userAnswerLabel: { fontSize: 16, marginTop: 10, fontStyle: 'italic', color: 'gray' },
+  userAnswerText: { fontSize: 16, marginLeft: 10, color: 'gray' },
 });
 
 export default ExamenSessionNote;
