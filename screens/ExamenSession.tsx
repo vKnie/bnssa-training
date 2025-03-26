@@ -1,14 +1,17 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import questionsData from '../assets/data/questions.json';
 import Button from '../components/Button';
 import Timer from '../components/Timer';
+import { RootStackParamList } from '../App';
 
 interface Question {
   question: string;
   options: string[];
   correct_answers: string[];
+  theme_name: string;
 }
 
 interface Theme {
@@ -16,35 +19,45 @@ interface Theme {
   questions: Question[];
 }
 
+type ExamenSessionScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenSession'>;
+
 const getRandomElements = <T,>(arr: T[], num: number): T[] => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, num);
 };
 
 const ExamenSession: React.FC = () => {
+  const navigation = useNavigation<ExamenSessionScreenNavigationProp>();
+  
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
+  const [allSelectedAnswers, setAllSelectedAnswers] = useState<string[][]>([]);
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(45 * 60); // 45 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(45 * 60);
   const [isExamFinished, setIsExamFinished] = useState(false);
-  const navigation = useNavigation();
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: 'Session Examen' });
   }, [navigation]);
 
   useEffect(() => {
-    const themes: Theme[] = questionsData.themes;
-    let allQuestions: Question[] = themes.flatMap(theme => theme.questions);
-    const shuffledQuestions = getRandomElements(allQuestions, 40);
+    const themes: Theme[] = questionsData.themes as Theme[];
+    const allQuestions: Question[] = themes.flatMap(theme =>
+      theme.questions.map(question => ({
+        ...question,
+        theme_name: theme.theme_name,
+      }))
+    );
+    const shuffledQuestions = getRandomElements(allQuestions, 5);
     setSelectedQuestions(shuffledQuestions);
+    setAllSelectedAnswers(Array(shuffledQuestions.length).fill([]));
   }, []);
 
   useEffect(() => {
     if (timeLeft > 0 && !isExamFinished) {
       const timer = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft(prevTime => prevTime - 1);
       }, 1000);
       return () => clearTimeout(timer);
     } else if (timeLeft === 0) {
@@ -53,18 +66,21 @@ const ExamenSession: React.FC = () => {
     }
   }, [timeLeft, isExamFinished]);
 
-  const finishExam = () => {
+  const finishExam = useCallback(() => {
     const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
       selectedAnswers.includes(answer)
+    ) && selectedAnswers.every(answer =>
+      selectedQuestions[currentQuestionIndex]?.correct_answers.includes(answer)
     );
     setScore(prev => prev + (isCorrect ? 1 : 0));
 
-    Alert.alert(
-      'Examen terminé !',
-      `Votre score est de ${score + (isCorrect ? 1 : 0)}/${selectedQuestions.length}`,
-      [{ text: 'OK', onPress: () => navigation.goBack() }]
-    );
-  };
+    navigation.navigate('ExamenSessionNote', {
+      score: score + (isCorrect ? 1 : 0),
+      totalQuestions: selectedQuestions.length,
+      selectedQuestions,
+      selectedAnswers: allSelectedAnswers,
+    });
+  }, [currentQuestionIndex, selectedAnswers, selectedQuestions, score, navigation, allSelectedAnswers]);
 
   const handleAnswerSelection = (answer: string) => {
     setSelectedAnswers(prev =>
@@ -75,9 +91,17 @@ const ExamenSession: React.FC = () => {
   const handleNextQuestion = () => {
     const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
       selectedAnswers.includes(answer)
+    ) && selectedAnswers.every(answer =>
+      selectedQuestions[currentQuestionIndex]?.correct_answers.includes(answer)
     );
 
     if (isCorrect) setScore(prev => prev + 1);
+
+    setAllSelectedAnswers(prev => {
+      const newAnswers = [...prev];
+      newAnswers[currentQuestionIndex] = selectedAnswers;
+      return newAnswers;
+    });
 
     if (currentQuestionIndex < selectedQuestions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
@@ -102,6 +126,7 @@ const ExamenSession: React.FC = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {currentQuestion && (
           <View style={styles.questionContainer}>
+            <Text style={styles.themeText}>{currentQuestion.theme_name}</Text>
             <Text style={styles.questionText}>{currentQuestion.question}</Text>
             {currentQuestion.options.map((option, index) => (
               <View key={index} style={styles.optionButton}>
@@ -112,7 +137,7 @@ const ExamenSession: React.FC = () => {
                   textColor={selectedAnswers.includes(option) ? '#FFFFFF' : '#000'}
                   width="100%"
                   borderColor={selectedAnswers.includes(option) ? '#4CAF50' : '#ccc'}
-                  borderWidth={selectedAnswers.includes(option) ? 1 : 1}
+                  borderWidth={1}
                 />
               </View>
             ))}
@@ -136,6 +161,7 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   questionContainer: { width: '100%' },
   questionText: { fontSize: 18, marginBottom: 20, textAlign: 'center' },
+  themeText: { fontSize: 16, marginBottom: 10, textAlign: 'center', fontWeight: 'bold' },
   optionButton: { padding: 5 },
   progressBarContainer: { width: '100%', height: 20, backgroundColor: '#e0e0e0', borderRadius: 5, overflow: 'hidden', marginBottom: 10 },
   progressBar: { height: '100%', backgroundColor: '#3099EF', borderRadius: 5 },
