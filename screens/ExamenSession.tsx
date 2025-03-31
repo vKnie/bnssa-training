@@ -49,7 +49,7 @@ const ExamenSession: React.FC = () => {
         theme_name: theme.theme_name,
       }))
     );
-    const shuffledQuestions = getRandomElements(allQuestions, 5);
+    const shuffledQuestions = getRandomElements(allQuestions, 45);
     setSelectedQuestions(shuffledQuestions);
     setAllSelectedAnswers(Array(shuffledQuestions.length).fill([]));
   }, []);
@@ -126,7 +126,7 @@ const ExamenSession: React.FC = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {currentQuestion && (
           <View style={styles.questionContainer}>
-            <Text style={styles.themeText}>{currentQuestion.theme_name}</Text>
+            {/* <Text style={styles.themeText}>{currentQuestion.theme_name}</Text> */}
             <Text style={styles.questionText}>{currentQuestion.question}</Text>
             {currentQuestion.options.map((option, index) => (
               <View key={index} style={styles.optionButton}>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   questionContainer: { width: '100%' },
   questionText: { fontSize: 18, marginBottom: 20, textAlign: 'center' },
-  themeText: { fontSize: 16, marginBottom: 10, textAlign: 'center', fontWeight: 'bold' },
+  // themeText: { fontSize: 16, marginBottom: 10, textAlign: 'center', fontWeight: 'bold' },
   optionButton: { padding: 5 },
   progressBarContainer: { width: '100%', height: 20, backgroundColor: '#e0e0e0', borderRadius: 5, overflow: 'hidden', marginBottom: 10 },
   progressBar: { height: '100%', backgroundColor: '#3099EF', borderRadius: 5 },
