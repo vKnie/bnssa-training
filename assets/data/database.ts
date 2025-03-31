@@ -9,7 +9,7 @@ interface SQLiteError {
 // Définir un type pour les lignes de la base de données
 interface SQLiteRow {
   id: number;
-  mode: string;
+  session: string;
   correctAnswers: number;
   incorrectAnswers: number;
   timestamp: string;
@@ -37,7 +37,7 @@ export const createTables = () => {
     tx.executeSql(
       `CREATE TABLE IF NOT EXISTS results (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        mode TEXT NOT NULL,
+        session TEXT NOT NULL,
         correctAnswers INTEGER NOT NULL,
         incorrectAnswers INTEGER NOT NULL,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -50,12 +50,12 @@ export const createTables = () => {
 };
 
 // Fonction pour insérer un résultat
-export const insertResult = (mode: string, correctAnswers: number, incorrectAnswers: number) => {
+export const insertResult = (session: string, correctAnswers: number, incorrectAnswers: number) => {
   return new Promise<void>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `INSERT INTO results (mode, correctAnswers, incorrectAnswers) VALUES (?, ?, ?);`,
-        [mode, correctAnswers, incorrectAnswers],
+        `INSERT INTO results (session, correctAnswers, incorrectAnswers) VALUES (?, ?, ?);`,
+        [session, correctAnswers, incorrectAnswers],
         (_: unknown, result: SQLiteResults) => {  // Typage précis de `result`
           console.log("Résultat ajouté !");
           resolve();
