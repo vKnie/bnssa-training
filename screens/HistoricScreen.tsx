@@ -1,4 +1,3 @@
-// HistoricScreen.tsx - Mise à jour pour récupérer les résultats depuis SQLite
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import * as SQLite from 'react-native-sqlite-storage';
@@ -16,7 +15,6 @@ interface HistoryEntry {
   date: string;
 }
 
-// Ajout des nouvelles propriétés : legendFontColor et legendFontSize
 interface ChartData {
   name: string;
   population: number;
@@ -36,11 +34,13 @@ export default function HistoricScreen() {
   const fetchResults = async () => {
     try {
       const dbInstance = await db; // Résolution de la promesse
-      dbInstance.transaction(tx => {
+      dbInstance.transaction((tx) => {
         tx.executeSql(
           'SELECT * FROM history WHERE mode = ? ORDER BY date DESC LIMIT 10',
           [mode],
-          (_, { rows }) => {
+          (_: unknown, result) => {
+            // `result` est le SQLResultSet, TypeScript l'infère automatiquement
+            const rows = result.rows;
             const results: HistoryEntry[] = rows.raw(); // Type explicite pour `results`
             const correctAnswers = results.reduce((sum: number, entry: HistoryEntry) => sum + entry.score, 0);
             const totalQuestions = results.reduce((sum: number, entry: HistoryEntry) => sum + entry.total, 0);
@@ -51,17 +51,20 @@ export default function HistoricScreen() {
                 name: 'Bonnes réponses', 
                 population: correctAnswers, 
                 color: 'green', 
-                legendFontColor: '#000', // Couleur de la police du légende
-                legendFontSize: 12 // Taille de la police du légende
+                legendFontColor: '#000', 
+                legendFontSize: 12
               },
               { 
                 name: 'Mauvaises réponses', 
                 population: totalQuestions - correctAnswers, 
                 color: 'red', 
-                legendFontColor: '#000', // Couleur de la police du légende
-                legendFontSize: 12 // Taille de la police du légende
+                legendFontColor: '#000', 
+                legendFontSize: 12
               },
             ]);
+          },
+          (error) => {
+            console.error('Error executing SQL:', error);
           }
         );
       });

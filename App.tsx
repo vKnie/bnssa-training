@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -7,6 +7,7 @@ import ExamenScreen from './screens/ExamenScreen';
 import TrainingScreen from './screens/TrainingScreen';
 import HistoricScreen from './screens/HistoricScreen';
 import TrainingSession from './screens/TrainingSession';
+import ExamenSession from './screens/ExamenSession';
 
 // Définir les types pour les paramètres de navigation
 export type RootStackParamList = {
@@ -21,7 +22,7 @@ export type RootStackParamList = {
 // Créer une instance du Stack Navigator
 const Stack = createStackNavigator<RootStackParamList>();
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>

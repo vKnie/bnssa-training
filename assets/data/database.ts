@@ -1,10 +1,34 @@
 import SQLite from 'react-native-sqlite-storage';
 
+// Définir un type pour l'erreur SQLite
+interface SQLiteError {
+  code: string;
+  message: string;
+}
+
+// Définir un type pour les lignes de la base de données
+interface SQLiteRow {
+  id: number;
+  mode: string;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  timestamp: string;
+}
+
+// Définir un type pour les résultats SQL
+interface SQLiteResults {
+  rows: {
+    length: number;
+    item(index: number): SQLiteRow;
+    raw(): SQLiteRow[];
+  };
+}
+
 // Ouvrir ou créer la base de données SQLite
 const db = SQLite.openDatabase(
   { name: 'bnssa.db', location: 'default' },
   () => console.log("Base de données ouverte"),
-  (error) => console.error("Erreur lors de l'ouverture de la base de données", error)
+  (error: SQLiteError) => console.error("Erreur lors de l'ouverture de la base de données", error)
 );
 
 // Fonction pour créer la table des résultats
@@ -20,7 +44,7 @@ export const createTables = () => {
       );`,
       [],
       () => console.log("Table 'results' créée"),
-      (error) => console.error("Erreur lors de la création de la table", error)
+      (error: SQLiteError) => console.error("Erreur lors de la création de la table", error)
     );
   });
 };
@@ -32,11 +56,11 @@ export const insertResult = (mode: string, correctAnswers: number, incorrectAnsw
       tx.executeSql(
         `INSERT INTO results (mode, correctAnswers, incorrectAnswers) VALUES (?, ?, ?);`,
         [mode, correctAnswers, incorrectAnswers],
-        (_, result) => {
+        (_: unknown, result: SQLiteResults) => {  // Typage précis de `result`
           console.log("Résultat ajouté !");
           resolve();
         },
-        (_, error) => {
+        (_: unknown, error: SQLiteError) => {  // Typage précis de `error`
           console.error("Erreur lors de l'insertion", error);
           reject(error);
         }
@@ -47,13 +71,15 @@ export const insertResult = (mode: string, correctAnswers: number, incorrectAnsw
 
 // Fonction pour récupérer tous les résultats
 export const getAllResults = () => {
-  return new Promise<any[]>((resolve, reject) => {
+  return new Promise<SQLiteRow[]>((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
         `SELECT * FROM results ORDER BY timestamp DESC;`,
         [],
-        (_, results) => resolve(results.rows.raw()),
-        (_, error) => {
+        (_: unknown, results: SQLiteResults) => {  // Typage précis de `results`
+          resolve(results.rows.raw());
+        },
+        (_: unknown, error: SQLiteError) => {  // Typage précis de `error`
           console.error("Erreur lors de la récupération", error);
           reject(error);
         }
