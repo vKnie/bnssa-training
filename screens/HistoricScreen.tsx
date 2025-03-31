@@ -1,84 +1,99 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import { PieChart } from 'react-native-chart-kit';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../App';
+import { ScrollView } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
+type HistoricScreenRouteProp = RouteProp<RootStackParamList, 'Historique'>;
+
+const themes = ['Connaissance du milieu', 'Diplômes, compétences et obligations', 'Organisation administrative', 'Organisation de la sécurité', 'Surveillance et sécurité des activités spécifiques', 'Conduite à tenir en cas d’accident - Premiers secours'];
+
 export default function HistoricScreen() {
-  const [filterCategory, setFilterCategory] = useState('');
-  const [filter, setFilter] = useState('');
-  const [mode, setMode] = useState('examen');
-  const [showFilters, setShowFilters] = useState(true); // État pour afficher/masquer les filtres
+  const [mode, setMode] = useState('examen'); // 'examen' ou 'entrainement'
+  const [selectedTheme, setSelectedTheme] = useState<null | string>(null);
+  const [examenScore, setExamenScore] = useState(0);
+  const [entrainementScore, setEntrainementScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(40);
+  const [data, setData] = useState<{
+    name: string;
+    population: number;
+    color: string;
+    legendFontColor: string;
+    legendFontSize: number;
+  }[]>([]);
 
-  // Liste des thèmes
-  const themes = [
-    'CONNAISSANCE DU MILIEU', 'DIPLOMES, COMPETENCES & OBLIGATIONS', 'ORGANISATION ADMINISTRATIVE',
-    'ORGANISATION DE LA SECURITE', 'SURVEILLANCE ET SECURITE DES ACTIVITES SPECIFIQUES',
-    'CONDUITE A TENIR EN CAS D’ACCIDENT - PREMIERS SOINS'
-  ];
+  const route = useRoute<HistoricScreenRouteProp>();
+  const { score1, score2 } = route.params || { score1: 30, score2: 20 };
 
-  // Données factices pour le diagramme circulaire
-  const data = [
-    { name: 'Bonnes réponses', population: 60, color: 'green', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-    { name: 'Mauvaises réponses', population: 40, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-  ];
+  useEffect(() => {
+    setExamenScore(score1);
+    setEntrainementScore(score2);
+  }, [score1, score2]);
+
+  useEffect(() => {
+    const selectedScore = mode === 'examen' ? examenScore : entrainementScore;
+    setData([
+      { name: 'Bonnes réponses', population: selectedScore, color: 'green', legendFontColor: '#7F7F7F', legendFontSize: 9 },
+      { name: 'Mauvaises réponses', population: totalQuestions - selectedScore, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 9 },
+    ]);
+  }, [examenScore, entrainementScore, mode, totalQuestions]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Historique de progression</Text>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.modeButton, mode === 'examen' && styles.selectedMode]} onPress={() => setMode('examen')}>
-          <Text style={styles.buttonText}>Mode Examen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.modeButton, mode === 'entrainement' && styles.selectedMode]} onPress={() => setMode('entrainement')}>
-          <Text style={styles.buttonText}>Mode Entraînement</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Bouton pour afficher/masquer les filtres */}
-      <TouchableOpacity style={styles.toggleButton} onPress={() => setShowFilters(!showFilters)}>
-        <Text style={styles.toggleButtonText}>{showFilters ? 'Masquer les filtres' : 'Afficher les filtres'}</Text>
-      </TouchableOpacity>
-
-      {/* Section des filtres */}
-      {showFilters && (
-        <View style={styles.section}>
-          <Text style={styles.label}>Filtrer par :</Text>
-          <Picker selectedValue={filterCategory} onValueChange={(value) => setFilterCategory(value)} style={styles.picker}>
-            <Picker.Item label="Réponses" value="reponses" />
-            <Picker.Item label="Thèmes" value="themes" />
-          </Picker>
-          {filterCategory === 'reponses' && (
-            <Picker selectedValue={filter} onValueChange={(value) => setFilter(value)} style={styles.picker}>
-              <Picker.Item label="Bonnes réponses" value="good" />
-              <Picker.Item label="Mauvaises réponses" value="bad" />
-            </Picker>
-          )}
-          {filterCategory === 'themes' && (
-            <Picker selectedValue={filter} onValueChange={(value) => setFilter(value)} style={styles.picker}>
-              {themes.map((theme, index) => (
-                <Picker.Item key={index} label={theme} value={theme} />
-              ))}
-            </Picker>
-          )}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Historique de progression</Text>
+        
+        {/* Bouton de filtre pour le mode */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'examen' && styles.selectedMode]}
+            onPress={() => setMode('examen')}
+          >
+            <Text style={styles.buttonText}>Mode Examen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.modeButton, mode === 'entrainement' && styles.selectedMode]}
+            onPress={() => setMode('entrainement')}
+          >
+            <Text style={styles.buttonText}>Mode Entraînement</Text>
+          </TouchableOpacity>
         </View>
-      )}
+        
+        {/* Boutons de filtre par thème */}
+        <View style={styles.themeContainer}>
+          {themes.map((theme) => (
+            <TouchableOpacity 
+              key={theme} 
+              style={[styles.themeButton, selectedTheme === theme && styles.selectedTheme]} 
+              onPress={() => setSelectedTheme(selectedTheme === theme ? null : theme)}
+            >
+              <Text style={styles.themeButtonText}>{theme}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        
+        <Text style={styles.chartTitle}>Répartition des réponses en {mode === 'examen' ? 'Examen' : 'Entraînement'} ({selectedTheme})</Text>
+        <PieChart
+          data={data}
+          width={screenWidth - 40}
+          height={220}
+          chartConfig={chartConfig}
+          accessor="population"
+          backgroundColor="transparent"
+          paddingLeft="15"
+          absolute
+          style={styles.chart}
+        />
 
-      <Text style={styles.chartTitle}>Répartition des réponses en {mode === 'examen' ? 'Examen' : 'Entraînement'}</Text>
-      <PieChart
-        data={data}
-        width={screenWidth - 40}
-        height={220}
-        chartConfig={chartConfig}
-        accessor="population"
-        backgroundColor="transparent"
-        paddingLeft="15"
-        absolute
-        style={styles.chart}
-      />
-    </View>
+        <View style={styles.resultsContainer}>
+          <Text style={styles.resultsText}>Bonnes réponses : {mode === 'examen' ? examenScore : entrainementScore}</Text>
+          <Text style={styles.resultsText}>Mauvaises réponses : {totalQuestions - (mode === 'examen' ? examenScore : entrainementScore)}</Text>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
@@ -91,17 +106,23 @@ const chartConfig = {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 20, backgroundColor: '#f5f5f5' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
   buttonContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: 20 },
   modeButton: { padding: 10, marginHorizontal: 10, backgroundColor: '#ddd', borderRadius: 5 },
-  selectedMode: { backgroundColor: '#4CAF50' },
+  selectedMode: { backgroundColor: '#3099EF' },
   buttonText: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
-  section: { width: '100%', marginBottom: 20, padding: 10, backgroundColor: '#fff', borderRadius: 10, shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
-  label: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
-  picker: { height: 50, width: '100%' },
+
+  scrollContainer: {flexGrow: 1, alignItems: 'center', paddingBottom: 20},
+
+  container: { flex: 1, alignItems: 'center', padding: 20, backgroundColor: '#f5f5f5' },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
+  filterButton: { backgroundColor: '#3099EF', padding: 10, borderRadius: 5, marginBottom: 20 },
+  filterButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  themeContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 20 },
+  themeButton: { padding: 10, margin: 5, backgroundColor: '#ddd', borderRadius: 5 },
+  selectedTheme: { backgroundColor: '#3099EF' },
+  themeButtonText: { fontSize: 14, fontWeight: 'bold', color: '#fff' },
   chartTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 20, marginBottom: 10 },
   chart: { marginVertical: 10, borderRadius: 10 },
-  toggleButton: { marginVertical: 10, padding: 10, backgroundColor: '#4CAF50', borderRadius: 5 },
-  toggleButtonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' }
+  resultsContainer: { marginTop: 20 },
+  resultsText: { fontSize: 18, color: '#333' },
 });
