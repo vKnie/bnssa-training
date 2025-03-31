@@ -19,17 +19,17 @@ export default function HistoricScreen() {
   ]);
 
   const route = useRoute<HistoricScreenRouteProp>();
-  const { score } = route.params || { score: 35 };  // On récupère le score passé en paramètre de navigation
+  const { score1, score2 } = route.params || { score1: 30, score2: 20 };  // On récupère les scores passés en paramètre de navigation
 
   useEffect(() => {
     if (mode === 'examen') {
       // Mise à jour des données pour le mode Examen
-      setExamenScore(score);
+      setExamenScore(score1);
     } else if (mode === 'entrainement') {
       // Mise à jour des données pour le mode Entraînement
-      setEntrainementScore(score);
+      setEntrainementScore(score2);
     }
-  }, [score, mode]);
+  }, [score1, score2, mode]);  // Effect dépend des scores et du mode
 
   useEffect(() => {
     // Mettre à jour le graphique en fonction du mode actuel
@@ -44,7 +44,7 @@ export default function HistoricScreen() {
         { name: 'Mauvaises réponses', population: totalQuestions - entrainementScore, color: 'red', legendFontColor: '#7F7F7F', legendFontSize: 10 },
       ]);
     }
-  }, [examenScore, entrainementScore, mode, totalQuestions]);
+  }, [examenScore, entrainementScore, mode, totalQuestions]);  // Effect dépend des scores, du mode et du totalQuestions
 
   return (
     <View style={styles.container}>
@@ -83,14 +83,14 @@ export default function HistoricScreen() {
       />
 
       {/* Displaying results under the chart */}
-      {/* <View style={styles.resultsContainer}>
+      <View style={styles.resultsContainer}>
         <Text style={styles.resultsText}>
           Bonnes réponses : {mode === 'examen' ? examenScore : entrainementScore}
         </Text>
         <Text style={styles.resultsText}>
           Mauvaises réponses : {mode === 'examen' ? totalQuestions - examenScore : totalQuestions - entrainementScore}
         </Text>
-      </View> */}
+      </View>
     </View>
   );
 }
