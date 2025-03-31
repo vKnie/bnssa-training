@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { Button } from 'react-native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Importation de l'icône
 
 // Importation des différentes pages (écrans) de l'application
 import HomeScreen from './screens/HomeScreen';
@@ -38,12 +40,33 @@ export type RootStackParamList = {
 // Création d'une instance du Stack Navigator avec les types définis
 const Stack = createStackNavigator<RootStackParamList>();
 
+// Composant pour le bouton de retour avec une icône
+const BackButton = () => {
+  const navigation = useNavigation();
+  return (
+    <Icon
+      name="backburger"
+      size={26}
+      color="red"
+      style={{ marginLeft: 15 }}
+      onPress={() => navigation.goBack()}
+    />
+  );
+};
+
 const App: React.FC = () => {
   return (
     <NavigationContainer> {/* Conteneur principal pour la navigation */}
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerLeft: () => <BackButton />,
+          headerTitleStyle: {
+            marginLeft: 10,
+          },
+        }}
+      >
         {/* Définition des écrans de l'application dans le stack navigator */}
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="ExamenScreen" component={ExamenScreen} />
         <Stack.Screen name="TrainingScreen" component={TrainingScreen} />
         <Stack.Screen name="Historique" component={HistoricScreen} />
