@@ -20,7 +20,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const buttons = [
     { title: "Examen", screen: "ExamenScreen", color: "#3099EF", icon: "assignment" },
     { title: "Entrainement", screen: "TrainingScreen", color: "#3099EF", icon: "fitness-center" },
-    { title: "Historique", screen: "Historique", color: "#3099EF", icon: "history" },
+    { title: "Historique", screen: "HistoricScreen", color: "#3099EF", icon: "history" },
   ];
 
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {

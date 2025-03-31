@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../App';
 import { ScrollView } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const screenWidth = Dimensions.get('window').width;
 
-type HistoricScreenRouteProp = RouteProp<RootStackParamList, 'Historique'>;
+type HistoricScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HistoricScreen'>;
 
 const themes = ['Connaissance du milieu', 'Diplômes, compétences et obligations', 'Organisation administrative', 'Organisation de la sécurité', 'Surveillance et sécurité des activités spécifiques', 'Conduite à tenir en cas d’accident - Premiers secours'];
 
-export default function HistoricScreen() {
+const HistoricScreen: React.FC = () => {
   const [mode, setMode] = useState('examen'); // 'examen' ou 'entrainement'
   const [selectedTheme, setSelectedTheme] = useState<null | string>(null);
   const [examenScore, setExamenScore] = useState(0);
@@ -25,13 +26,13 @@ export default function HistoricScreen() {
     legendFontSize: number;
   }[]>([]);
 
-  const route = useRoute<HistoricScreenRouteProp>();
-  const { score1, score2 } = route.params || { score1: 30, score2: 20 };
+  const navigation = useNavigation<HistoricScreenNavigationProp>();
+  // const { score1, score2 } = route.params || { score1: 30, score2: 20 };
 
-  useEffect(() => {
-    setExamenScore(score1);
-    setEntrainementScore(score2);
-  }, [score1, score2]);
+  // useEffect(() => {
+  //   setExamenScore(score1);
+  //   setEntrainementScore(score2);
+  // }, [score1, score2]);
 
   useEffect(() => {
     const selectedScore = mode === 'examen' ? examenScore : entrainementScore;
@@ -126,3 +127,5 @@ const styles = StyleSheet.create({
   resultsContainer: { marginTop: 20 },
   resultsText: { fontSize: 18, color: '#333' },
 });
+
+export default HistoricScreen;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Importation de l'icône
@@ -12,6 +11,8 @@ import HistoricScreen from './screens/HistoricScreen';
 import TrainingSession from './screens/TrainingSession';
 import ExamenSession from './screens/ExamenSession';
 import ExamenSessionNote from './screens/ExamenSessionNote';
+import HistoricScreenExamen from './screens/HistoricScreenExamen';
+import HistoricScreenTraining from './screens/HistoricScreenTraining';
 
 // Définition de l'interface pour structurer une question
 interface Question {
@@ -26,7 +27,9 @@ export type RootStackParamList = {
   HomeScreen: undefined; // Aucun paramètre requis
   ExamenScreen: undefined;
   TrainingScreen: undefined;
-  Historique: undefined;
+  HistoricScreen: undefined;
+  HistoricScreenExamen: undefined;
+  HistoricScreenTraining: undefined;
   TrainingSession: { selectedThemes: string[] }; // Reçoit un tableau de thèmes sélectionnés
   ExamenSession: undefined;
   ExamenSessionNote: {
@@ -69,7 +72,9 @@ const App: React.FC = () => {
         <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="ExamenScreen" component={ExamenScreen} />
         <Stack.Screen name="TrainingScreen" component={TrainingScreen} />
-        <Stack.Screen name="Historique" component={HistoricScreen} />
+        <Stack.Screen name="HistoricScreen" component={HistoricScreen} />
+        <Stack.Screen name="HistoricScreenExamen" component={HistoricScreenExamen} />
+        <Stack.Screen name="HistoricScreenTraining" component={HistoricScreenTraining} />
         <Stack.Screen name="TrainingSession" component={TrainingSession} />
         <Stack.Screen name="ExamenSession" component={ExamenSession} />
         <Stack.Screen name="ExamenSessionNote" component={ExamenSessionNote} />
