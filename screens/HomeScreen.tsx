@@ -5,7 +5,8 @@ import {
   Image, 
   StyleSheet, 
   TouchableOpacity, 
-  Platform 
+  Platform,
+  StatusBar  // Ajout de l'import StatusBar
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -71,6 +72,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [navigation]);
 
   useLayoutEffect(() => {
+    // Configuration de la StatusBar en transparent
+    StatusBar.setBarStyle('dark-content'); // Pour icônes noires sur fond clair
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+
     navigation.setOptions({ 
       title: 'Accueil',
       headerStyle: {
@@ -81,12 +89,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       headerTintColor: '#fff',
       headerTitleStyle: {
         fontWeight: 'bold',
-      }
+      },
+      headerShown: false, // Cacher le header pour cet écran
     });
   }, [navigation, theme]);
 
   return (
     <View style={[styles.screenContainer, { backgroundColor: theme.background }]}>
+      {/* StatusBar avec configuration spécifique pour cet écran */}
+      <StatusBar 
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent={true}
+      />
+      
       <View style={styles.headerContainer}>
         <Image source={require('../assets/icons/logo_app_512.png')} style={styles.appLogo} resizeMode="contain" />
         <Text style={[styles.appTitle, { color: theme.text }]}>BNSSA Training</Text>
@@ -116,6 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
     paddingHorizontal: spacing.m,
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Ajout de paddingTop pour éviter le chevauchement avec la StatusBar
   },
   headerContainer: {
     alignItems: 'center',
