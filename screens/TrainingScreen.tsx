@@ -155,7 +155,11 @@ const TrainingScreen: React.FC = () => {
         style={styles.headerGradient}
       />
       
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <Icon name="fitness-center" size={40} color={theme.primary} style={styles.headerIcon} />
           <Text style={[styles.titleText, { color: theme.text }]}>
@@ -179,11 +183,7 @@ const TrainingScreen: React.FC = () => {
           </View>
         </View>
         
-        <ScrollView 
-          style={styles.scrollContainer}
-          contentContainerStyle={styles.scrollContentContainer}
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={styles.themesContainer}>
           {themes.map(({ theme_name }, index) => {
             const isSelected = selectedThemes.includes(theme_name);
             const themeColor = getThemeColor(theme_name, theme.primary);
@@ -220,20 +220,20 @@ const TrainingScreen: React.FC = () => {
               </View>
             );
           })}
-        </ScrollView>
-      </View>
-      
-      <View style={[styles.footer, shadowStyles.large]}>
-        <TouchableButton
-          title={`Commencer l'entraînement${totalQuestions > 0 ? ` (${totalQuestions} questions)` : ''}`}
-          onPress={startTraining}
-          backgroundColor={isButtonDisabled ? '#ccc' : theme.primary}
-          textColor={isButtonDisabled ? '#999' : '#fff'}
-          width={'90%'}
-          iconName="play-arrow"
-          disabled={isButtonDisabled}
-        />
-      </View>
+        </View>
+        
+        <View style={styles.buttonWrapper}>
+          <TouchableButton
+            title={`Commencer l'entraînement${totalQuestions > 0 ? ` (${totalQuestions} questions)` : ''}`}
+            onPress={startTraining}
+            backgroundColor={isButtonDisabled ? '#ccc' : theme.primary}
+            textColor={isButtonDisabled ? '#999' : '#fff'}
+            width={'90%'}
+            iconName="play-arrow"
+            disabled={isButtonDisabled}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -250,10 +250,13 @@ const styles = StyleSheet.create({
     height: 170,
     zIndex: -1,
   },
-  contentContainer: { 
-    flex: 1, 
-    paddingHorizontal: spacing.m, 
-    paddingTop: spacing.m
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingHorizontal: spacing.m,
+    paddingTop: spacing.m,
+    paddingBottom: spacing.xl * 2, // Plus d'espace en bas pour éviter les boutons du téléphone
   },
   header: { 
     alignItems: 'center', 
@@ -302,17 +305,9 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     marginBottom: spacing.xs,
   },
-  scrollContainer: {
-    flex: 1,
+  themesContainer: {
     width: '100%',
-  },
-  scrollContentContainer: { 
-    paddingVertical: spacing.s,
     paddingHorizontal: 8, // Espace pour les ombres
-    paddingTop: 8, // Espace en haut pour la première règle
-    paddingBottom: 8, // Espace en bas pour cohérence
-    alignItems: 'center',
-    width: '100%', 
   },
   themeButtonWrapper: {
     width: '100%',
@@ -347,25 +342,11 @@ const styles = StyleSheet.create({
     fontSize: typography.body1,
     fontWeight: 'bold' as TextStyle['fontWeight'],
   },
-  footer: { 
-    width: '100%',
+  buttonWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.m,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
+    marginTop: spacing.l,
+    marginBottom: spacing.xl, // Espace supplémentaire en dessous du bouton
+    paddingHorizontal: spacing.m,
   },
   // Styles pour le bouton
   button: {

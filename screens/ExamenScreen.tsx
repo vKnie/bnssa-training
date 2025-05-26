@@ -132,7 +132,11 @@ const ExamenScreen: React.FC = () => {
         style={styles.headerGradient}
       />
       
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <Icon name="school" size={40} color={theme.primary} style={styles.headerIcon} />
           <Text style={[styles.titleText, { color: theme.text }]}>
@@ -143,56 +147,47 @@ const ExamenScreen: React.FC = () => {
           </Text>
         </View>
         
-        <View style={styles.rulesWrapper}>
-          <ScrollView 
-            style={styles.rulesContainer}
-            contentContainerStyle={styles.rulesContentContainer}
-            showsVerticalScrollIndicator={false}
-          >
-            {rules.map(({ icon, text, color }, index) => (
-              <View key={index} style={styles.ruleItemWrapper}>
-                <View style={[styles.ruleItem, { backgroundColor: themeCard }]}>
-                  <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
-                    <Icon name={icon} size={24} color={color} />
-                  </View>
-                  <Text style={[styles.ruleText, { color: theme.text }]}>
-                    {text}
-                  </Text>
+        <View style={styles.rulesContainer}>
+          {rules.map(({ icon, text, color }, index) => (
+            <View key={index} style={styles.ruleItemWrapper}>
+              <View style={[styles.ruleItem, { backgroundColor: themeCard }]}>
+                <View style={[styles.iconContainer, { backgroundColor: `${color}20` }]}>
+                  <Icon name={icon} size={24} color={color} />
                 </View>
-              </View>
-            ))}
-            
-            <View style={styles.tipsWrapper}>
-              <View style={[styles.tipsContainer, { backgroundColor: themeCard }]}>
-                <View style={styles.tipHeader}>
-                  <Icon name="lightbulb" size={22} color={theme.accent} />
-                  <Text style={[styles.tipTitle, { color: theme.text }]}>
-                    Conseils pour réussir
-                  </Text>
-                </View>
-                <Text style={[styles.tipText, { color: theme.textLight }]}>
-                  Lisez attentivement chaque question. Gérez bien votre temps et commencez par les questions 
-                  dont vous êtes sûr. Vous pouvez revenir aux questions plus difficiles par la suite.
+                <Text style={[styles.ruleText, { color: theme.text }]}>
+                  {text}
                 </Text>
               </View>
             </View>
-            
-            {/* Espace en bas pour s'assurer que le bouton n'obstrue pas le contenu */}
-            <View style={{ height: 80 }} />
-          </ScrollView>
+          ))}
         </View>
-      </View>
-      
-      <View style={[styles.footer, shadowStyles.large]}>
-        <TouchableButton
-          title="Commencer l'examen"
-          onPress={startTraining}
-          backgroundColor={theme.primary}
-          textColor='#FFF'
-          width={'90%'}
-          iconName="play-arrow"
-        />
-      </View>
+        
+        <View style={styles.tipsWrapper}>
+          <View style={[styles.tipsContainer, { backgroundColor: themeCard }]}>
+            <View style={styles.tipHeader}>
+              <Icon name="lightbulb" size={22} color={theme.accent} />
+              <Text style={[styles.tipTitle, { color: theme.text }]}>
+                Conseils pour réussir
+              </Text>
+            </View>
+            <Text style={[styles.tipText, { color: theme.textLight }]}>
+              Lisez attentivement chaque question. Gérez bien votre temps et commencez par les questions 
+              dont vous êtes sûr. Vous pouvez revenir aux questions plus difficiles par la suite.
+            </Text>
+          </View>
+        </View>
+        
+        <View style={styles.buttonWrapper}>
+          <TouchableButton
+            title="Commencer l'examen"
+            onPress={startTraining}
+            backgroundColor={theme.primary}
+            textColor='#FFF'
+            width={'90%'}
+            iconName="play-arrow"
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -209,10 +204,13 @@ const styles = StyleSheet.create({
     height: 170,
     zIndex: -1,
   },
-  contentContainer: { 
-    flex: 1, 
-    paddingHorizontal: spacing.m, 
-    paddingTop: spacing.m
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingHorizontal: spacing.m,
+    paddingTop: spacing.m,
+    paddingBottom: spacing.xl * 2, // Plus d'espace en bas pour éviter les boutons du téléphone
   },
   header: { 
     alignItems: 'center', 
@@ -234,17 +232,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     maxWidth: '80%'
   },
-  rulesWrapper: {
-    flex: 1,
-    width: '100%',
-  },
   rulesContainer: { 
     width: '100%',
-  },
-  rulesContentContainer: {
-    paddingHorizontal: 10, // Plus d'espace sur les côtés
-    paddingTop: 8, // Espace en haut pour la première règle
-    paddingBottom: 8, // Espace en bas pour cohérence
+    paddingHorizontal: 10,
   },
   ruleItemWrapper: {
     marginBottom: spacing.s,
@@ -283,8 +273,9 @@ const styles = StyleSheet.create({
     flex: 1 
   },
   tipsWrapper: {
-    marginTop: spacing.m, // Remplace marginVertical pour plus de contrôle
+    marginTop: spacing.m,
     marginBottom: spacing.m,
+    marginHorizontal: 10, // Cohérence avec rulesContainer
     borderRadius: borderRadius.large,
     // Appliquer l'ombre ici plutôt que sur tipsContainer directement
     ...Platform.select({
@@ -318,14 +309,11 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     lineHeight: 20,
   },
-  footer: { 
-    width: '100%',
+  buttonWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.m,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    marginTop: spacing.l,
+    marginBottom: spacing.xl, // Espace supplémentaire en dessous du bouton
+    paddingHorizontal: spacing.m,
   },
   // Styles pour le bouton
   button: {
