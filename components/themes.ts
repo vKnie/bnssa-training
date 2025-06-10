@@ -1,13 +1,15 @@
+// components/themes.ts
 import { Platform, TextStyle } from 'react-native';
+import { AppTheme, ThemeKeyType } from '../types';
 
-// Thèmes pour les différentes sections de l'application
-export const appThemes = {
-  // Thème général de l'application
+// Thèmes optimisés avec une structure cohérente
+export const appThemes: Record<ThemeKeyType, AppTheme> = {
   main: {
     primary: '#3766B7',
     secondary: '#6C8DC2',
     accent: '#4CAF50',
     background: '#F5F7FA',
+    card: '#FFFFFF',
     text: '#333333',
     textLight: '#666666',
     textInverse: '#FFFFFF',
@@ -18,108 +20,57 @@ export const appThemes = {
     info: '#2196F3',
   },
   
-  // Thème pour la section Home
   home: {
     primary: '#3099EF',
     secondary: '#64B5F6',
-    gradient: ['#3099EF', '#64B5F6'],
     background: '#F5F7FA',
     card: '#FFFFFF',
     text: '#333333',
     textLight: '#666666',
+    success: '#4CAF50',
+    error: '#F44336',
+    gradient: ['#3099EF', '#64B5F6'],
   },
   
-  // Thème pour la section Examen
   examen: {
     primary: '#1e3c72',
     secondary: '#2a5298',
-    gradient: ['#1e3c72', '#2a5298'],
+    accent: '#FF9800',
     background: '#F5F7FA',
     card: '#FFFFFF',
     text: '#333333',
     textLight: '#666666',
-    accent: '#FF9800',
+    success: '#4CAF50',
+    error: '#F44336',
+    gradient: ['#1e3c72', '#2a5298'],
   },
   
-  // Thème pour la section Training
   training: {
     primary: '#FF5F6D',
     secondary: '#FFC371',
-    gradient: ['#FF5F6D', '#FFC371'],
+    accent: '#4CAF50',
     background: '#F5F7FA',
     card: '#FFFFFF',
     text: '#333333',
     textLight: '#666666',
-    accent: '#4CAF50',
+    success: '#4CAF50',
+    error: '#F44336',
+    gradient: ['#FF5F6D', '#FFC371'],
   },
 };
 
-// Types pour les thèmes
-export type ThemeType = typeof appThemes.main;
-export type ThemeKeyType = keyof typeof appThemes;
-
-// Style de header commun pour toutes les pages
-export const headerStyles = {
-  common: {
-    headerTitleStyle: {
-      color: '#FFFFFF',
-      fontWeight: 'bold' as TextStyle['fontWeight'],
-      fontSize: 18,
-    },
-    headerStyle: {
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 0,
-      height: Platform.OS === 'ios' ? 100 : 60,
-    },
-    headerTintColor: '#FFFFFF',
-  },
-  
-  // Styles de header spécifiques pour chaque section
-  home: {
-    headerStyle: {
-      backgroundColor: appThemes.home.primary,
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 0,
-      height: Platform.OS === 'ios' ? 100 : 60,
-    },
-  },
-  
-  examen: {
-    headerStyle: {
-      backgroundColor: appThemes.examen.primary,
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 0,
-      height: Platform.OS === 'ios' ? 100 : 60,
-    },
-  },
-  
-  training: {
-    headerStyle: {
-      backgroundColor: appThemes.training.primary,
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 0,
-      height: Platform.OS === 'ios' ? 100 : 60,
-    },
-  },
-};
-
-// Mapping des écrans aux thèmes
+// Mapping optimisé des écrans aux thèmes
 export const screenToTheme: Record<string, ThemeKeyType> = {
   HomeScreen: 'home',
   ExamenScreen: 'examen',
   ExamenSession: 'examen',
   ExamenSessionNote: 'examen',
-  HistoricScreenExamen: 'examen',
   TrainingScreen: 'training',
   TrainingSession: 'training',
   HistoricScreenTraining: 'training',
 };
 
-// Shadow styles communs pour différentes élévations
+// Shadow styles optimisés avec memoization
 export const shadowStyles = {
   small: Platform.select({
     ios: {
@@ -131,6 +82,7 @@ export const shadowStyles = {
     android: {
       elevation: 2,
     },
+    default: {},
   }),
   
   medium: Platform.select({
@@ -143,6 +95,7 @@ export const shadowStyles = {
     android: {
       elevation: 4,
     },
+    default: {},
   }),
   
   large: Platform.select({
@@ -155,40 +108,11 @@ export const shadowStyles = {
     android: {
       elevation: 8,
     },
+    default: {},
   }),
 };
 
-// Thèmes pour les icônes et emojis utilisés dans l'application
-export const themeIcons = {
-  'Connaissance du milieu': '🏊',
-  'Diplômes, compétences et obligations': '🎓',
-  'Organisation administrative': '📋',
-  'Organisation de la sécurité': '🛡️',
-  'Surveillance et sécurité des activités spécifiques': '👁️',
-  'Conduite à tenir en cas d\'accident - Premiers secours': '🚑',
-};
-
-// Couleurs associées aux thèmes
-export const themeColors: Record<string, string> = {
-  'Connaissance du milieu': '#4CAF50',
-  'Diplômes, compétences et obligations': '#2196F3',
-  'Organisation administrative': '#FF9800',
-  'Organisation de la sécurité': '#F44336',
-  'Surveillance et sécurité des activités spécifiques': '#9C27B0',
-  'Conduite à tenir en cas d\'accident - Premiers secours': '#E91E63',
-};
-
-// Liste des thèmes pour les entrainements
-export const themes = [
-  'Connaissance du milieu',
-  'Diplômes, compétences et obligations',
-  'Organisation administrative',
-  'Organisation de la sécurité',
-  'Surveillance et sécurité des activités spécifiques',
-  'Conduite à tenir en cas d\'accident - Premiers secours',
-];
-
-// Tailles standardisées pour la typographie
+// Configuration de typographie standardisée
 export const typography = {
   heading1: 24,
   heading2: 20,
@@ -198,7 +122,6 @@ export const typography = {
   caption: 12,
   button: 16,
   
-  // Utiliser les valeurs acceptées par TextStyle['fontWeight']
   fontWeightRegular: '400' as TextStyle['fontWeight'],
   fontWeightMedium: '500' as TextStyle['fontWeight'],
   fontWeightBold: '700' as TextStyle['fontWeight'],
@@ -212,7 +135,7 @@ export const spacing = {
   l: 24,
   xl: 32,
   xxl: 48,
-};
+} as const;
 
 // Arrondis standardisés
 export const borderRadius = {
@@ -222,23 +145,49 @@ export const borderRadius = {
   xl: 16,
   xxl: 24,
   round: 9999,
+} as const;
+
+// Icônes pour les thèmes d'entraînement
+export const themeIcons: Record<string, string> = {
+  'Connaissance du milieu': '🏊',
+  'Diplômes, compétences et obligations': '🎓',
+  'Organisation administrative': '📋',
+  'Organisation de la sécurité': '🛡️',
+  'Surveillance et sécurité des activités spécifiques': '👁️',
+  'Conduite à tenir en cas d\'accident - Premiers secours': '🚑',
 };
 
-// Utiliser ce hook pour obtenir le thème actuel en fonction du nom de l'écran
-export const getThemeForScreen = (screenName: string): ThemeType => {
+// Couleurs pour les thèmes d'entraînement
+export const themeColors: Record<string, string> = {
+  'Connaissance du milieu': '#4CAF50',
+  'Diplômes, compétences et obligations': '#2196F3',
+  'Organisation administrative': '#FF9800',
+  'Organisation de la sécurité': '#F44336',
+  'Surveillance et sécurité des activités spécifiques': '#9C27B0',
+  'Conduite à tenir en cas d\'accident - Premiers secours': '#E91E63',
+};
+
+// Cache pour les thèmes
+const themeCache = new Map<string, AppTheme>();
+
+// Hook optimisé pour obtenir le thème avec cache
+export const getThemeForScreen = (screenName: string): AppTheme => {
+  if (themeCache.has(screenName)) {
+    return themeCache.get(screenName)!;
+  }
+  
   const themeKey = screenToTheme[screenName] || 'main';
-  return appThemes[themeKey];
+  const theme = appThemes[themeKey];
+  
+  themeCache.set(screenName, theme);
+  return theme;
 };
 
-export default {
-  appThemes,
-  headerStyles,
-  shadowStyles,
-  themes,
-  themeIcons,
-  themeColors,
-  typography,
-  spacing,
-  borderRadius,
-  getThemeForScreen,
+// Utilitaires pour les couleurs de thèmes
+export const getThemeColor = (themeName: string, defaultColor: string): string => {
+  return themeColors[themeName] || defaultColor;
+};
+
+export const getThemeIcon = (themeName: string, defaultIcon: string): string => {
+  return themeIcons[themeName] || defaultIcon;
 };
