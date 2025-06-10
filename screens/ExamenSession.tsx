@@ -1,21 +1,18 @@
-import React, { useEffect, useState, useLayoutEffect, useCallback } from 'react';
+// screens/ExamenSession.tsx
+import React, { useEffect, useState, useLayoutEffect, useCallback, useMemo } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
-  ScrollView, 
-  TouchableOpacity,
-  Platform,
-  TextStyle
+  ScrollView
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import questionsData from '../assets/data/questions.json';
 import Timer from '../components/Timer';
-import { RootStackParamList } from '../App';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
-// Importation des éléments du thème (si disponible)
+import TouchableButton from '../components/TouchableButton';
 import { 
   typography, 
   spacing, 
@@ -23,94 +20,7 @@ import {
   shadowStyles,
   getThemeForScreen
 } from '../components/themes';
-
-// Définition des valeurs par défaut si le système de thèmes n'est pas disponible
-const defaultSpacing = {
-  xs: 4,
-  s: 8,
-  m: 16,
-  l: 24,
-};
-
-const defaultBorderRadius = {
-  small: 4,
-  medium: 8,
-  large: 12,
-};
-
-const defaultTypography = {
-  body1: 16,
-  button: 16,
-};
-
-const defaultColors = {
-  primary: '#3099EF',
-  text: '#333',
-  textLight: '#666',
-  background: '#F5F7FA',
-  card: '#FFFFFF',
-  success: '#4CAF50',
-  error: '#F44336',
-};
-
-interface Question {
-  question: string;
-  options: string[];
-  correct_answers: string[];
-  theme_name: string;
-}
-
-interface Theme {
-  theme_name: string;
-  questions: Question[];
-}
-
-interface TouchableButtonProps {
-  title: string;
-  onPress: () => void;
-  backgroundColor: string;
-  textColor: string;
-  width?: string | number;
-  iconName?: string;
-  borderColor?: string;
-  borderWidth?: number;
-}
-
-// Composant TouchableButton pour remplacer le composant Button
-const TouchableButton: React.FC<TouchableButtonProps> = ({ 
-  title, 
-  onPress, 
-  backgroundColor, 
-  textColor, 
-  width = '100%', 
-  iconName,
-  borderColor = 'transparent',
-  borderWidth = 0
-}) => {
-  return (
-    <TouchableOpacity 
-      style={[
-        styles.button, 
-        { 
-          backgroundColor,
-          width: width as any,
-          borderColor,
-          borderWidth
-        },
-        shadowStyles?.small || {}
-      ]} 
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <View style={styles.buttonContent}>
-        {iconName && (
-          <Icon name={iconName} size={24} color={textColor} style={styles.buttonIcon} />
-        )}
-        <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
+import { RootStackParamList, Question, Theme } from '../types';
 
 type ExamenSessionScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenSession'>;
 
@@ -122,17 +32,10 @@ const getRandomElements = <T,>(arr: T[], num: number): T[] => {
 const ExamenSession: React.FC = () => {
   const navigation = useNavigation<ExamenSessionScreenNavigationProp>();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   
-  // Obtenir le thème brut pour cet écran
-  const rawTheme = getThemeForScreen ? getThemeForScreen(route.name) : { primary: '#3099EF' };
-  
-  // Créer un thème complet avec des valeurs par défaut pour les propriétés manquantes
-  const theme = {
-    primary: rawTheme.primary || defaultColors.primary,
-    background: (rawTheme as any).background || defaultColors.background,
-    text: (rawTheme as any).text || defaultColors.text
-  };
-  
+  const theme = useMemo(() => getThemeForScreen(route.name), [route.name]);
+
   const [selectedQuestions, setSelectedQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
@@ -141,20 +44,29 @@ const ExamenSession: React.FC = () => {
   const [timeLeft, setTimeLeft] = useState(45 * 60);
   const [isExamFinished, setIsExamFinished] = useState(false);
 
+  const currentQuestion = useMemo(() => 
+    selectedQuestions[currentQuestionIndex], 
+    [selectedQuestions, currentQuestionIndex]
+  );
+
+  const progress = useMemo(() => 
+    ((currentQuestionIndex + 1) / selectedQuestions.length) * 100, 
+    [currentQuestionIndex, selectedQuestions.length]
+  );
+
+  const isCorrectAnswer = useCallback(() => {
+    return currentQuestion?.correct_answers.every(answer =>
+      selectedAnswers.includes(answer)
+    ) && selectedAnswers.every(answer =>
+      currentQuestion?.correct_answers.includes(answer)
+    );
+  }, [currentQuestion, selectedAnswers]);
+
   useLayoutEffect(() => {
     navigation.setOptions({ 
       title: 'Session Examen',
-      headerStyle: {
-        backgroundColor: theme.primary,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      }
     });
-  }, [navigation, theme]);
+  }, [navigation]);
 
   useEffect(() => {
     const themes: Theme[] = questionsData.themes as Theme[];
@@ -164,7 +76,7 @@ const ExamenSession: React.FC = () => {
         theme_name: theme.theme_name,
       }))
     );
-    const shuffledQuestions = getRandomElements(allQuestions, 45);
+    const shuffledQuestions = getRandomElements(allQuestions, 40);
     setSelectedQuestions(shuffledQuestions);
     setAllSelectedAnswers(Array(shuffledQuestions.length).fill([]));
   }, []);
@@ -182,35 +94,35 @@ const ExamenSession: React.FC = () => {
   }, [timeLeft, isExamFinished]);
 
   const finishExam = useCallback(() => {
-    const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
-      selectedAnswers.includes(answer)
-    ) && selectedAnswers.every(answer =>
-      selectedQuestions[currentQuestionIndex]?.correct_answers.includes(answer)
-    );
-    setScore(prev => prev + (isCorrect ? 1 : 0));
+    const isCorrect = isCorrectAnswer();
+    const finalScore = score + (isCorrect ? 1 : 0);
 
     navigation.navigate('ExamenSessionNote', {
-      score: score + (isCorrect ? 1 : 0),
+      score: finalScore,
       totalQuestions: selectedQuestions.length,
       selectedQuestions,
-      selectedAnswers: allSelectedAnswers,
+      selectedAnswers: [
+        ...allSelectedAnswers.slice(0, currentQuestionIndex),
+        selectedAnswers,
+        ...allSelectedAnswers.slice(currentQuestionIndex + 1)
+      ],
     });
-  }, [currentQuestionIndex, selectedAnswers, selectedQuestions, score, navigation, allSelectedAnswers]);
+  }, [isCorrectAnswer, score, navigation, selectedQuestions, allSelectedAnswers, currentQuestionIndex, selectedAnswers]);
 
-  const handleAnswerSelection = (answer: string) => {
+  const handleAnswerSelection = useCallback((answer: string) => {
     setSelectedAnswers(prev =>
-      prev.includes(answer) ? prev.filter(a => a !== answer) : [...prev, answer]
+      prev.includes(answer) 
+        ? prev.filter(a => a !== answer) 
+        : [...prev, answer]
     );
-  };
+  }, []);
 
-  const handleNextQuestion = () => {
-    const isCorrect = selectedQuestions[currentQuestionIndex]?.correct_answers.every(answer =>
-      selectedAnswers.includes(answer)
-    ) && selectedAnswers.every(answer =>
-      selectedQuestions[currentQuestionIndex]?.correct_answers.includes(answer)
-    );
+  const handleNextQuestion = useCallback(() => {
+    const isCorrect = isCorrectAnswer();
 
-    if (isCorrect) setScore(prev => prev + 1);
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
 
     setAllSelectedAnswers(prev => {
       const newAnswers = [...prev];
@@ -224,146 +136,145 @@ const ExamenSession: React.FC = () => {
     } else {
       finishExam();
     }
-  };
+  }, [isCorrectAnswer, currentQuestionIndex, selectedQuestions.length, selectedAnswers, finishExam]);
 
-  const currentQuestion = selectedQuestions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
+  const OptionButton = useCallback(({ option, index }: { option: string; index: number }) => {
+    const isSelected = selectedAnswers.includes(option);
+    
+    return (
+      <View key={index} style={styles.optionButton}>
+        <TouchableButton
+          title={option}
+          onPress={() => handleAnswerSelection(option)}
+          backgroundColor={isSelected ? '#4CAF50' : '#FFFFFF'}
+          textColor={isSelected ? '#FFFFFF' : '#000'}
+          width="100%"
+          borderColor={isSelected ? '#4CAF50' : '#ccc'}
+          borderWidth={1}
+          fontWeight="normal"
+        />
+      </View>
+    );
+  }, [selectedAnswers, handleAnswerSelection]);
+
+  if (!currentQuestion) {
+    return (
+      <View style={[
+        styles.container, 
+        { 
+          backgroundColor: theme.background, 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          paddingBottom: insets.bottom + spacing.m
+        }
+      ]}>
+        <Text style={[styles.loadingText, { color: theme.text }]}>Préparation de l'examen...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.progressBarContainer}>
-        <View style={[styles.progressBar, { width: `${progress}%`, backgroundColor: theme.primary }]} />
+      {/* En-tête avec barre de progression */}
+      <View style={styles.headerContainer}>
+        <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBar, { width: `${progress}%`, backgroundColor: theme.primary }]} />
+        </View>
+        <Text style={[styles.progressText, { color: theme.text }]}>
+          {currentQuestionIndex + 1}/{selectedQuestions.length}
+        </Text>
+        <Timer timeLeft={timeLeft} totalTime={45 * 60} />
       </View>
-      <Text style={styles.progressText}>
-        {currentQuestionIndex + 1}/{selectedQuestions.length}
-      </Text>
-      <Timer timeLeft={timeLeft} totalTime={45 * 60} />
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {currentQuestion && (
-          <View style={styles.questionContainerWrapper}>
-            <View style={styles.questionContainer}>
-              {/* <Text style={styles.themeText}>{currentQuestion.theme_name}</Text> */}
-              <Text style={[styles.questionText, { color: theme.text }]}>
-                {currentQuestion.question}
-              </Text>
-              {currentQuestion.options.map((option, index) => (
-                <View key={index} style={styles.optionButton}>
-                  <TouchableButton
-                    title={option}
-                    onPress={() => handleAnswerSelection(option)}
-                    backgroundColor={selectedAnswers.includes(option) ? '#4CAF50' : '#FFFFFF'}
-                    textColor={selectedAnswers.includes(option) ? '#FFFFFF' : '#000'}
-                    width="100%"
-                    borderColor={selectedAnswers.includes(option) ? '#4CAF50' : '#ccc'}
-                    borderWidth={1}
-                  />
-                </View>
-              ))}
-            </View>
+      
+      {/* Contenu principal avec ScrollView */}
+      <ScrollView 
+        style={styles.scrollViewContainer}
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.questionContainerWrapper}>
+          <View style={styles.questionContainer}>
+            <Text style={[styles.questionText, { color: theme.text }]}>
+              {currentQuestion.question}
+            </Text>
+            {currentQuestion.options.map((option, index) => (
+              <OptionButton key={index} option={option} index={index} />
+            ))}
           </View>
-        )}
+        </View>
       </ScrollView>
-      <TouchableButton
-        title="Suivant"
-        onPress={handleNextQuestion}
-        backgroundColor={theme.primary}
-        textColor="#FFFFFF"
-        width="100%"
-        iconName="arrow-forward"
-      />
+      
+      {/* Pied de page avec bouton fixe et marge pour la barre de navigation */}
+      <View style={[styles.footerContainer, { paddingBottom: insets.bottom + spacing.m }]}>
+        <TouchableButton
+          title="Suivant"
+          onPress={handleNextQuestion}
+          backgroundColor={theme.primary}
+          textColor="#FFFFFF"
+          width="100%"
+          iconName="arrow-forward"
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { 
-    flex: 1, 
-    padding: spacing?.m || defaultSpacing.m, 
-    justifyContent: 'space-between' 
+    flex: 1,
+    paddingHorizontal: spacing.m,
+  },
+  headerContainer: {
+    paddingTop: spacing.l,
+    paddingBottom: spacing.m,
+  },
+  scrollViewContainer: {
+    flex: 1,
   },
   scrollContainer: { 
-    flexGrow: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingVertical: spacing.m,
   },
   questionContainerWrapper: {
     width: '100%',
-    // Appliquer l'ombre ici pour éviter les coupures
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
   },
   questionContainer: { 
     width: '100%',
-    padding: spacing?.m || defaultSpacing.m,
-    borderRadius: borderRadius?.medium || defaultBorderRadius.medium,
-    backgroundColor: '#FFFFFF',
+    padding: spacing.m,
   },
   questionText: { 
-    fontSize: typography?.body1 || defaultTypography.body1, 
-    marginBottom: spacing?.m || defaultSpacing.m, 
+    fontSize: typography.body1, 
+    marginBottom: spacing.m, 
     textAlign: 'center',
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+    fontWeight: typography.fontWeightBold,
   },
   optionButton: { 
-    padding: spacing?.xs || defaultSpacing.xs 
+    marginBottom: spacing.xs,
   },
   progressBarContainer: { 
     width: '100%', 
     height: 20, 
     backgroundColor: '#e0e0e0', 
-    borderRadius: borderRadius?.small || defaultBorderRadius.small, 
+    borderRadius: borderRadius.small, 
     overflow: 'hidden', 
-    marginBottom: spacing?.s || 10 
+    marginBottom: spacing.s,
   },
   progressBar: { 
     height: '100%', 
-    borderRadius: borderRadius?.small || defaultBorderRadius.small
+    borderRadius: borderRadius.small
   },
   progressText: { 
-    fontSize: typography?.body1 || defaultTypography.body1, 
-    marginBottom: spacing?.m || defaultSpacing.m, 
-    textAlign: 'center' 
-  },
-  // Styles pour le bouton
-  button: {
-    borderRadius: borderRadius?.medium || defaultBorderRadius.medium,
-    paddingVertical: spacing?.m || defaultSpacing.m,
-    paddingHorizontal: spacing?.l || defaultSpacing.l,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: typography?.button || defaultTypography.button,
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+    fontSize: typography.body1, 
     textAlign: 'center',
+    fontWeight: typography.fontWeightMedium,
   },
-  buttonIcon: {
-    marginRight: spacing?.s || defaultSpacing.s,
+  footerContainer: {
+    paddingTop: spacing.m,
+  },
+  loadingText: {
+    fontSize: typography.heading2,
+    fontWeight: typography.fontWeightBold,
   },
 });
 

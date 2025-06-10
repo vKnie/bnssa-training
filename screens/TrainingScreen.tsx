@@ -1,3 +1,4 @@
+// screens/TrainingScreen.tsx
 import React, { useState, useCallback, useMemo, useLayoutEffect } from 'react';
 import { 
   View, 
@@ -6,96 +7,73 @@ import {
   SafeAreaView, 
   StatusBar, 
   ScrollView,
-  Platform,
-  TextStyle,
   TouchableOpacity
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import questionsData from '../assets/data/questions.json';
-import { RootStackParamList } from '../App';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-// Importation des éléments du thème
+import questionsData from '../assets/data/questions.json';
 import { 
   getThemeForScreen, 
   shadowStyles, 
   typography, 
   spacing, 
   borderRadius,
-  themeIcons,
-  themeColors
+  getThemeColor,
+  getThemeIcon
 } from '../components/themes';
-
-interface Question {
-  question: string;
-  options: string[];
-  correct_answers: string[];
-}
-
-interface Theme {
-  theme_name: string;
-  questions: Question[];
-}
+import TouchableButton from '../components/TouchableButton';
+import { RootStackParamList, Theme } from '../types';
 
 type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TrainingScreen'>;
 
-// Interface pour le bouton
-interface TouchableButtonProps {
-  title: string;
+interface ThemeButtonProps {
+  themeName: string;
+  isSelected: boolean;
   onPress: () => void;
-  backgroundColor: string;
+  themeColor: string;
+  themeIcon: string;
+  cardColor: string;
   textColor: string;
-  width?: string | number;
-  iconName?: string;
-  disabled?: boolean;
 }
 
-// Composant TouchableButton pour remplacer le composant Button
-const TouchableButton: React.FC<TouchableButtonProps> = ({ 
-  title, 
-  onPress, 
-  backgroundColor, 
-  textColor, 
-  width = '100%', 
-  iconName,
-  disabled = false
-}) => {
-  return (
-    <TouchableOpacity 
+const ThemeButton: React.FC<ThemeButtonProps> = React.memo(({
+  themeName,
+  isSelected,
+  onPress,
+  themeColor,
+  themeIcon,
+  cardColor,
+  textColor,
+}) => (
+  <View style={styles.themeButtonWrapper}>
+    <View 
       style={[
-        styles.button, 
+        styles.themeButton, 
         { 
-          backgroundColor,
-          width: width as any,
-          opacity: disabled ? 0.7 : 1
+          backgroundColor: isSelected ? themeColor : cardColor,
+          borderWidth: 2,
+          borderColor: isSelected ? themeColor : 'transparent',
         }
-      ]} 
-      onPress={disabled ? undefined : onPress}
-      activeOpacity={0.7}
-      disabled={disabled}
+      ]}
     >
-      <View style={styles.buttonContent}>
-        {iconName && (
-          <Icon name={iconName} size={24} color={textColor} style={styles.buttonIcon} />
-        )}
-        <Text style={[styles.buttonText, { color: textColor }]}>{title}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-// Helper function to safely get theme color or icon
-const getThemeColor = (themeName: string, defaultColor: string): string => {
-  // Using type assertion to tell TypeScript this is safe
-  return themeColors[themeName as keyof typeof themeColors] || defaultColor;
-};
-
-const getThemeIcon = (themeName: string, defaultIcon: string): string => {
-  // Using type assertion to tell TypeScript this is safe
-  return themeIcons[themeName as keyof typeof themeIcons] || defaultIcon;
-};
+      <TouchableOpacity
+        style={styles.themeButtonTouch}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        <Text style={[
+          styles.themeButtonText, 
+          { color: isSelected ? '#fff' : textColor }
+        ]}>
+          {themeIcon}  {themeName}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+));
 
 const TrainingScreen: React.FC = () => {
   const [themes] = useState<Theme[]>(questionsData.themes);
@@ -103,14 +81,17 @@ const TrainingScreen: React.FC = () => {
   const navigation = useNavigation<TrainingScreenNavigationProp>();
   const route = useRoute();
   
-  // Obtenir le thème pour cet écran
-  const theme = getThemeForScreen(route.name);
-  
-  // Définir des valeurs par défaut pour les propriétés qui pourraient manquer
-  const themeGradient = (theme as any).gradient || ['#FF5F6D', '#FFC371'];
-  const themeCard = (theme as any).card || '#FFFFFF';
+  const theme = useMemo(() => getThemeForScreen(route.name), [route.name]);
+  const themeGradient = useMemo(() => theme.gradient || ['#FF5F6D', '#FFC371'], [theme]);
+  const themeCard = useMemo(() => theme.card || '#FFFFFF', [theme]);
   
   const isButtonDisabled = useMemo(() => selectedThemes.length === 0, [selectedThemes]);
+  
+  const totalQuestions = useMemo(() => {
+    return themes
+      .filter(theme => selectedThemes.includes(theme.theme_name))
+      .reduce((acc, theme) => acc + theme.questions.length, 0);
+  }, [themes, selectedThemes]);
   
   const toggleSelection = useCallback((themeName: string) => {
     setSelectedThemes(prevSelected =>
@@ -127,24 +108,23 @@ const TrainingScreen: React.FC = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ 
       title: 'Entraînement',
-      headerStyle: {
-        backgroundColor: theme.primary,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      }
     });
-  }, [navigation, theme]);
+  }, [navigation]);
   
-  // Obtenir le nombre total de questions pour les thèmes sélectionnés
-  const totalQuestions = useMemo(() => {
-    return themes
-      .filter(theme => selectedThemes.includes(theme.theme_name))
-      .reduce((acc, theme) => acc + theme.questions.length, 0);
-  }, [themes, selectedThemes]);
+  const InfoCard = useMemo(() => (
+    <View style={styles.selectionInfoWrapper}>
+      <View style={[styles.infoCard, { backgroundColor: themeCard }]}>
+        <Text style={[styles.infoText, { color: theme.textLight }]}>
+          Thèmes sélectionnés: <Text style={{ fontWeight: 'bold', color: theme.text }}>{selectedThemes.length}</Text>
+        </Text>
+        {totalQuestions > 0 && (
+          <Text style={[styles.infoText, { color: theme.textLight }]}>
+            Questions disponibles: <Text style={{ fontWeight: 'bold', color: theme.text }}>{totalQuestions}</Text>
+          </Text>
+        )}
+      </View>
+    </View>
+  ), [themeCard, theme.textLight, theme.text, selectedThemes.length, totalQuestions]);
   
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
@@ -155,7 +135,11 @@ const TrainingScreen: React.FC = () => {
         style={styles.headerGradient}
       />
       
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <Icon name="fitness-center" size={40} color={theme.primary} style={styles.headerIcon} />
           <Text style={[styles.titleText, { color: theme.text }]}>
@@ -166,74 +150,41 @@ const TrainingScreen: React.FC = () => {
           </Text>
         </View>
         
-        <View style={styles.selectionInfoWrapper}>
-          <View style={[styles.infoCard, { backgroundColor: themeCard }]}>
-            <Text style={[styles.infoText, { color: theme.textLight }]}>
-              Thèmes sélectionnés: <Text style={{ fontWeight: 'bold', color: theme.text }}>{selectedThemes.length}</Text>
-            </Text>
-            {totalQuestions > 0 && (
-              <Text style={[styles.infoText, { color: theme.textLight }]}>
-                Questions disponibles: <Text style={{ fontWeight: 'bold', color: theme.text }}>{totalQuestions}</Text>
-              </Text>
-            )}
-          </View>
-        </View>
+        {InfoCard}
         
-        <ScrollView 
-          style={styles.scrollContainer}
-          contentContainerStyle={styles.scrollContentContainer}
-          showsVerticalScrollIndicator={false}
-        >
+        <View style={styles.themesContainer}>
           {themes.map(({ theme_name }, index) => {
             const isSelected = selectedThemes.includes(theme_name);
             const themeColor = getThemeColor(theme_name, theme.primary);
             const themeIcon = getThemeIcon(theme_name, '📝');
             
             return (
-              <View 
-                key={index} 
-                style={styles.themeButtonWrapper}
-              >
-                <View 
-                  style={[
-                    styles.themeButton, 
-                    { 
-                      backgroundColor: isSelected ? themeColor : themeCard,
-                      borderWidth: 2,
-                      borderColor: isSelected ? themeColor : 'transparent',
-                    }
-                  ]}
-                >
-                  <TouchableOpacity
-                    style={styles.themeButtonTouch}
-                    onPress={() => toggleSelection(theme_name)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={[
-                      styles.themeButtonText, 
-                      { color: isSelected ? '#fff' : theme.text }
-                    ]}>
-                      {themeIcon}  {theme_name}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <ThemeButton
+                key={index}
+                themeName={theme_name}
+                isSelected={isSelected}
+                onPress={() => toggleSelection(theme_name)}
+                themeColor={themeColor}
+                themeIcon={themeIcon}
+                cardColor={themeCard}
+                textColor={theme.text}
+              />
             );
           })}
-        </ScrollView>
-      </View>
-      
-      <View style={[styles.footer, shadowStyles.large]}>
-        <TouchableButton
-          title={`Commencer l'entraînement${totalQuestions > 0 ? ` (${totalQuestions} questions)` : ''}`}
-          onPress={startTraining}
-          backgroundColor={isButtonDisabled ? '#ccc' : theme.primary}
-          textColor={isButtonDisabled ? '#999' : '#fff'}
-          width={'90%'}
-          iconName="play-arrow"
-          disabled={isButtonDisabled}
-        />
-      </View>
+        </View>
+        
+        <View style={styles.buttonWrapper}>
+          <TouchableButton
+            title={`Commencer l'entraînement${totalQuestions > 0 ? ` (${totalQuestions} questions)` : ''}`}
+            onPress={startTraining}
+            backgroundColor={isButtonDisabled ? '#ccc' : theme.primary}
+            textColor={isButtonDisabled ? '#999' : '#fff'}
+            width={'90%'}
+            iconName="play-arrow"
+            disabled={isButtonDisabled}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -250,10 +201,13 @@ const styles = StyleSheet.create({
     height: 170,
     zIndex: -1,
   },
-  contentContainer: { 
-    flex: 1, 
-    paddingHorizontal: spacing.m, 
-    paddingTop: spacing.m
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContentContainer: {
+    paddingHorizontal: spacing.m,
+    paddingTop: spacing.m,
+    paddingBottom: spacing.xl * 2,
   },
   header: { 
     alignItems: 'center', 
@@ -267,7 +221,7 @@ const styles = StyleSheet.create({
   titleText: { 
     fontSize: typography.heading2, 
     textAlign: 'center', 
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+    fontWeight: typography.fontWeightBold,
     marginBottom: spacing.xs
   },
   descriptionText: { 
@@ -280,18 +234,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.m,
     width: '100%',
     borderRadius: borderRadius.medium,
-    // Appliquer l'ombre ici plutôt que sur infoCard directement
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    ...shadowStyles.small,
   },
   infoCard: {
     borderRadius: borderRadius.medium,
@@ -302,34 +245,15 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     marginBottom: spacing.xs,
   },
-  scrollContainer: {
-    flex: 1,
+  themesContainer: {
     width: '100%',
-  },
-  scrollContentContainer: { 
-    paddingVertical: spacing.s,
-    paddingHorizontal: 8, // Espace pour les ombres
-    paddingTop: 8, // Espace en haut pour la première règle
-    paddingBottom: 8, // Espace en bas pour cohérence
-    alignItems: 'center',
-    width: '100%', 
+    paddingHorizontal: 8,
   },
   themeButtonWrapper: {
     width: '100%',
     marginBottom: spacing.s,
     borderRadius: borderRadius.medium,
-    // Appliquer l'ombre ici plutôt que sur themeButton directement
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    ...shadowStyles.small,
   },
   themeButton: {
     width: '100%',
@@ -345,59 +269,13 @@ const styles = StyleSheet.create({
   },
   themeButtonText: {
     fontSize: typography.body1,
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+    fontWeight: typography.fontWeightBold,
   },
-  footer: { 
-    width: '100%',
+  buttonWrapper: {
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.m,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  // Styles pour le bouton
-  button: {
-    borderRadius: borderRadius.medium,
-    paddingVertical: spacing.m,
-    paddingHorizontal: spacing.l,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonText: {
-    fontSize: typography.button,
-    fontWeight: 'bold' as TextStyle['fontWeight'],
-    textAlign: 'center',
-  },
-  buttonIcon: {
-    marginRight: spacing.s,
+    marginTop: spacing.l,
+    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.m,
   },
 });
 
