@@ -2,7 +2,7 @@
 
 Pour toute question ou suggestion, n'hésitez pas à nous contacter :
 
-- Kévin : [kevin.boillon@free.fr](mailto:kevin.boillon@free.fr)
+- Kévin : [kevin.boillon.pro@gmail.com](mailto:kevin.boillon.pro@gmail.com)
 - Kelyfane : [kelyfane@gmail.com](mailto:kelyfane@gmail.com)
 
 ## Prérequis
