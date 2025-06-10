@@ -1,39 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, TextStyle } from 'react-native';
+// components/Timer.tsx
+import React, { useEffect, useRef, useMemo, useCallback } from 'react';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 import { useRoute } from '@react-navigation/native';
 
-// Importation des éléments du thème (si disponible)
-try {
-  var { 
-    typography, 
-    spacing, 
-    getThemeForScreen 
-  } = require('../components/themes');
-} catch (error) {
-  // Si l'import échoue, on utilise les valeurs par défaut
-}
-
-// Définition des valeurs par défaut
-const defaultSpacing = {
-  xs: 4,
-  s: 8,
-  m: 16,
-  l: 24,
-};
-
-const defaultTypography = {
-  heading1: 24,
-  heading2: 20,
-  body1: 16,
-};
-
-const defaultColors = {
-  primary: '#3099EF',
-  warning: '#FFA000',
-  error: '#F44336',
-  text: '#333333',
-};
+import { typography, spacing, getThemeForScreen } from './themes';
 
 interface TimerProps {
   timeLeft: number;
@@ -44,77 +15,83 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
   const route = useRoute();
-  // Obtenir le thème si disponible
-  const theme = getThemeForScreen ? getThemeForScreen(route.name) : null;
+  const theme = useMemo(() => getThemeForScreen(route.name), [route.name]);
   
-  // Animation pour la progress
   const animatedValue = useRef(new Animated.Value(timeLeft / totalTime)).current;
-  
-  // Animation pour le pulse sur les dernières minutes
   const pulseAnim = useRef(new Animated.Value(1)).current;
   
-  const [colorTransition, setColorTransition] = useState({
-    color: theme?.primary || defaultColors.primary,
-    textColor: theme?.text || defaultColors.text
-  });
+  const formatTime = useCallback((seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  }, []);
 
-  // Démarrer l'animation de pulse quand il reste moins de 5 minutes
-  useEffect(() => {
-    if (timeLeft <= 300) { // 5 minutes
-      const warningColor = theme?.warning || defaultColors.warning;
-      setColorTransition({ color: warningColor, textColor: warningColor });
-
-      // Créer une animation de pulse
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.1,
-            duration: 800,
-            useNativeDriver: true
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 800,
-            useNativeDriver: true
-          })
-        ])
-      ).start();
-    }
-
-    // Rouge clignotant pour la dernière minute
+  const { color, textColor, shouldPulse } = useMemo(() => {
     if (timeLeft <= 60) {
-      const errorColor = theme?.error || defaultColors.error;
-      setColorTransition({ color: errorColor, textColor: errorColor });
-      
-      // Pulse plus rapide
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.2,
-            duration: 500,
-            useNativeDriver: true
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true
-          })
-        ])
-      ).start();
+      return {
+        color: theme.error,
+        textColor: theme.error,
+        shouldPulse: true,
+      };
+    } else if (timeLeft <= 300) {
+      return {
+        color: theme.warning || '#FFA000',
+        textColor: theme.warning || '#FFA000',
+        shouldPulse: true,
+      };
     }
-  }, [timeLeft <= 300, timeLeft <= 60]);
+    return {
+      color: theme.primary,
+      textColor: theme.text,
+      shouldPulse: false,
+    };
+  }, [timeLeft, theme]);
 
-  // Mettre à jour l'animation du cercle
+  const percentageLeft = useMemo(() => 
+    Math.round((timeLeft / totalTime) * 100), 
+    [timeLeft, totalTime]
+  );
+
+  // Animation du cercle de progression
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: timeLeft / totalTime,
       duration: 1000,
       useNativeDriver: false,
     }).start();
-  }, [timeLeft, totalTime]);
+  }, [timeLeft, totalTime, animatedValue]);
 
-  const circleSize = 120;
-  const strokeWidth = 12;
+  // Animation de pulse
+  useEffect(() => {
+    if (shouldPulse) {
+      const duration = timeLeft <= 60 ? 500 : 800;
+      const scale = timeLeft <= 60 ? 1.2 : 1.1;
+      
+      const pulseAnimation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: scale,
+            duration,
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      
+      pulseAnimation.start();
+      
+      return () => pulseAnimation.stop();
+    } else {
+      pulseAnim.setValue(1);
+    }
+  }, [shouldPulse, timeLeft, pulseAnim]);
+
+  const circleSize = 80;
+  const strokeWidth = 8;
   const radius = (circleSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   
@@ -123,15 +100,6 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
     outputRange: [circumference, 0],
   });
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
-
-  // Calculer le pourcentage de temps restant
-  const percentageLeft = Math.round((timeLeft / totalTime) * 100);
-  
   return (
     <View style={styles.timerContainer}>
       <View style={styles.timerLabelContainer}>
@@ -140,9 +108,12 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
 
       <View style={styles.timerCircleContainer}>
         <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-          <Svg width={circleSize} height={circleSize} viewBox={`0 0 ${circleSize} ${circleSize}`}>
+          <Svg 
+            width={circleSize} 
+            height={circleSize} 
+            viewBox={`0 0 ${circleSize} ${circleSize}`}
+          >
             <G rotation="-90" origin={`${circleSize / 2}, ${circleSize / 2}`}>
-              {/* Cercle de fond */}
               <Circle
                 stroke="#E0E0E0"
                 fill="none"
@@ -153,9 +124,8 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
                 strokeLinecap="round"
               />
               
-              {/* Cercle animé de progression */}
               <AnimatedCircle
-                stroke={colorTransition.color}
+                stroke={color}
                 fill="none"
                 cx={circleSize / 2}
                 cy={circleSize / 2}
@@ -170,7 +140,7 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
         </Animated.View>
 
         <View style={styles.timerTextContainer}>
-          <Animated.Text style={[styles.timerText, { color: colorTransition.textColor }]}>
+          <Animated.Text style={[styles.timerText, { color: textColor }]}>
             {formatTime(timeLeft)}
           </Animated.Text>
           <Text style={styles.timerPercentage}>{percentageLeft}%</Text>
@@ -181,19 +151,19 @@ const Timer: React.FC<TimerProps> = ({ timeLeft, totalTime }) => {
 };
 
 const styles = StyleSheet.create({
-  timerContainer: { 
-    marginVertical: spacing?.m || defaultSpacing.m, 
-    alignItems: 'center', 
+  timerContainer: {
+    marginVertical: spacing.s,
+    alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   timerLabelContainer: {
-    marginBottom: spacing?.s || defaultSpacing.s,
+    marginBottom: spacing.xs,
   },
   timerLabel: {
-    fontSize: typography?.body1 || defaultTypography.body1,
+    fontSize: typography.body2,
     color: '#666',
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+    fontWeight: typography.fontWeightMedium,
   },
   timerCircleContainer: {
     position: 'relative',
@@ -202,13 +172,14 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.08,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 4,
+        elevation: 2,
       },
+      default: {},
     }),
   },
   timerTextContainer: {
@@ -216,15 +187,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  timerText: { 
-    fontSize: typography?.heading1 || defaultTypography.heading1, 
-    fontWeight: 'bold' as TextStyle['fontWeight'],
+  timerText: {
+    fontSize: typography.heading3,
+    fontWeight: typography.fontWeightBold,
   },
   timerPercentage: {
-    fontSize: typography?.body1 || defaultTypography.body1,
+    fontSize: typography.caption,
     color: '#888',
-    marginTop: spacing?.xs || defaultSpacing.xs,
+    marginTop: 2,
   },
 });
 
-export default Timer;
+export default React.memo(Timer);

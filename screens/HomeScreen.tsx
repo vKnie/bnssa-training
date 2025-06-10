@@ -1,4 +1,5 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+// screens/HomeScreen.tsx
+import React, { useCallback, useLayoutEffect, useState, useMemo } from 'react';
 import { 
   View, 
   Text, 
@@ -8,21 +9,16 @@ import {
   Platform,
   StatusBar,
   Modal,
-  Dimensions
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRoute } from '@react-navigation/native';
-import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
 
-// Définition des types pour la navigation
-type RootStackParamList = {
-  ExamenScreen: undefined;
-  TrainingScreen: undefined;
-  HistoricScreenExamen: undefined;
-  HistoricScreenTraining: undefined;
-  HomeScreen: undefined;
-};
+import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
+import TouchableButton from '../components/TouchableButton';
+import { RootStackParamList } from '../types';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
@@ -30,7 +26,6 @@ interface HomeScreenProps {
   navigation: HomeScreenNavigationProp;
 }
 
-// Type pour les boutons de navigation
 interface NavButtonProps {
   title: string;
   onPress: () => void;
@@ -38,36 +33,54 @@ interface NavButtonProps {
   icon: string;
 }
 
-// Composant TouchableButton pour remplacer le composant Button
-const TouchableButton: React.FC<NavButtonProps> = ({ title, onPress, color, icon }) => {
-  return (
-    <TouchableOpacity 
-      style={[
-        styles.button, 
-        { backgroundColor: color },
-        shadowStyles.medium
-      ]} 
-      onPress={onPress}
-      activeOpacity={0.7}
-    >
-      <View style={styles.buttonContent}>
-        <Icon name={icon} size={24} color="#FFFFFF" style={styles.buttonIcon} />
-        <Text style={styles.buttonText}>{title}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-// Composant Modal de paramètres
 interface SettingsModalProps {
   visible: boolean;
   onClose: () => void;
   theme: any;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, theme }) => {
-  const screenHeight = Dimensions.get('window').height;
-  
+const NavButton: React.FC<NavButtonProps> = React.memo(({ title, onPress, color, icon }) => (
+  <TouchableOpacity 
+    style={[styles.button, { backgroundColor: color }, shadowStyles.medium]} 
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
+    <View style={styles.buttonContent}>
+      <Icon name={icon} size={24} color="#FFFFFF" style={styles.buttonIcon} />
+      <Text style={styles.buttonText}>{title}</Text>
+    </View>
+  </TouchableOpacity>
+));
+
+const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ visible, onClose, theme }) => {
+  const settingSections = useMemo(() => [
+    {
+      title: 'Information de l\'application',
+      icon: 'info',
+      items: [
+        { label: 'Version', value: '1.0.0' },
+        { label: 'Développé par', value: 'BNSSA Team' },
+      ]
+    },
+    {
+      title: 'Données',
+      icon: 'storage',
+      items: [
+        { label: 'Réinitialiser données d\'entraînement', hasAction: true },
+        { label: 'Réinitialiser données d\'examen', hasAction: true },
+      ]
+    },
+    {
+      title: 'Support',
+      icon: 'help',
+      items: [
+        { label: 'Centre d\'aide', hasAction: true },
+        { label: 'Contactez-nous', hasAction: true },
+        { label: 'Conditions d\'utilisation', hasAction: true },
+      ]
+    }
+  ], []);
+
   return (
     <Modal
       animationType="slide"
@@ -77,7 +90,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, theme }
     >
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContainer, { backgroundColor: theme.background }]}>
-          {/* Header du modal */}
           <View style={styles.modalHeader}>
             <Text style={[styles.modalTitle, { color: theme.text }]}>Paramètres</Text>
             <TouchableOpacity 
@@ -89,74 +101,53 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, theme }
             </TouchableOpacity>
           </View>
           
-          {/* Contenu du modal */}
-          <View style={styles.modalContent}>
-            {/* Section App Info */}
-            <View style={styles.settingsSection}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                <Icon name="info" size={20} color={theme.primary} /> Information de l'application
-              </Text>
-              <View style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Version</Text>
-                <Text style={[styles.settingValue, { color: theme.textLight }]}>1.0.0</Text>
+          <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+            {settingSections.map((section, sectionIndex) => (
+              <View key={sectionIndex} style={styles.settingsSection}>
+                <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                  <Icon name={section.icon} size={20} color={theme.primary} /> {section.title}
+                </Text>
+                {section.items.map((item, itemIndex) => (
+                  <TouchableOpacity 
+                    key={itemIndex}
+                    style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
+                    disabled={!item.hasAction}
+                  >
+                    <Text style={[styles.settingLabel, { color: theme.text }]}>
+                      {item.label}
+                    </Text>
+                    {item.value ? (
+                      <Text style={[styles.settingValue, { color: theme.textLight }]}>
+                        {item.value}
+                      </Text>
+                    ) : (
+                      <Icon 
+                        name={item.hasAction ? "chevron-right" : "refresh"} 
+                        size={20} 
+                        color={theme.textLight} 
+                      />
+                    )}
+                  </TouchableOpacity>
+                ))}
               </View>
-              <View style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Développé par</Text>
-                <Text style={[styles.settingValue, { color: theme.textLight }]}>BNSSA Team</Text>
-              </View>
-            </View>
-
-            {/* Section Données */}
-            <View style={styles.settingsSection}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                <Icon name="storage" size={20} color={theme.primary} /> Données
-              </Text>
-              <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Réinitialiser données d'entraînement</Text>
-                <Icon name="refresh" size={20} color={theme.textLight} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Réinitialiser données d'examen</Text>
-                <Icon name="refresh" size={20} color={theme.textLight} />
-              </TouchableOpacity>
-            </View>
-
-            {/* Section Support */}
-            <View style={styles.settingsSection}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                <Icon name="help" size={20} color={theme.primary} /> Support
-              </Text>
-              <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Centre d'aide</Text>
-                <Icon name="chevron-right" size={20} color={theme.textLight} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Contactez-nous</Text>
-                <Icon name="chevron-right" size={20} color={theme.textLight} />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}>
-                <Text style={[styles.settingLabel, { color: theme.text }]}>Conditions d'utilisation</Text>
-                <Icon name="chevron-right" size={20} color={theme.textLight} />
-              </TouchableOpacity>
-            </View>
-          </View>
+            ))}
+          </ScrollView>
         </View>
       </View>
     </Modal>
   );
-};
+});
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const route = useRoute();
-  const theme = getThemeForScreen('home'); // Utiliser le thème home pour l'écran d'accueil
+  const theme = useMemo(() => getThemeForScreen('home'), []);
   const [settingsModalVisible, setSettingsModalVisible] = useState(false);
 
-  const buttons = [
-    { title: "Examen", screen: "ExamenScreen", color: theme.primary, icon: "assignment" },
-    { title: "Entrainement", screen: "TrainingScreen", color: theme.primary, icon: "fitness-center" },
-    { title: "Historique Examen", screen: "HistoricScreenExamen", color: theme.primary, icon: "history" },
-    { title: "Historique Entrainement", screen: "HistoricScreenTraining", color: theme.primary, icon: "history" },
-  ];
+  const buttons = useMemo(() => [
+    { title: "Examen", screen: "ExamenScreen" as const, color: theme.primary, icon: "assignment" },
+    { title: "Entrainement", screen: "TrainingScreen" as const, color: theme.primary, icon: "fitness-center" },
+    { title: "Historique Entrainement", screen: "HistoricScreenTraining" as const, color: theme.primary, icon: "history" },
+  ], [theme.primary]);
 
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
@@ -171,38 +162,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, []);
 
   useLayoutEffect(() => {
-    // Configuration de la StatusBar en transparent
-    StatusBar.setBarStyle('dark-content'); // Pour icônes noires sur fond clair
+    StatusBar.setBarStyle('dark-content');
     if (Platform.OS === 'android') {
       StatusBar.setTranslucent(true);
       StatusBar.setBackgroundColor('transparent');
     }
 
     navigation.setOptions({ 
-      title: 'Accueil',
-      headerStyle: {
-        backgroundColor: theme.primary,
-        elevation: 0,
-        shadowOpacity: 0,
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerShown: false, // Cacher le header pour cet écran
+      headerShown: false,
     });
-  }, [navigation, theme]);
+  }, [navigation]);
 
   return (
     <View style={[styles.screenContainer, { backgroundColor: theme.background }]}>
-      {/* StatusBar avec configuration spécifique pour cet écran */}
       <StatusBar 
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent={true}
       />
       
-      {/* Bouton paramètres en haut à droite */}
       <TouchableOpacity 
         style={styles.settingsButton}
         onPress={openSettings}
@@ -212,7 +190,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </TouchableOpacity>
       
       <View style={styles.headerContainer}>
-        <Image source={require('../assets/icons/logo_app_512.png')} style={styles.appLogo} resizeMode="contain" />
+        <Image 
+          source={require('../assets/icons/logo_app_512.png')} 
+          style={styles.appLogo} 
+          resizeMode="contain" 
+        />
         <Text style={[styles.appTitle, { color: theme.text }]}>BNSSA Training</Text>
         <Text style={[styles.appSubtitle, { color: theme.textLight }]}>
           Préparez-vous efficacement à l'examen du BNSSA
@@ -221,17 +203,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
       <View style={styles.buttonContainer}>
         {buttons.map(({ title, screen, color, icon }) => (
-          <TouchableButton
+          <NavButton
             key={screen}
             title={title}
-            onPress={() => handleNavigation(screen as keyof RootStackParamList)}
+            onPress={() => handleNavigation(screen)}
             color={color}
             icon={icon}
           />
         ))}
       </View>
 
-      {/* Modal de paramètres */}
       <SettingsModal 
         visible={settingsModalVisible}
         onClose={closeSettings}
@@ -247,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
     paddingHorizontal: spacing.m,
-    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Ajout de paddingTop pour éviter le chevauchement avec la StatusBar
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0,
   },
   settingsButton: {
     position: 'absolute',
@@ -256,17 +237,7 @@ const styles = StyleSheet.create({
     padding: spacing.s,
     borderRadius: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    ...shadowStyles.medium,
     zIndex: 1000,
   },
   headerContainer: {
@@ -275,7 +246,7 @@ const styles = StyleSheet.create({
   },
   appTitle: { 
     fontSize: typography.heading1, 
-    fontWeight: 'bold',
+    fontWeight: typography.fontWeightBold,
     marginBottom: spacing.xs,
   },
   appSubtitle: {
@@ -297,19 +268,8 @@ const styles = StyleSheet.create({
     width: 250,
     paddingVertical: spacing.m,
     paddingHorizontal: spacing.l,
-    borderRadius: 10,
+    borderRadius: borderRadius.medium,
     marginBottom: spacing.m,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
   },
   buttonContent: {
     flexDirection: 'row',
@@ -319,13 +279,13 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: typography.button,
-    fontWeight: 'bold',
+    fontWeight: typography.fontWeightBold,
     textAlign: 'center',
   },
   buttonIcon: {
     marginRight: spacing.s,
   },
-  // Styles pour le modal
+  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -336,17 +296,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: borderRadius.large,
     maxHeight: '80%',
     minHeight: '60%',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 10,
-      },
-    }),
+    ...shadowStyles.large,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -358,7 +308,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: typography.heading2,
-    fontWeight: 'bold',
+    fontWeight: typography.fontWeightBold,
   },
   closeButton: {
     padding: spacing.xs,
@@ -372,7 +322,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: typography.heading3,
-    fontWeight: 'bold',
+    fontWeight: typography.fontWeightBold,
     marginBottom: spacing.m,
     flexDirection: 'row',
     alignItems: 'center',
@@ -384,17 +334,7 @@ const styles = StyleSheet.create({
     padding: spacing.m,
     borderRadius: borderRadius.medium,
     marginBottom: spacing.s,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 1,
-      },
-    }),
+    ...shadowStyles.small,
   },
   settingLabel: {
     fontSize: typography.body1,
