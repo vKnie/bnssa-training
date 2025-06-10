@@ -11,8 +11,6 @@ import TrainingScreen from './screens/TrainingScreen';
 import TrainingSession from './screens/TrainingSession';
 import ExamenSession from './screens/ExamenSession';
 import ExamenSessionNote from './screens/ExamenSessionNote';
-import HistoricScreenExamen from './screens/HistoricScreenExamen';
-import HistoricScreenTraining from './screens/HistoricScreenTraining';
 // Importer le thème
 import { headerStyles, screenToTheme, appThemes } from './components/themes';
 
@@ -358,8 +356,6 @@ const App: React.FC = () => {
         />
         <Stack.Screen name="ExamenScreen" component={ExamenScreen} />
         <Stack.Screen name="TrainingScreen" component={TrainingScreen} />
-        <Stack.Screen name="HistoricScreenExamen" component={HistoricScreenExamen}/>
-        <Stack.Screen name="HistoricScreenTraining" component={HistoricScreenTraining}/>
         <Stack.Screen name="TrainingSession" component={TrainingSession} />
         <Stack.Screen name="ExamenSession" component={ExamenSession} />
         <Stack.Screen name="ExamenSessionNote" component={ExamenSessionNote} />
