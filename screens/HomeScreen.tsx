@@ -9,51 +9,70 @@ import {
   Platform,
   StatusBar,
   Modal,
-  Dimensions,
   ScrollView
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useRoute } from '@react-navigation/native';
 
 import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
-import TouchableButton from '../components/TouchableButton';
 import { RootStackParamList } from '../types';
 
+// Type pour la navigation de l'écran d'accueil
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
-interface HomeScreenProps {
-  navigation: HomeScreenNavigationProp;
-}
-
-interface NavButtonProps {
+// Composant bouton de navigation mémorisé pour optimiser les performances
+const NavButton: React.FC<{
   title: string;
   onPress: () => void;
   color: string;
   icon: string;
-}
-
-interface SettingsModalProps {
-  visible: boolean;
-  onClose: () => void;
-  theme: any;
-}
-
-const NavButton: React.FC<NavButtonProps> = React.memo(({ title, onPress, color, icon }) => (
+}> = React.memo(({ title, onPress, color, icon }) => (
   <TouchableOpacity 
     style={[styles.button, { backgroundColor: color }, shadowStyles.medium]} 
     onPress={onPress}
-    activeOpacity={0.7}
+    activeOpacity={0.7} // Effet de transparence au toucher
   >
-    <View style={styles.buttonContent}>
-      <Icon name={icon} size={24} color="#FFFFFF" style={styles.buttonIcon} />
-      <Text style={styles.buttonText}>{title}</Text>
-    </View>
+    {/* Icône du bouton */}
+    <Icon name={icon} size={24} color="#FFFFFF" style={styles.buttonIcon} />
+    {/* Texte du bouton */}
+    <Text style={styles.buttonText}>{title}</Text>
   </TouchableOpacity>
 ));
 
-const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ visible, onClose, theme }) => {
-  const settingSections = useMemo(() => [
+// Composant pour chaque élément de paramètre dans la modal
+const SettingItem: React.FC<{
+  label: string;
+  value?: string;
+  hasAction?: boolean;
+  theme: any;
+}> = ({ label, value, hasAction, theme }) => (
+  <TouchableOpacity 
+    style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
+    disabled={!hasAction} // Désactivé si pas d'action associée
+  >
+    <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
+    {value ? (
+      // Affichage de la valeur si présente
+      <Text style={[styles.settingValue, { color: theme.textLight }]}>{value}</Text>
+    ) : (
+      // Icône selon le type d'action
+      <Icon 
+        name={hasAction ? "chevron-right" : "refresh"} 
+        size={20} 
+        color={theme.textLight} 
+      />
+    )}
+  </TouchableOpacity>
+);
+
+// Modal des paramètres mémorisée pour éviter les re-renders inutiles
+const SettingsModal: React.FC<{
+  visible: boolean;
+  onClose: () => void;
+  theme: any;
+}> = React.memo(({ visible, onClose, theme }) => {
+  // Configuration des sections de paramètres
+  const sections = [
     {
       title: 'Information de l\'application',
       icon: 'info',
@@ -79,17 +98,19 @@ const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ visible, onClo
         { label: 'Conditions d\'utilisation', hasAction: true },
       ]
     }
-  ], []);
+  ];
 
   return (
     <Modal
-      animationType="slide"
-      transparent={true}
+      animationType="slide" // Animation de glissement depuis le bas
+      transparent // Fond transparent pour l'overlay
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={onClose} // Gestion du bouton retour Android
     >
+      {/* Overlay sombre derrière la modal */}
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContainer, { backgroundColor: theme.background }]}>
+          {/* En-tête de la modal avec titre et bouton fermer */}
           <View style={styles.modalHeader}>
             <Text style={[styles.modalTitle, { color: theme.text }]}>Paramètres</Text>
             <TouchableOpacity 
@@ -101,33 +122,23 @@ const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ visible, onClo
             </TouchableOpacity>
           </View>
           
+          {/* Contenu scrollable de la modal */}
           <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-            {settingSections.map((section, sectionIndex) => (
-              <View key={sectionIndex} style={styles.settingsSection}>
+            {sections.map((section, index) => (
+              <View key={index} style={styles.settingsSection}>
+                {/* Titre de section avec icône */}
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>
                   <Icon name={section.icon} size={20} color={theme.primary} /> {section.title}
                 </Text>
+                {/* Mappage des éléments de la section */}
                 {section.items.map((item, itemIndex) => (
-                  <TouchableOpacity 
+                  <SettingItem
                     key={itemIndex}
-                    style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
-                    disabled={!item.hasAction}
-                  >
-                    <Text style={[styles.settingLabel, { color: theme.text }]}>
-                      {item.label}
-                    </Text>
-                    {item.value ? (
-                      <Text style={[styles.settingValue, { color: theme.textLight }]}>
-                        {item.value}
-                      </Text>
-                    ) : (
-                      <Icon 
-                        name={item.hasAction ? "chevron-right" : "refresh"} 
-                        size={20} 
-                        color={theme.textLight} 
-                      />
-                    )}
-                  </TouchableOpacity>
+                    label={item.label}
+                    value={item.value}
+                    hasAction={item.hasAction}
+                    theme={theme}
+                  />
                 ))}
               </View>
             ))}
@@ -138,84 +149,81 @@ const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ visible, onClo
   );
 });
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const route = useRoute();
-  const theme = useMemo(() => getThemeForScreen('home'), []);
-  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ navigation }) => {
+  const theme = getThemeForScreen('home'); // Récupération du thème pour l'écran d'accueil
+  const [settingsVisible, setSettingsVisible] = useState(false); // État de visibilité de la modal
 
-  const buttons = useMemo(() => [
-    { title: "Examen", screen: "ExamenScreen" as const, color: theme.primary, icon: "assignment" },
-    { title: "Entrainement", screen: "TrainingScreen" as const, color: theme.primary, icon: "fitness-center" },
-    { title: "Historique Entrainement", screen: "HistoricScreenTraining" as const, color: theme.primary, icon: "history" },
-  ], [theme.primary]);
+  // Configuration des boutons de navigation principaux
+  const buttons = [
+    { title: "Examen", screen: "ExamenScreen" as const, icon: "assignment" },
+    { title: "Entrainement", screen: "TrainingScreen" as const, icon: "fitness-center" },
+    { title: "Historique Entrainement", screen: "HistoricScreenTraining" as const, icon: "history" },
+  ];
 
+  // Gestionnaire de navigation optimisé avec useCallback
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
   }, [navigation]);
 
-  const openSettings = useCallback(() => {
-    setSettingsModalVisible(true);
-  }, []);
-
-  const closeSettings = useCallback(() => {
-    setSettingsModalVisible(false);
-  }, []);
-
+  // Configuration de l'écran au montage
   useLayoutEffect(() => {
+    // Configuration de la barre de statut
     StatusBar.setBarStyle('dark-content');
     if (Platform.OS === 'android') {
-      StatusBar.setTranslucent(true);
+      StatusBar.setTranslucent(true); // Transparence de la barre de statut
       StatusBar.setBackgroundColor('transparent');
     }
-
-    navigation.setOptions({ 
-      headerShown: false,
-    });
+    navigation.setOptions({ headerShown: false }); // Masquage de l'en-tête de navigation
   }, [navigation]);
 
   return (
-    <View style={[styles.screenContainer, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      {/* Configuration de la barre de statut */}
       <StatusBar 
         barStyle="dark-content"
         backgroundColor="transparent"
-        translucent={true}
+        translucent
       />
       
+      {/* Bouton paramètres positionné en absolu en haut à droite */}
       <TouchableOpacity 
         style={styles.settingsButton}
-        onPress={openSettings}
+        onPress={() => setSettingsVisible(true)}
         activeOpacity={0.7}
       >
         <Icon name="settings" size={28} color={theme.primary} />
       </TouchableOpacity>
       
-      <View style={styles.headerContainer}>
+      {/* Section d'en-tête avec logo et textes */}
+      <View style={styles.header}>
         <Image 
           source={require('../assets/icons/logo_app_512.png')} 
-          style={styles.appLogo} 
+          style={styles.logo} 
           resizeMode="contain" 
         />
-        <Text style={[styles.appTitle, { color: theme.text }]}>BNSSA Training</Text>
-        <Text style={[styles.appSubtitle, { color: theme.textLight }]}>
+        <Text style={[styles.title, { color: theme.text }]}>BNSSA Training</Text>
+        <Text style={[styles.subtitle, { color: theme.textLight }]}>
           Préparez-vous efficacement à l'examen du BNSSA
         </Text>
       </View>
 
+      {/* Conteneur des boutons de navigation principaux */}
       <View style={styles.buttonContainer}>
-        {buttons.map(({ title, screen, color, icon }) => (
+        {buttons.map(({ title, screen, icon }) => (
           <NavButton
             key={screen}
             title={title}
             onPress={() => handleNavigation(screen)}
-            color={color}
+            color={theme.primary}
             icon={icon}
           />
         ))}
       </View>
 
+      {/* Modal des paramètres */}
       <SettingsModal 
-        visible={settingsModalVisible}
-        onClose={closeSettings}
+        visible={settingsVisible}
+        onClose={() => setSettingsVisible(false)}
         theme={theme}
       />
     </View>
@@ -223,110 +231,126 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  screenContainer: { 
+  // Conteneur principal centré avec padding adaptatif selon la plateforme
+  container: { 
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
     paddingHorizontal: spacing.m,
-    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0,
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Gestion des zones sécurisées
   },
+  // Bouton paramètres positionné en absolu avec z-index élevé
   settingsButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 0) + 10,
     right: spacing.m,
     padding: spacing.s,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fond semi-transparent
     ...shadowStyles.medium,
-    zIndex: 1000,
+    zIndex: 1000, // Au-dessus de tous les autres éléments
   },
-  headerContainer: {
+  // En-tête centré avec logo et textes
+  header: {
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
-  appTitle: { 
-    fontSize: typography.heading1, 
-    fontWeight: typography.fontWeightBold,
-    marginBottom: spacing.xs,
-  },
-  appSubtitle: {
-    fontSize: typography.body2,
-    textAlign: 'center',
-    marginBottom: spacing.m,
-  },
-  appLogo: { 
+  // Logo de l'application
+  logo: { 
     width: 128, 
     height: 128, 
     marginBottom: spacing.m,
   },
+  // Titre principal de l'application
+  title: { 
+    fontSize: typography.heading1, 
+    fontWeight: typography.fontWeightBold,
+    marginBottom: spacing.xs,
+  },
+  // Sous-titre descriptif
+  subtitle: {
+    fontSize: typography.body2,
+    textAlign: 'center',
+    marginBottom: spacing.m,
+  },
+  // Conteneur des boutons de navigation
   buttonContainer: { 
     width: '100%',
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
+  // Style des boutons de navigation avec icône et texte
   button: {
-    width: 250,
+    width: 250, // Largeur fixe pour l'uniformité
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: spacing.m,
     paddingHorizontal: spacing.l,
     borderRadius: borderRadius.medium,
     marginBottom: spacing.m,
   },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  // Icône des boutons avec marge droite
+  buttonIcon: {
+    marginRight: spacing.s,
   },
+  // Texte des boutons de navigation
   buttonText: {
     color: '#FFFFFF',
     fontSize: typography.button,
     fontWeight: typography.fontWeightBold,
-    textAlign: 'center',
   },
-  buttonIcon: {
-    marginRight: spacing.s,
-  },
-  // Modal styles
+  
+  // === Styles de la modal des paramètres ===
+  
+  // Overlay sombre de fond de la modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent noir
+    justifyContent: 'flex-end', // Modal depuis le bas
   },
+  // Conteneur principal de la modal avec coins arrondis
   modalContainer: {
     borderTopLeftRadius: borderRadius.large,
     borderTopRightRadius: borderRadius.large,
-    maxHeight: '80%',
-    minHeight: '60%',
+    maxHeight: '80%', // Hauteur maximale
+    minHeight: '60%', // Hauteur minimale
     ...shadowStyles.large,
   },
+  // En-tête de la modal avec titre et bouton fermer
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: spacing.m,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#e0e0e0', // Séparateur visuel
   },
+  // Titre de la modal
   modalTitle: {
     fontSize: typography.heading2,
     fontWeight: typography.fontWeightBold,
   },
+  // Bouton de fermeture de la modal
   closeButton: {
     padding: spacing.xs,
   },
+  // Contenu scrollable de la modal
   modalContent: {
     flex: 1,
     padding: spacing.m,
   },
+  // Section de paramètres avec espacement
   settingsSection: {
     marginBottom: spacing.l,
   },
+  // Titre de section avec icône intégrée
   sectionTitle: {
     fontSize: typography.heading3,
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.m,
-    flexDirection: 'row',
-    alignItems: 'center',
   },
+  // Élément de paramètre avec layout horizontal
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -336,10 +360,12 @@ const styles = StyleSheet.create({
     marginBottom: spacing.s,
     ...shadowStyles.small,
   },
+  // Label des éléments de paramètre
   settingLabel: {
     fontSize: typography.body1,
-    flex: 1,
+    flex: 1, // Prend l'espace disponible
   },
+  // Valeur affichée pour les éléments informatifs
   settingValue: {
     fontSize: typography.body2,
   },
