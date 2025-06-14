@@ -197,7 +197,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
       {/* Section d'en-tête avec logo et textes */}
       <View style={styles.header}>
         <Image 
-          source={require('../assets/icons/logo_app_512.png')} 
+          source={require('../assets/icons/playstore.png')} 
           style={styles.logo} 
           resizeMode="contain" 
         />

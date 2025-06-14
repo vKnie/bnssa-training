@@ -1,24 +1,26 @@
 {
   "expo": {
-    "name": "bnssa-training",
-    "slug": "bnssa-training",
+    "name": "BNSSA Training",
+    "slug": "BNSSA Training",
     "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/logo_app_512.png",
+    "owner": "Kévin&Kelyfane",
+    "icon": "./assets/icons/appstore.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
-
     "splash": {
-      "image": "./assets/icons/logo_app_512.png",
+      "image": "./assets/icons/appstore.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": "./assets/icons/appstore.png"
     },
     "android": {
+      "icon": "./assets/icons/playstore.png",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/logo_app_512.png",
+        "foregroundImage": "./assets/icons/playstore.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -27,7 +29,7 @@
       "permissions": []
     },
     "web": {
-      "favicon": "./assets/icons/logo_app_512.png"
+      "favicon": "./assets/icons/playstore.png"
     },
     "plugins": [],
     "extra": {

@@ -33,3 +33,15 @@ npx expo start
 ### 4. Scanner le QR Code avec Expo Go
 - **Sur Android** : Ouvrez l’application Expo Go et scannez le QR code affiché dans votre terminal ou navigateur.
 - **Sur iOS** : Ouvrez l'appareil photo de votre téléphone et scannez le QR code pour ouvrir l'application dans Expo Go.
+
+- npx expo prebuild --clean
+npx expo run:android --variant debug --device
+
+- npx expo run:android --variant release --no-install
+
+ou
+
+- cd android
+- ./gradlew assembleRelease
+
+npx expo prebuild --clean
