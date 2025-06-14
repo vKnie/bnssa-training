@@ -7,6 +7,7 @@
     "icon": "./assets/icons/logo_app_512.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+
     "splash": {
       "image": "./assets/icons/logo_app_512.png",
       "resizeMode": "contain",
@@ -20,13 +21,19 @@
         "foregroundImage": "./assets/icons/logo_app_512.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.vknie.bnssatraining",
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/icons/logo_app_512.png"
     },
-    "plugins": [
-      "expo-sqlite"
-    ]
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "0eae00e8-4a62-49dc-9d4d-16dc6209f68b"
+      }
+    }
   }
 }

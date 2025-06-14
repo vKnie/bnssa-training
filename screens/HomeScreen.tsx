@@ -157,7 +157,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
   const buttons = [
     { title: "Examen", screen: "ExamenScreen" as const, icon: "assignment" },
     { title: "Entrainement", screen: "TrainingScreen" as const, icon: "fitness-center" },
-    { title: "Historique Entrainement", screen: "HistoricScreenTraining" as const, icon: "history" },
+    // { title: "Historique Entrainement", screen: "HistoricScreenTraining" as const, icon: "history" },
   ];
 
   // Gestionnaire de navigation optimisé avec useCallback
