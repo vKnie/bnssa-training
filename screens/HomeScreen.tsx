@@ -9,13 +9,15 @@ import {
   Platform,
   StatusBar,
   Modal,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
 import { RootStackParamList } from '../types';
+import { databaseService } from '../services/DatabaseService'; // AJOUT : Import du service de base de données
 
 // Type pour la navigation de l'écran d'accueil
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -44,11 +46,14 @@ const SettingItem: React.FC<{
   label: string;
   value?: string;
   hasAction?: boolean;
+  onPress?: () => void; // AJOUT : Fonction de callback pour les actions
   theme: any;
-}> = ({ label, value, hasAction, theme }) => (
+}> = ({ label, value, hasAction, onPress, theme }) => (
   <TouchableOpacity 
     style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
     disabled={!hasAction} // Désactivé si pas d'action associée
+    onPress={onPress} // AJOUT : Gestion du clic
+    activeOpacity={hasAction ? 0.7 : 1} // AJOUT : Effet visuel seulement si cliquable
   >
     <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
     {value ? (
@@ -70,7 +75,8 @@ const SettingsModal: React.FC<{
   visible: boolean;
   onClose: () => void;
   theme: any;
-}> = React.memo(({ visible, onClose, theme }) => {
+  onResetExamData: () => void; // AJOUT : Fonction pour réinitialiser les données d'examen
+}> = React.memo(({ visible, onClose, theme, onResetExamData }) => {
   // Configuration des sections de paramètres
   const sections = [
     {
@@ -85,8 +91,12 @@ const SettingsModal: React.FC<{
       title: 'Données',
       icon: 'storage',
       items: [
-        { label: 'Réinitialiser données d\'entraînement', hasAction: true },
-        { label: 'Réinitialiser données d\'examen', hasAction: true },
+        // MODIFICATION : Suppression du bouton d'entraînement, conservation de l'examen
+        { 
+          label: 'Réinitialiser données d\'examen', 
+          hasAction: true,
+          onPress: onResetExamData // AJOUT : Action de réinitialisation
+        },
       ]
     },
     {
@@ -137,6 +147,7 @@ const SettingsModal: React.FC<{
                     label={item.label}
                     value={item.value}
                     hasAction={item.hasAction}
+                    onPress={item.onPress} // AJOUT : Passage de la fonction onPress
                     theme={theme}
                   />
                 ))}
@@ -164,6 +175,58 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
   }, [navigation]);
+
+  // AJOUT : Fonction pour réinitialiser les données d'examen
+  const handleResetExamData = useCallback(async () => {
+    Alert.alert(
+      'Réinitialiser les données d\'examen',
+      'Cette action supprimera définitivement toutes vos données d\'examen (historique, scores, statistiques). Cette action est irréversible.\n\nÊtes-vous absolument sûr de vouloir continuer ?',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel'
+        },
+        {
+          text: 'Confirmer',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Fermeture de la modal
+              setSettingsVisible(false);
+              
+              // Initialisation de la base de données
+              await databaseService.initDatabase();
+              
+              // Suppression de toutes les données
+              await databaseService.clearAllData();
+              
+              // Confirmation de succès
+              Alert.alert(
+                'Réinitialisation terminée',
+                'Toutes les données d\'examen ont été supprimées avec succès.',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      // Optionnel : Naviguer vers l'écran d'accueil pour "rafraîchir"
+                      console.log('Données d\'examen réinitialisées');
+                    }
+                  }
+                ]
+              );
+            } catch (error) {
+              console.error('Erreur lors de la réinitialisation:', error);
+              Alert.alert(
+                'Erreur',
+                'Une erreur est survenue lors de la réinitialisation des données. Veuillez réessayer.',
+                [{ text: 'OK' }]
+              );
+            }
+          }
+        }
+      ]
+    );
+  }, []);
 
   // Configuration de l'écran au montage
   useLayoutEffect(() => {
@@ -225,6 +288,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
         theme={theme}
+        onResetExamData={handleResetExamData} // AJOUT : Passage de la fonction de réinitialisation
       />
     </View>
   );

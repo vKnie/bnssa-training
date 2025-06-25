@@ -3,7 +3,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationOptions, StackHeaderProps } from '@react-navigation/stack';
 import { Platform, StatusBar } from 'react-native';
-
 // Screens
 import HomeScreen from './screens/HomeScreen';
 import ExamenScreen from './screens/ExamenScreen';
@@ -11,10 +10,9 @@ import TrainingScreen from './screens/TrainingScreen';
 import TrainingSession from './screens/TrainingSession';
 import ExamenSession from './screens/ExamenSession';
 import ExamenSessionNote from './screens/ExamenSessionNote';
-
+import HistoricScreen from './screens/HistoricScreen'; // AJOUT : Nouvel écran d'historique
 // Components
 import CustomHeader from './components/CustomHeader';
-
 // Types
 import { RootStackParamList } from './types/index';
 
@@ -45,8 +43,8 @@ const App: React.FC = () => {
     cardStyle: {
       backgroundColor: '#f8f9fa',
     },
-    headerStyle: { 
-      elevation: 0, 
+    headerStyle: {
+      elevation: 0,
       shadowOpacity: 0,
       borderBottomWidth: 0,
     },
@@ -86,7 +84,7 @@ const App: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <StatusBar 
+      <StatusBar
         translucent={true}
         backgroundColor="transparent"
         barStyle="light-content"
@@ -95,35 +93,41 @@ const App: React.FC = () => {
         initialRouteName="HomeScreen"
         screenOptions={screenOptions}
       >
-        <Stack.Screen 
-          name="HomeScreen" 
-          component={HomeScreen} 
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="ExamenScreen" 
+        <Stack.Screen
+          name="ExamenScreen"
           component={ExamenScreen}
           options={{ title: 'Mode Examen' }}
         />
-        <Stack.Screen 
-          name="TrainingScreen" 
+        <Stack.Screen
+          name="TrainingScreen"
           component={TrainingScreen}
           options={{ title: 'Mode Entraînement' }}
         />
-        <Stack.Screen 
-          name="TrainingSession" 
+        <Stack.Screen
+          name="TrainingSession"
           component={TrainingSession}
           options={{ title: 'Session d\'Entraînement' }}
         />
-        <Stack.Screen 
-          name="ExamenSession" 
+        <Stack.Screen
+          name="ExamenSession"
           component={ExamenSession}
           options={{ title: 'Session d\'Examen' }}
         />
-        <Stack.Screen 
-          name="ExamenSessionNote" 
+        <Stack.Screen
+          name="ExamenSessionNote"
           component={ExamenSessionNote}
           options={{ title: 'Résultat d\'Examen' }}
+        />
+        {/* AJOUT : Écran d'historique des examens */}
+        <Stack.Screen
+          name="HistoricScreen"
+          component={HistoricScreen}
+          options={{ title: 'Historique des Examens' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

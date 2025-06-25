@@ -1,6 +1,6 @@
 // screens/ExamenSessionNote.tsx
 import React, { useEffect, useLayoutEffect, useCallback, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -14,6 +14,7 @@ import {
   getThemeForScreen
 } from '../components/themes';
 import { RootStackParamList, Question } from '../types';
+import { databaseService } from '../services/DatabaseService';
 
 // Types pour la navigation et les routes
 type ExamenSessionNoteScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenSessionNote'>;
@@ -155,6 +156,9 @@ const ExamenSessionNote: React.FC = () => {
   
   const theme = getThemeForScreen(route.name);
   const [activeTab, setActiveTab] = useState<TabType>('all'); // Filtre actuel
+  const [saving, setSaving] = useState(false); // État de sauvegarde
+  const [isSaved, setIsSaved] = useState(false); // NOUVEAU : Flag pour éviter les doubles sauvegardes
+  const [examStartTime] = useState(() => Date.now()); // Temps de début pour calculer la durée
   
   // Calcul du pourcentage de réussite
   const successPercentage = (score / totalQuestions) * 100;
@@ -228,24 +232,78 @@ const ExamenSessionNote: React.FC = () => {
     return icons[activeTab];
   };
 
-  // Gestionnaire de retour à l'accueil
-  const handleReturnHome = useCallback(() => {
-    navigation.navigate('HomeScreen');
-  }, [navigation]);
+  // Fonction de sauvegarde dans SQLite - MODIFIÉE pour éviter les doublons
+  const saveExamData = useCallback(async () => {
+    if (saving || isSaved) return; // MODIFICATION : Empêche les doubles sauvegardes avec flag
+    
+    try {
+      setSaving(true);
+      
+      // Calcul de la durée de l'examen (45 minutes max - temps écoulé)
+      const examDuration = Math.floor((Date.now() - examStartTime) / 1000); // en secondes
+      const maxDuration = 45 * 60; // 45 minutes en secondes
+      const actualDuration = Math.min(examDuration, maxDuration);
+      
+      // Initialisation de la base de données si nécessaire
+      await databaseService.initDatabase();
+      
+      // Sauvegarde des données
+      const sessionId = await databaseService.saveExamSession(
+        actualDuration,
+        score,
+        totalQuestions,
+        selectedQuestions,
+        selectedAnswers
+      );
+      
+      console.log('Session d\'examen sauvegardée avec l\'ID:', sessionId);
+      setIsSaved(true); // NOUVEAU : Marquer comme sauvegardé
+      
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde:', error);
+      Alert.alert(
+        'Erreur de sauvegarde', 
+        'Les données de l\'examen n\'ont pas pu être sauvegardées. Vous pouvez réessayer depuis l\'écran d\'accueil.'
+      );
+    } finally {
+      setSaving(false);
+    }
+  }, [saving, isSaved, examStartTime, score, totalQuestions, selectedQuestions, selectedAnswers]); // MODIFICATION : Ajout d'isSaved dans les dépendances
 
-  // Gestion du bouton retour - redirection vers l'écran d'examen
+  // Gestionnaire de retour à l'accueil - MODIFIÉ pour ne pas sauvegarder à nouveau
+  const handleReturnHome = useCallback(async () => {
+    // MODIFICATION : Ne sauvegarde que si pas encore fait
+    if (!isSaved) {
+      await saveExamData();
+    }
+    navigation.navigate('HomeScreen');
+  }, [isSaved, saveExamData, navigation]);
+
+  // Gestion du bouton retour - MODIFIÉE pour ne pas sauvegarder à nouveau
   useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+    const unsubscribe = navigation.addListener('beforeRemove', async (e) => {
       e.preventDefault();
+      // MODIFICATION : Ne sauvegarde que si pas encore fait
+      if (!isSaved) {
+        await saveExamData();
+      }
       navigation.navigate('ExamenScreen');
     });
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, saveExamData, isSaved]); // MODIFICATION : Ajout d'isSaved dans les dépendances
 
   // Configuration du titre de l'écran
   useLayoutEffect(() => {
     navigation.setOptions({ title: 'Récapitulatif Examen' });
   }, [navigation]);
+
+  // Sauvegarde automatique au montage du composant - UNIQUE
+  useEffect(() => {
+    // MODIFICATION : Ne sauvegarde qu'une seule fois au montage
+    if (!isSaved) {
+      saveExamData();
+    }
+  }, []); // MODIFICATION : Dépendances vides pour ne s'exécuter qu'au montage
 
   // Configuration des filtres avec leurs couleurs et compteurs
   const filters = [
@@ -267,6 +325,18 @@ const ExamenSessionNote: React.FC = () => {
           <Text style={[styles.scoreStatus, { color: scoreStatus.color }]}>
             {scoreStatus.text}
           </Text>
+          {/* Indicateur de sauvegarde */}
+          {saving && (
+            <Text style={[styles.savingText, { color: theme.textLight }]}>
+              💾 Sauvegarde en cours...
+            </Text>
+          )}
+          {/* NOUVEAU : Indicateur de sauvegarde terminée */}
+          {isSaved && !saving && (
+            <Text style={[styles.savedText, { color: theme.success }]}>
+              ✅ Données sauvegardées
+            </Text>
+          )}
         </View>
       </View>
 
@@ -320,9 +390,12 @@ const ExamenSessionNote: React.FC = () => {
           style={[styles.homeButton, { backgroundColor: theme.primary }]} 
           onPress={handleReturnHome}
           activeOpacity={0.7}
+          disabled={saving} // Désactivé pendant la sauvegarde
         >
           <Icon name="home" size={20} color="#FFF" style={styles.buttonIcon} />
-          <Text style={styles.buttonText}>Retour à l'accueil</Text>
+          <Text style={styles.buttonText}>
+            {saving ? 'Sauvegarde...' : 'Retour à l\'accueil'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -362,6 +435,18 @@ const styles = StyleSheet.create({
   scoreStatus: {
     fontSize: typography.body2,
     fontWeight: typography.fontWeightBold,
+  },
+  // Texte de sauvegarde
+  savingText: {
+    fontSize: typography.caption,
+    marginTop: spacing.xs,
+    fontStyle: 'italic',
+  },
+  // NOUVEAU : Texte de sauvegarde terminée
+  savedText: {
+    fontSize: typography.caption,
+    marginTop: spacing.xs,
+    fontWeight: typography.fontWeightMedium,
   },
   // Conteneur des filtres
   filtersContainer: {

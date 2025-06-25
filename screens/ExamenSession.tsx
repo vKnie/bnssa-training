@@ -72,6 +72,7 @@ const ExamenSession: React.FC = () => {
   const [score, setScore] = useState(0); // Score actuel de l'utilisateur
   const [timeLeft, setTimeLeft] = useState(45 * 60); // Temps restant en secondes (45 minutes)
   const [isExamFinished, setIsExamFinished] = useState(false); // État de fin d'examen
+  const [examStartTime] = useState(() => Date.now()); // Temps de début d'examen pour calcul de durée
 
   // Données calculées dérivées des états
   const currentQuestion = selectedQuestions[currentQuestionIndex];
@@ -114,6 +115,11 @@ const ExamenSession: React.FC = () => {
     const isCorrect = isCorrectAnswer();
     const finalScore = score + (isCorrect ? 1 : 0); // Ajout du point pour la dernière question si correcte
 
+    // Calcul du temps écoulé en secondes
+    const examEndTime = Date.now();
+    const examDuration = Math.floor((examEndTime - examStartTime) / 1000);
+    const actualDuration = Math.min(examDuration, 45 * 60); // Max 45 minutes
+
     // Navigation vers l'écran de notation avec toutes les données nécessaires
     navigation.navigate('ExamenSessionNote', {
       score: finalScore,
@@ -124,8 +130,9 @@ const ExamenSession: React.FC = () => {
         selectedAnswers, // Réponses de la question actuelle
         ...allSelectedAnswers.slice(currentQuestionIndex + 1) // Réponses des questions suivantes (vides)
       ],
+      examStartTime, // Transmission du temps de début pour calcul précis de la durée
     });
-  }, [isCorrectAnswer, score, navigation, selectedQuestions, allSelectedAnswers, currentQuestionIndex, selectedAnswers]);
+  }, [isCorrectAnswer, score, navigation, selectedQuestions, allSelectedAnswers, currentQuestionIndex, selectedAnswers, examStartTime]);
 
   // Gestionnaire de sélection/désélection des réponses
   const handleAnswerSelection = useCallback((answer: string) => {
