@@ -36,6 +36,150 @@ import { ExamSession } from '../services/DatabaseService';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
+// ✅ NOUVEAU : Utilitaires de formatage uniformisés
+const formatUtils = {
+  // Formatage de durée uniforme avec validation stricte
+  formatDuration: (duration: any): string => {
+    try {
+      // Conversion sécurisée en nombre
+      let seconds = Number(duration);
+      
+      // Validation stricte
+      if (!duration && duration !== 0) {
+        console.warn('⚠️ Durée undefined/null:', duration);
+        return "0:00";
+      }
+      
+      if (isNaN(seconds) || seconds < 0) {
+        console.warn('⚠️ Durée invalide:', duration, 'convertie en:', seconds);
+        return "0:00";
+      }
+      
+      // Conversion en entier pour éviter les décimales
+      seconds = Math.floor(seconds);
+      
+      // Calcul des unités de temps
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const remainingSeconds = seconds % 60;
+      
+      // Format selon la durée
+      if (hours > 0) {
+        // Format: "1h 23min" ou "1h 00min"
+        return `${hours}h ${String(minutes).padStart(2, '0')}min`;
+      } else {
+        // Format: "23:45" ou "5:30"
+        return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
+      }
+    } catch (error) {
+      console.error('❌ Erreur formatage durée:', error, 'pour:', duration);
+      return "0:00";
+    }
+  },
+
+  // Formatage de durée courte pour les espaces restreints
+  formatDurationShort: (duration: any): string => {
+    try {
+      let seconds = Number(duration);
+      
+      if (!duration && duration !== 0) return "0min";
+      if (isNaN(seconds) || seconds < 0) return "0min";
+      
+      seconds = Math.floor(seconds);
+      const minutes = Math.floor(seconds / 60);
+      
+      if (minutes === 0) {
+        return `${seconds}s`;
+      } else if (minutes < 60) {
+        return `${minutes}min`;
+      } else {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return `${hours}h${remainingMinutes > 0 ? `${remainingMinutes}min` : ''}`;
+      }
+    } catch (error) {
+      console.error('❌ Erreur formatage durée courte:', error);
+      return "0min";
+    }
+  },
+
+  // Formatage de date sécurisé
+  formatDate: (dateString: any): string => {
+    try {
+      if (!dateString) {
+        console.warn('⚠️ Date manquante');
+        return "Date non disponible";
+      }
+      
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        console.warn('⚠️ Date invalide:', dateString);
+        return "Date invalide";
+      }
+      
+      return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('❌ Erreur formatage date:', error);
+      return "Date invalide";
+    }
+  },
+
+  // Validation et nettoyage des sessions
+  validateSession: (session: any, index: number): any => {
+    if (!session || typeof session !== 'object') {
+      console.warn(`⚠️ Session ${index} invalide:`, session);
+      return null;
+    }
+
+    const validatedSession = {
+      ...session,
+      // Validation stricte des nombres
+      score: (() => {
+        const s = Number(session.score);
+        return isNaN(s) ? 0 : Math.max(0, Math.min(40, s)); // Score entre 0 et 40
+      })(),
+      successRate: (() => {
+        const sr = Number(session.successRate);
+        return isNaN(sr) ? 0 : Math.max(0, Math.min(100, sr)); // Pourcentage entre 0 et 100
+      })(),
+      duration: (() => {
+        const d = Number(session.duration);
+        const validDuration = isNaN(d) ? 0 : Math.max(0, d); // Durée positive
+        if (validDuration !== d) {
+          console.warn(`⚠️ Session ${index} durée corrigée:`, d, '→', validDuration);
+        }
+        return validDuration;
+      })(),
+      // Validation des booléens
+      isPassed: Boolean(session.isPassed),
+      // Validation des dates
+      examDate: session.examDate || new Date().toISOString(),
+      // Métadonnées utiles
+      originalIndex: index,
+      isValid: true
+    };
+
+    // Log des corrections appliquées
+    if (validatedSession.score !== session.score || 
+        validatedSession.successRate !== session.successRate || 
+        validatedSession.duration !== session.duration) {
+      console.log(`🔧 Session ${index} corrigée:`, {
+        score: `${session.score} → ${validatedSession.score}`,
+        successRate: `${session.successRate} → ${validatedSession.successRate}`,
+        duration: `${session.duration} → ${validatedSession.duration}`
+      });
+    }
+
+    return validatedSession;
+  }
+};
+
 // Système responsive avancé
 const breakpoints = {
   small: 350,
@@ -70,59 +214,20 @@ const AllExamsList: React.FC<{
 }> = ({ sessions, theme }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Fonctions de formatage sécurisées
-  const safeFormatDuration = (duration: any): string => {
-    try {
-      const num = Number(duration);
-      if (!num || isNaN(num) || num < 0) return "0:00";
-      const minutes = Math.floor(num / 60);
-      const seconds = num % 60;
-      return `${minutes}:${String(seconds).padStart(2, '0')}`;
-    } catch {
-      return "0:00";
+  // ✅ MODIFIÉ : Utilisation des utilitaires unifiés
+  const validSessions = useMemo(() => {
+    if (!sessions || !Array.isArray(sessions)) {
+      console.warn('⚠️ Sessions invalides:', sessions);
+      return [];
     }
-  };
-
-  const safeFormatDate = (dateString: any): string => {
-    try {
-      if (!dateString) return "Date non disponible";
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return "Date invalide";
-      
-      return date.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch {
-      return "Date invalide";
-    }
-  };
-
-  // Validation stricte des sessions
-  const safeGetSessions = () => {
-    if (!sessions || !Array.isArray(sessions)) return [];
     
-    return sessions
-      .map((session, originalIndex) => {
-        if (!session || typeof session !== 'object') return null;
-        
-        return {
-          ...session,
-          score: Number(session.score) || 0,
-          successRate: Number(session.successRate) || 0,
-          isPassed: Boolean(session.isPassed),
-          duration: Number(session.duration) || 0,
-          examDate: session.examDate || new Date().toISOString(),
-          originalIndex
-        };
-      })
+    const validated = sessions
+      .map((session, index) => formatUtils.validateSession(session, index))
       .filter(Boolean);
-  };
-
-  const validSessions = safeGetSessions();
+    
+    console.log(`✅ ${validated.length}/${sessions.length} sessions validées`);
+    return validated;
+  }, [sessions]);
 
   if (validSessions.length === 0) {
     return (
@@ -154,7 +259,7 @@ const AllExamsList: React.FC<{
           <View style={styles.allExamsHeaderText}>
             <Text style={styles.allExamsHeaderTitle}>Historique complet</Text>
             <Text style={styles.allExamsHeaderSubtitle}>
-              {String(validSessions.length)} session{validSessions.length > 1 ? 's' : ''} • Performances détaillées
+              {validSessions.length} session{validSessions.length > 1 ? 's' : ''} • Performances détaillées
             </Text>
           </View>
           <TouchableOpacity 
@@ -196,14 +301,14 @@ const AllExamsList: React.FC<{
                         backgroundColor: isPass ? theme.success : theme.error,
                       }]}>
                         <Text style={styles.premiumExamNumber}>
-                          {`E${String(examNumber)}`}
+                          E{examNumber}
                         </Text>
                       </View>
                       
                       <View style={styles.premiumExamInfo}>
                         <View style={styles.premiumExamScoreRow}>
                           <Text style={[styles.premiumExamScore, { color: theme.text }]}>
-                            {`${String(item.score)}/40`}
+                            {item.score}/40
                           </Text>
                           <View style={[styles.premiumPercentageBadge, { 
                             backgroundColor: isPass ? theme.success + '15' : theme.error + '15',
@@ -212,12 +317,12 @@ const AllExamsList: React.FC<{
                             <Text style={[styles.premiumPercentageText, { 
                               color: isPass ? theme.success : theme.error 
                             }]}>
-                              {`${String(item.successRate)}%`}
+                              {Math.round(item.successRate)}%
                             </Text>
                           </View>
                         </View>
                         <Text style={[styles.premiumExamDate, { color: theme.textLight }]}>
-                          {safeFormatDate(item.examDate)}
+                          {formatUtils.formatDate(item.examDate)}
                         </Text>
                       </View>
 
@@ -225,7 +330,8 @@ const AllExamsList: React.FC<{
                         <View style={[styles.premiumStatChip, { backgroundColor: theme.primary + '10' }]}>
                           <Icon name="schedule" size={14} color={theme.primary} />
                           <Text style={[styles.premiumStatText, { color: theme.primary }]}>
-                            {safeFormatDuration(item.duration)}
+                            {/* ✅ CORRIGÉ : Utilisation du formatage unifié */}
+                            {formatUtils.formatDurationShort(item.duration)}
                           </Text>
                         </View>
                         <View style={[styles.premiumStatusBadge, { 
@@ -254,7 +360,7 @@ const AllExamsList: React.FC<{
       <View style={[styles.allExamsFooter, { backgroundColor: '#FAFBFC' }]}>
         <View style={styles.quickStat}>
           <Text style={[styles.quickStatNumber, { color: theme.success }]}>
-            {String(validSessions.filter(s => s.isPassed).length)}
+            {validSessions.filter(s => s.isPassed).length}
           </Text>
           <Text style={[styles.quickStatLabel, { color: theme.textLight }]}>
             Réussis
@@ -263,7 +369,7 @@ const AllExamsList: React.FC<{
         <View style={styles.quickStatDivider} />
         <View style={styles.quickStat}>
           <Text style={[styles.quickStatNumber, { color: theme.error }]}>
-            {String(validSessions.filter(s => !s.isPassed).length)}
+            {validSessions.filter(s => !s.isPassed).length}
           </Text>
           <Text style={[styles.quickStatLabel, { color: theme.textLight }]}>
             Échoués
@@ -275,7 +381,7 @@ const AllExamsList: React.FC<{
             {(() => {
               if (validSessions.length === 0) return "0%";
               const avg = validSessions.reduce((sum, s) => sum + s.successRate, 0) / validSessions.length;
-              return `${String(Math.round(avg))}%`;
+              return `${Math.round(avg)}%`;
             })()}
           </Text>
           <Text style={[styles.quickStatLabel, { color: theme.textLight }]}>
@@ -286,6 +392,8 @@ const AllExamsList: React.FC<{
     </View>
   );
 };
+
+// ✅ MODIFIÉ : Modal avec formatage uniforme
 const ExamDetailModal: React.FC<{
   visible: boolean;
   onClose: () => void;
@@ -330,7 +438,7 @@ const ExamDetailModal: React.FC<{
               <Icon name="grade" size={18} color={theme.primary} />
               <Text style={[styles.modalLabel, { color: theme.textLight }]}>Score:</Text>
               <Text style={[styles.modalValue, { color: theme.text }]}>
-                {examData.score}/40 ({examData.successRate}%)
+                {examData.score}/40 ({Math.round(examData.successRate)}%)
               </Text>
             </View>
             
@@ -338,7 +446,7 @@ const ExamDetailModal: React.FC<{
               <Icon name="event" size={18} color={theme.primary} />
               <Text style={[styles.modalLabel, { color: theme.textLight }]}>Date:</Text>
               <Text style={[styles.modalValue, { color: theme.text }]}>
-                {examData.fullDate}
+                {formatUtils.formatDate(examData.sessionData?.examDate || examData.fullDate)}
               </Text>
             </View>
             
@@ -346,7 +454,8 @@ const ExamDetailModal: React.FC<{
               <Icon name="schedule" size={18} color={theme.primary} />
               <Text style={[styles.modalLabel, { color: theme.textLight }]}>Durée:</Text>
               <Text style={[styles.modalValue, { color: theme.text }]}>
-                {Math.round(examData.duration / 60)} minutes
+                {/* ✅ CORRIGÉ : Utilisation du formatage unifié */}
+                {formatUtils.formatDuration(examData.sessionData?.duration || examData.duration)}
               </Text>
             </View>
             
@@ -376,10 +485,21 @@ const ProgressChart: React.FC<{
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // ✅ MODIFIÉ : Utilisation des utilitaires de validation
   const chartData = useMemo(() => {
     if (!sessions.length) return [];
     
-    const recentSessions = sessions.slice(0, 6).reverse();
+    // Validation des sessions avant traitement
+    const validSessions = sessions
+      .map((session, index) => formatUtils.validateSession(session, index))
+      .filter(Boolean);
+    
+    if (!validSessions.length) {
+      console.warn('⚠️ Aucune session valide pour le graphique');
+      return [];
+    }
+    
+    const recentSessions = validSessions.slice(0, 6).reverse();
     const chartWidth = screenWidth - (config.margin * 4);
     const chartHeight = currentSize === 'xs' ? 260 : currentSize === 'sm' ? 300 : currentSize === 'md' ? 340 : 380;
     const padding = config.padding;
@@ -387,8 +507,8 @@ const ProgressChart: React.FC<{
     const maxScore = 40;
     const minScore = 0;
     
-    // Calculer le numéro de départ des examens (si plus de 6 examens, on commence par le bon numéro)
-    const startExamNumber = Math.max(1, sessions.length - 5);
+    // Calcul du numéro de départ des examens
+    const startExamNumber = Math.max(1, validSessions.length - 5);
     
     return recentSessions.map((session, index) => {
       const x = padding + (index * (chartWidth - padding * 2)) / Math.max(recentSessions.length - 1, 1);
@@ -399,15 +519,9 @@ const ProgressChart: React.FC<{
         y,
         score: session.score,
         successRate: session.successRate,
-        examLabel: `E${startExamNumber + index}`, // Utilise la même logique que la liste
-        fullDate: new Date(session.examDate).toLocaleDateString('fr-FR', { 
-          day: '2-digit', 
-          month: '2-digit',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }),
-        duration: session.duration,
+        examLabel: `E${startExamNumber + index}`,
+        fullDate: formatUtils.formatDate(session.examDate),
+        duration: session.duration, // Durée en secondes
         isPassed: session.isPassed,
         sessionData: session
       };
@@ -598,22 +712,6 @@ const ProgressChart: React.FC<{
                     {/* Halo extérieur */}
                     <Circle
                       cx={point.x}
-                      cy={point.y}
-                      r={config.pointSize + 6}
-                      fill={point.isPassed ? theme.success : theme.error}
-                      opacity={0.15}
-                    />
-                    {/* Cercle intermédiaire */}
-                    <Circle
-                      cx={point.x}
-                      cy={point.y}
-                      r={config.pointSize + 2}
-                      fill={point.isPassed ? theme.success : theme.error}
-                      opacity={0.4}
-                    />
-                    {/* Point principal avec ombre */}
-                    <Circle
-                      cx={point.x}
                       cy={point.y + 1}
                       r={config.pointSize}
                       fill="#000000"
@@ -771,20 +869,28 @@ export const StatsOverviewCard: React.FC<{
   insets?: any;
 }> = ({ stats, sessions, theme, insets }) => {
   
+  // ✅ MODIFIÉ : Utilisation des utilitaires de validation
   const additionalStats = useMemo(() => {
     if (!sessions.length) return {};
     
-    const avgDuration = sessions.reduce((sum, s) => sum + s.duration, 0) / sessions.length;
-    const bestScore = Math.max(...sessions.map(s => s.successRate));
-    const recentSessions = sessions.slice(0, 5);
+    // Validation des sessions
+    const validSessions = sessions
+      .map((session, index) => formatUtils.validateSession(session, index))
+      .filter(Boolean);
+    
+    if (!validSessions.length) return {};
+    
+    const avgDuration = validSessions.reduce((sum, s) => sum + s.duration, 0) / validSessions.length;
+    const bestScore = Math.max(...validSessions.map(s => s.successRate));
+    const recentSessions = validSessions.slice(0, 5);
     const recentAvg = recentSessions.reduce((sum, s) => sum + s.successRate, 0) / recentSessions.length;
     
     return {
-      avgDuration: Math.round(avgDuration / 60),
+      avgDuration: Math.round(avgDuration / 60), // En minutes
       bestScore: Math.round(bestScore),
       recentAvg: Math.round(recentAvg),
-      improvement: sessions.length >= 2 ? 
-        Math.round(sessions[0].successRate - sessions[sessions.length - 1].successRate) : 0
+      improvement: validSessions.length >= 2 ? 
+        Math.round(validSessions[0].successRate - validSessions[validSessions.length - 1].successRate) : 0
     };
   }, [sessions]);
 
@@ -1457,58 +1563,6 @@ const styles = StyleSheet.create({
     height: spacing.m,
   },
 
-  premiumFooter: {
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.05)',
-  },
-
-  premiumFooterContent: {
-    padding: spacing.m,
-  },
-
-  premiumFooterTitle: {
-    fontSize: currentSize === 'xs' ? 12 : 13,
-    fontWeight: '600',
-    marginBottom: spacing.m,
-    textAlign: 'center',
-  },
-
-  premiumStatsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-  premiumStatCard: {
-    flex: 1,
-    alignItems: 'center',
-  },
-
-  premiumStatIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: spacing.xs,
-  },
-
-  premiumStatNumber: {
-    fontSize: currentSize === 'xs' ? 18 : 20,
-    fontWeight: '700',
-    marginBottom: 2,
-  },
-
-  premiumStatLabel: {
-    fontSize: currentSize === 'xs' ? 11 : 12,
-    fontWeight: '500',
-  },
-
-  premiumStatDivider: {
-    width: 1,
-    backgroundColor: '#E5E7EB',
-    marginHorizontal: spacing.m,
-  },
-
   // === STYLES POUR LA LISTE COMPLÈTE DES EXAMENS ===
   allExamsContainer: {
     borderRadius: 20,
@@ -1536,117 +1590,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: spacing.s,
     flex: 1,
-  },
-
-  allExamsHeaderRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  examCount: {
-    fontSize: currentSize === 'xs' ? 12 : 14,
-    marginRight: spacing.s,
-    fontWeight: '500',
-  },
-
-  examsList: {
-    // Pas de maxHeight ici pour laisser le ScrollView gérer la hauteur
-  },
-
-  examsScrollView: {
-    maxHeight: 400, // Déplacé ici depuis le style inline
-  },
-
-  examsListContent: {
-    padding: spacing.s,
-  },
-
-  examItem: {
-    borderRadius: 12,
-    padding: spacing.m,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-  },
-
-  examHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  examBadge: {
-    width: currentSize === 'xs' ? 36 : 44,
-    height: currentSize === 'xs' ? 36 : 44,
-    borderRadius: currentSize === 'xs' ? 18 : 22,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: spacing.m,
-  },
-
-  examNumber: {
-    fontSize: currentSize === 'xs' ? 12 : 14,
-    fontWeight: '700',
-  },
-
-  examInfo: {
-    flex: 1,
-  },
-
-  examScoreRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.xs / 2,
-  },
-
-  examScore: {
-    fontSize: currentSize === 'xs' ? 16 : 18,
-    fontWeight: '700',
-    marginRight: spacing.s,
-  },
-
-  examPercentage: {
-    fontSize: currentSize === 'xs' ? 12 : 14,
-    fontWeight: '600',
-    paddingHorizontal: spacing.s,
-    paddingVertical: 2,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-  },
-
-  examDate: {
-    fontSize: currentSize === 'xs' ? 11 : 12,
-    fontWeight: '500',
-  },
-
-  examStats: {
-    alignItems: 'flex-end',
-  },
-
-  examStatItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: spacing.xs,
-  },
-
-  examStatText: {
-    fontSize: currentSize === 'xs' ? 11 : 12,
-    marginLeft: spacing.xs / 2,
-    fontWeight: '500',
-  },
-
-  examStatus: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  examSeparator: {
-    height: spacing.s,
   },
 
   allExamsFooter: {

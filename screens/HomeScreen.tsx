@@ -70,6 +70,17 @@ const SettingItem: React.FC<{
   </TouchableOpacity>
 );
 
+// Composant pour afficher les emails de contact
+const ContactInfo: React.FC<{
+  theme: any;
+}> = ({ theme }) => (
+  <View style={[styles.contactContainer, { backgroundColor: theme.card || '#f5f5f5' }]}>
+    <Text style={[styles.contactLabel, { color: theme.text }]}>Contactez-nous :</Text>
+    <Text style={[styles.emailText, { color: theme.primary }]}>kevin.boillon@free.fr</Text>
+    <Text style={[styles.emailText, { color: theme.primary }]}>kelyfane@gmail.com</Text>
+  </View>
+);
+
 // Modal des paramètres mémorisée pour éviter les re-renders inutiles
 const SettingsModal: React.FC<{
   visible: boolean;
@@ -83,7 +94,7 @@ const SettingsModal: React.FC<{
       title: 'Information de l\'application',
       icon: 'info',
       items: [
-        { label: 'Version', value: '1.0.0' },
+        { label: 'Version', value: '2.0.0' },
         { label: 'Développé par', value: 'BNSSA Team' },
       ]
     },
@@ -102,11 +113,7 @@ const SettingsModal: React.FC<{
     {
       title: 'Support',
       icon: 'help',
-      items: [
-        { label: 'Centre d\'aide', hasAction: true },
-        { label: 'Contactez-nous', hasAction: true },
-        { label: 'Conditions d\'utilisation', hasAction: true },
-      ]
+      items: [], // Pas d'items car on affiche le composant ContactInfo séparément
     }
   ];
 
@@ -140,8 +147,9 @@ const SettingsModal: React.FC<{
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>
                   <Icon name={section.icon} size={20} color={theme.primary} /> {section.title}
                 </Text>
-                {/* Mappage des éléments de la section */}
-                {section.items.map((item, itemIndex) => (
+                
+                {/* Mappage des éléments de la section pour les sections autres que Support */}
+                {section.title !== 'Support' && section.items.map((item, itemIndex) => (
                   <SettingItem
                     key={itemIndex}
                     label={item.label}
@@ -151,6 +159,11 @@ const SettingsModal: React.FC<{
                     theme={theme}
                   />
                 ))}
+                
+                {/* Affichage spécial pour la section Support */}
+                {section.title === 'Support' && (
+                  <ContactInfo theme={theme} />
+                )}
               </View>
             ))}
           </ScrollView>
@@ -266,7 +279,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         />
         <Text style={[styles.title, { color: theme.text }]}>BNSSA Training</Text>
         <Text style={[styles.subtitle, { color: theme.textLight }]}>
-          Préparez-vous efficacement à l'examen du BNSSA
+          Préparez-vous efficacement à l'examen du BNSSA "Brevet National de Sécurité et de Sauvetage Aquatique"
         </Text>
       </View>
 
@@ -303,15 +316,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.m,
     paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Gestion des zones sécurisées
   },
-  // Bouton paramètres positionné en absolu avec z-index élevé
+  // Bouton paramètres positionné en absolu sans fond gris
   settingsButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 0) + 10,
     right: spacing.m,
     padding: spacing.s,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fond semi-transparent
-    ...shadowStyles.medium,
+    // Suppression du backgroundColor et des shadowStyles
     zIndex: 1000, // Au-dessus de tous les autres éléments
   },
   // En-tête centré avec logo et textes
@@ -432,6 +444,28 @@ const styles = StyleSheet.create({
   // Valeur affichée pour les éléments informatifs
   settingValue: {
     fontSize: typography.body2,
+  },
+  
+  // === Styles pour la section contact ===
+  
+  // Conteneur pour les informations de contact
+  contactContainer: {
+    padding: spacing.m,
+    borderRadius: borderRadius.medium,
+    marginBottom: spacing.s,
+    ...shadowStyles.small,
+  },
+  // Label pour la section contact
+  contactLabel: {
+    fontSize: typography.body1,
+    fontWeight: typography.fontWeightBold,
+    marginBottom: spacing.s,
+  },
+  // Style pour les adresses email
+  emailText: {
+    fontSize: typography.body2,
+    marginBottom: spacing.xs,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', // Police monospace pour les emails
   },
 });
 

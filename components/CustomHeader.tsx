@@ -86,7 +86,7 @@ const getScreenTitle = (routeName: string): string => {
   const titles: Record<string, string> = {
     ExamenScreen: "Mode Examen",                                      // Écran de préparation à l'examen
     TrainingScreen: "Mode Entraînement",                              // Écran de sélection des thèmes d'entraînement
-    HistoricScreenTraining: "Historique d'Entraînement",              // Écran d'historique des sessions
+    HistoricScreen: "Historique des Examens",              // Écran d'historique des sessions
     TrainingSession: "Session d'Entraînement",                        // Écran de session d'entraînement active
     ExamenSession: "Session d'Examen",                                // Écran de session d'examen active
     ExamenSessionNote: "Résultat d'Examen"                            // Écran de résultats d'examen
