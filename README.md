@@ -7,8 +7,6 @@
 ![Downloads](https://img.shields.io/github/downloads/vKnie/bnssa-training/total)
 ![Node](https://img.shields.io/badge/Node.js-LTS-green.svg)
 ![Expo](https://img.shields.io/badge/Expo-SDK-black.svg)
-![Dependencies](https://img.shields.io/librariesio/github/vKnie/bnssa-training)
-![Code Quality](https://img.shields.io/badge/code%20quality-maintained-brightgreen)
 ![Maintenance](https://img.shields.io/badge/maintained-yes-brightgreen.svg)
 
 _Application mobile de formation BNSSA développée avec React Native et Expo._
