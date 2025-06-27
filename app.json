@@ -31,7 +31,9 @@
     "web": {
       "favicon": "./assets/icons/playstore.png"
     },
-    "plugins": [],
+    "plugins": [
+      "expo-sqlite"
+    ],
     "extra": {
       "eas": {
         "projectId": "0eae00e8-4a62-49dc-9d4d-16dc6209f68b"

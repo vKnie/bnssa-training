@@ -317,10 +317,10 @@ const TrainingSession: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  // Conteneur principal avec padding horizontal
+  // Conteneur principal avec padding horizontal réduit
   container: { 
     flex: 1,
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
   },
   // Style pour l'état de chargement centré
   loading: {
@@ -378,10 +378,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: spacing.m,
   },
-  // Conteneur de la question et des options
+  // Conteneur de la question et des options avec padding réduit
   questionContainer: { 
     width: '100%',
-    padding: spacing.m,
+    padding: spacing.s, // Réduit de spacing.m à spacing.s
   },
   // Style du texte de la question
   questionText: { 

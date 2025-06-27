@@ -150,7 +150,7 @@ const ExamenScreen: React.FC = () => {
             onPress={startExam}
             backgroundColor={theme.primary}
             textColor='#FFF'
-            width={'90%'}
+            width={'95%'}
             iconName="play-arrow"
           />
         </View>
@@ -177,9 +177,9 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
   },
-  // Styles du contenu scrollable avec padding
+  // Styles du contenu scrollable avec padding réduit
   scrollContent: {
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
     paddingTop: spacing.m,
     paddingBottom: spacing.xl * 2, // Espace supplémentaire en bas
   },
@@ -201,16 +201,16 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.xs
   },
-  // Sous-titre avec largeur limitée
+  // Sous-titre avec largeur étendue
   subtitle: {
     fontSize: typography.body2,
     textAlign: 'center',
-    maxWidth: '80%'
+    maxWidth: '90%' // Augmenté de 80% à 90%
   },
-  // Conteneur des règles avec padding latéral
+  // Conteneur des règles sans padding latéral
   rulesContainer: { 
     width: '100%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 0, // Supprimé le padding de 10
   },
   // Wrapper de chaque règle avec ombre
   ruleWrapper: {
@@ -240,11 +240,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     flex: 1 
   },
-  // Wrapper de la section conseils avec ombre
+  // Wrapper de la section conseils avec ombre et sans margin latéral
   tipsWrapper: {
     marginTop: spacing.m,
     marginBottom: spacing.m,
-    marginHorizontal: 10,
+    marginHorizontal: 0, // Supprimé la marge de 10
     borderRadius: borderRadius.large,
     ...shadowStyles.small,
   },
@@ -270,13 +270,12 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     lineHeight: 20,
   },
-  // Wrapper du bouton centré
+  // Wrapper du bouton centré avec padding réduit
   buttonWrapper: {
     alignItems: 'center',
     marginTop: spacing.l,
     marginBottom: spacing.xl,
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
   },
 });
-
 export default ExamenScreen;

@@ -28,6 +28,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;                    // Écran d'accueil - aucun paramètre
   ExamenScreen: undefined;                  // Écran de préparation à l'examen - aucun paramètre
   TrainingScreen: undefined;                // Écran de sélection des thèmes d'entraînement - aucun paramètre
+  HistoricScreen: undefined;                // Écran d'historique des examens - aucun paramètre
   HistoricScreenTraining: undefined;        // Écran d'historique des entraînements - aucun paramètre
   
   // Écran de session d'entraînement - avec paramètres de configuration
@@ -44,6 +45,7 @@ export type RootStackParamList = {
     totalQuestions: number;                 // Nombre total de questions de l'examen
     selectedQuestions: Question[];          // Tableau des questions qui ont été posées
     selectedAnswers: string[][];            // Tableau 2D des réponses sélectionnées par question
+    examStartTime?: number;                 // Timestamp de début d'examen pour calcul de durée
   };
 };
 
@@ -89,3 +91,98 @@ export type ThemeKeyType = 'main' | 'home' | 'examen' | 'training';
 // 'home' - thème spécifique à l'écran d'accueil
 // 'examen' - thème spécifique aux écrans d'examen
 // 'training' - thème spécifique aux écrans d'entraînement
+
+// === INTERFACES POUR LA BASE DE DONNÉES ===
+
+// Interface pour une session d'examen sauvegardée
+export interface ExamSession {
+  id?: number;                              // ID unique de la session (auto-généré)
+  examDate: string;                         // Date et heure de l'examen (ISO string)
+  duration: number;                         // Durée de l'examen en secondes
+  score: number;                            // Score obtenu (nombre de bonnes réponses)
+  totalQuestions: number;                   // Nombre total de questions
+  correctAnswers: number;                   // Nombre de réponses correctes
+  incorrectAnswers: number;                 // Nombre de réponses incorrectes
+  unansweredQuestions: number;              // Nombre de questions non répondues
+  successRate: number;                      // Pourcentage de réussite
+  isPassed: boolean;                        // true si score >= 30 (seuil de réussite)
+}
+
+// Interface pour les résultats par thème
+export interface ThemeResult {
+  id?: number;                              // ID unique du résultat (auto-généré)
+  examSessionId: number;                    // ID de la session d'examen associée
+  themeName: string;                        // Nom du thème
+  totalQuestions: number;                   // Nombre de questions pour ce thème
+  correctAnswers: number;                   // Nombre de bonnes réponses pour ce thème
+  incorrectAnswers: number;                 // Nombre de mauvaises réponses pour ce thème
+  unansweredQuestions: number;              // Nombre de questions non répondues pour ce thème
+  successRate: number;                      // Pourcentage de réussite pour ce thème
+}
+
+// Interface pour les résultats détaillés d'un examen avec breakdown par thème
+export interface DetailedExamResult {
+  examSession: ExamSession;                 // Données principales de la session
+  themeResults: ThemeResult[];              // Résultats détaillés par thème
+}
+
+// === INTERFACES POUR LES STATISTIQUES ===
+
+// Interface pour les statistiques générales de l'utilisateur
+export interface GeneralStats {
+  totalExams: number;                       // Nombre total d'examens passés
+  passedExams: number;                      // Nombre d'examens réussis
+  averageScore: number;                     // Score moyen sur tous les examens
+  bestScore: number;                        // Meilleur score obtenu
+  successRate: number;                      // Pourcentage de réussite global
+}
+
+// Interface pour les statistiques par thème
+export interface ThemeStats {
+  themeName: string;                        // Nom du thème
+  totalQuestions: number;                   // Total de questions rencontrées pour ce thème
+  correctAnswers: number;                   // Total de bonnes réponses pour ce thème
+  incorrectAnswers: number;                 // Total de mauvaises réponses pour ce thème
+  unansweredQuestions: number;              // Total de questions non répondues pour ce thème
+  successRate: number;                      // Pourcentage de réussite pour ce thème
+  averageScore: number;                     // Score moyen pour ce thème
+}
+
+// === TYPES POUR LES ÉNUMÉRATIONS ===
+
+// Type pour les différents statuts de réponse
+export type AnswerStatus = 'correct' | 'incorrect' | 'unanswered';
+
+// Type pour les niveaux de difficulté des questions (extension future)
+export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+
+// Type pour les types de sessions
+export type SessionType = 'exam' | 'training';
+
+// === INTERFACES POUR LES HOOKS ET UTILITAIRES ===
+
+// Interface pour les résultats de validation des réponses
+export interface AnswerValidationResult {
+  isCorrect: boolean;                       // true si la réponse est correcte
+  selectedAnswers: string[];                // Réponses sélectionnées par l'utilisateur
+  correctAnswers: string[];                 // Bonnes réponses attendues
+  missingAnswers: string[];                 // Bonnes réponses manquées
+  extraAnswers: string[];                   // Mauvaises réponses sélectionnées
+}
+
+// Interface pour les paramètres de filtrage des questions
+export interface QuestionFilter {
+  themes?: string[];                        // Filtrer par thèmes spécifiques
+  difficulty?: DifficultyLevel;             // Filtrer par niveau de difficulté
+  maxQuestions?: number;                    // Nombre maximum de questions
+  excludeAnswered?: boolean;                // Exclure les questions déjà répondues
+}
+
+// Interface pour les options de session d'entraînement
+export interface TrainingSessionOptions {
+  selectedThemes: string[];                 // Thèmes sélectionnés
+  instantAnswerMode: boolean;               // Mode réponse instantanée
+  maxQuestions?: number;                    // Nombre maximum de questions
+  shuffleQuestions: boolean;                // Mélanger les questions
+  showExplanations: boolean;                // Afficher les explications des réponses
+}

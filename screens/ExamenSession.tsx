@@ -72,6 +72,7 @@ const ExamenSession: React.FC = () => {
   const [score, setScore] = useState(0); // Score actuel de l'utilisateur
   const [timeLeft, setTimeLeft] = useState(45 * 60); // Temps restant en secondes (45 minutes)
   const [isExamFinished, setIsExamFinished] = useState(false); // État de fin d'examen
+  const [examStartTime] = useState(() => Date.now()); // Temps de début d'examen pour calcul de durée
 
   // Données calculées dérivées des états
   const currentQuestion = selectedQuestions[currentQuestionIndex];
@@ -114,6 +115,11 @@ const ExamenSession: React.FC = () => {
     const isCorrect = isCorrectAnswer();
     const finalScore = score + (isCorrect ? 1 : 0); // Ajout du point pour la dernière question si correcte
 
+    // Calcul du temps écoulé en secondes
+    const examEndTime = Date.now();
+    const examDuration = Math.floor((examEndTime - examStartTime) / 1000);
+    const actualDuration = Math.min(examDuration, 45 * 60); // Max 45 minutes
+
     // Navigation vers l'écran de notation avec toutes les données nécessaires
     navigation.navigate('ExamenSessionNote', {
       score: finalScore,
@@ -124,8 +130,9 @@ const ExamenSession: React.FC = () => {
         selectedAnswers, // Réponses de la question actuelle
         ...allSelectedAnswers.slice(currentQuestionIndex + 1) // Réponses des questions suivantes (vides)
       ],
+      examStartTime, // Transmission du temps de début pour calcul précis de la durée
     });
-  }, [isCorrectAnswer, score, navigation, selectedQuestions, allSelectedAnswers, currentQuestionIndex, selectedAnswers]);
+  }, [isCorrectAnswer, score, navigation, selectedQuestions, allSelectedAnswers, currentQuestionIndex, selectedAnswers, examStartTime]);
 
   // Gestionnaire de sélection/désélection des réponses
   const handleAnswerSelection = useCallback((answer: string) => {
@@ -227,10 +234,10 @@ const ExamenSession: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  // Conteneur principal - prend toute la hauteur avec padding horizontal
+  // Conteneur principal - prend toute la hauteur avec padding réduit
   container: { 
     flex: 1,
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
   },
   // Style pour l'état de chargement - centré
   loading: {
@@ -272,10 +279,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: spacing.m,
   },
-  // Conteneur de la question et des options
+  // Conteneur de la question et des options avec padding réduit
   questionContainer: { 
     width: '100%',
-    padding: spacing.m,
+    padding: spacing.s, // Réduit de spacing.m à spacing.s
   },
   // Style du texte de la question
   questionText: { 

@@ -9,13 +9,15 @@ import {
   Platform,
   StatusBar,
   Modal,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
 import { RootStackParamList } from '../types';
+import { databaseService } from '../services/DatabaseService'; // AJOUT : Import du service de base de données
 
 // Type pour la navigation de l'écran d'accueil
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -44,11 +46,14 @@ const SettingItem: React.FC<{
   label: string;
   value?: string;
   hasAction?: boolean;
+  onPress?: () => void; // AJOUT : Fonction de callback pour les actions
   theme: any;
-}> = ({ label, value, hasAction, theme }) => (
+}> = ({ label, value, hasAction, onPress, theme }) => (
   <TouchableOpacity 
     style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
     disabled={!hasAction} // Désactivé si pas d'action associée
+    onPress={onPress} // AJOUT : Gestion du clic
+    activeOpacity={hasAction ? 0.7 : 1} // AJOUT : Effet visuel seulement si cliquable
   >
     <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
     {value ? (
@@ -65,19 +70,31 @@ const SettingItem: React.FC<{
   </TouchableOpacity>
 );
 
+// Composant pour afficher les emails de contact
+const ContactInfo: React.FC<{
+  theme: any;
+}> = ({ theme }) => (
+  <View style={[styles.contactContainer, { backgroundColor: theme.card || '#f5f5f5' }]}>
+    <Text style={[styles.contactLabel, { color: theme.text }]}>Contactez-nous :</Text>
+    <Text style={[styles.emailText, { color: theme.primary }]}>kevin.boillon@free.fr</Text>
+    <Text style={[styles.emailText, { color: theme.primary }]}>kelyfane@gmail.com</Text>
+  </View>
+);
+
 // Modal des paramètres mémorisée pour éviter les re-renders inutiles
 const SettingsModal: React.FC<{
   visible: boolean;
   onClose: () => void;
   theme: any;
-}> = React.memo(({ visible, onClose, theme }) => {
+  onResetExamData: () => void; // AJOUT : Fonction pour réinitialiser les données d'examen
+}> = React.memo(({ visible, onClose, theme, onResetExamData }) => {
   // Configuration des sections de paramètres
   const sections = [
     {
       title: 'Information de l\'application',
       icon: 'info',
       items: [
-        { label: 'Version', value: '1.0.0' },
+        { label: 'Version', value: '2.0.0' },
         { label: 'Développé par', value: 'BNSSA Team' },
       ]
     },
@@ -85,18 +102,18 @@ const SettingsModal: React.FC<{
       title: 'Données',
       icon: 'storage',
       items: [
-        { label: 'Réinitialiser données d\'entraînement', hasAction: true },
-        { label: 'Réinitialiser données d\'examen', hasAction: true },
+        // MODIFICATION : Suppression du bouton d'entraînement, conservation de l'examen
+        { 
+          label: 'Réinitialiser données d\'examen', 
+          hasAction: true,
+          onPress: onResetExamData // AJOUT : Action de réinitialisation
+        },
       ]
     },
     {
       title: 'Support',
       icon: 'help',
-      items: [
-        { label: 'Centre d\'aide', hasAction: true },
-        { label: 'Contactez-nous', hasAction: true },
-        { label: 'Conditions d\'utilisation', hasAction: true },
-      ]
+      items: [], // Pas d'items car on affiche le composant ContactInfo séparément
     }
   ];
 
@@ -130,16 +147,23 @@ const SettingsModal: React.FC<{
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>
                   <Icon name={section.icon} size={20} color={theme.primary} /> {section.title}
                 </Text>
-                {/* Mappage des éléments de la section */}
-                {section.items.map((item, itemIndex) => (
+                
+                {/* Mappage des éléments de la section pour les sections autres que Support */}
+                {section.title !== 'Support' && section.items.map((item, itemIndex) => (
                   <SettingItem
                     key={itemIndex}
                     label={item.label}
                     value={item.value}
                     hasAction={item.hasAction}
+                    onPress={item.onPress} // AJOUT : Passage de la fonction onPress
                     theme={theme}
                   />
                 ))}
+                
+                {/* Affichage spécial pour la section Support */}
+                {section.title === 'Support' && (
+                  <ContactInfo theme={theme} />
+                )}
               </View>
             ))}
           </ScrollView>
@@ -164,6 +188,58 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
   }, [navigation]);
+
+  // AJOUT : Fonction pour réinitialiser les données d'examen
+  const handleResetExamData = useCallback(async () => {
+    Alert.alert(
+      'Réinitialiser les données d\'examen',
+      'Cette action supprimera définitivement toutes vos données d\'examen (historique, scores, statistiques). Cette action est irréversible.\n\nÊtes-vous absolument sûr de vouloir continuer ?',
+      [
+        {
+          text: 'Annuler',
+          style: 'cancel'
+        },
+        {
+          text: 'Confirmer',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Fermeture de la modal
+              setSettingsVisible(false);
+              
+              // Initialisation de la base de données
+              await databaseService.initDatabase();
+              
+              // Suppression de toutes les données
+              await databaseService.clearAllData();
+              
+              // Confirmation de succès
+              Alert.alert(
+                'Réinitialisation terminée',
+                'Toutes les données d\'examen ont été supprimées avec succès.',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => {
+                      // Optionnel : Naviguer vers l'écran d'accueil pour "rafraîchir"
+                      console.log('Données d\'examen réinitialisées');
+                    }
+                  }
+                ]
+              );
+            } catch (error) {
+              console.error('Erreur lors de la réinitialisation:', error);
+              Alert.alert(
+                'Erreur',
+                'Une erreur est survenue lors de la réinitialisation des données. Veuillez réessayer.',
+                [{ text: 'OK' }]
+              );
+            }
+          }
+        }
+      ]
+    );
+  }, []);
 
   // Configuration de l'écran au montage
   useLayoutEffect(() => {
@@ -203,7 +279,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         />
         <Text style={[styles.title, { color: theme.text }]}>BNSSA Training</Text>
         <Text style={[styles.subtitle, { color: theme.textLight }]}>
-          Préparez-vous efficacement à l'examen du BNSSA
+          Préparez-vous efficacement à l'examen du BNSSA "Brevet National de Sécurité et de Sauvetage Aquatique"
         </Text>
       </View>
 
@@ -225,6 +301,7 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
         theme={theme}
+        onResetExamData={handleResetExamData} // AJOUT : Passage de la fonction de réinitialisation
       />
     </View>
   );
@@ -239,15 +316,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.m,
     paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Gestion des zones sécurisées
   },
-  // Bouton paramètres positionné en absolu avec z-index élevé
+  // Bouton paramètres positionné en absolu sans fond gris
   settingsButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 0) + 10,
     right: spacing.m,
     padding: spacing.s,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fond semi-transparent
-    ...shadowStyles.medium,
+    // Suppression du backgroundColor et des shadowStyles
     zIndex: 1000, // Au-dessus de tous les autres éléments
   },
   // En-tête centré avec logo et textes
@@ -368,6 +444,28 @@ const styles = StyleSheet.create({
   // Valeur affichée pour les éléments informatifs
   settingValue: {
     fontSize: typography.body2,
+  },
+  
+  // === Styles pour la section contact ===
+  
+  // Conteneur pour les informations de contact
+  contactContainer: {
+    padding: spacing.m,
+    borderRadius: borderRadius.medium,
+    marginBottom: spacing.s,
+    ...shadowStyles.small,
+  },
+  // Label pour la section contact
+  contactLabel: {
+    fontSize: typography.body1,
+    fontWeight: typography.fontWeightBold,
+    marginBottom: spacing.s,
+  },
+  // Style pour les adresses email
+  emailText: {
+    fontSize: typography.body2,
+    marginBottom: spacing.xs,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', // Police monospace pour les emails
   },
 });
 
