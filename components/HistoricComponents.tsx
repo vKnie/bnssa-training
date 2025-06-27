@@ -25,7 +25,6 @@ import Svg, {
   Filter,
   FeDropShadow
 } from 'react-native-svg';
-
 import { 
   shadowStyles, 
   typography, 
@@ -36,15 +35,11 @@ import { ExamSession } from '../services/DatabaseService';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-// ✅ NOUVEAU : Utilitaires de formatage uniformisés
 const formatUtils = {
-  // Formatage de durée uniforme avec validation stricte
   formatDuration: (duration: any): string => {
     try {
-      // Conversion sécurisée en nombre
       let seconds = Number(duration);
       
-      // Validation stricte
       if (!duration && duration !== 0) {
         console.warn('⚠️ Durée undefined/null:', duration);
         return "0:00";
@@ -55,20 +50,15 @@ const formatUtils = {
         return "0:00";
       }
       
-      // Conversion en entier pour éviter les décimales
       seconds = Math.floor(seconds);
       
-      // Calcul des unités de temps
       const hours = Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const remainingSeconds = seconds % 60;
       
-      // Format selon la durée
       if (hours > 0) {
-        // Format: "1h 23min" ou "1h 00min"
         return `${hours}h ${String(minutes).padStart(2, '0')}min`;
       } else {
-        // Format: "23:45" ou "5:30"
         return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
       }
     } catch (error) {
@@ -77,7 +67,6 @@ const formatUtils = {
     }
   },
 
-  // Formatage de durée courte pour les espaces restreints
   formatDurationShort: (duration: any): string => {
     try {
       let seconds = Number(duration);
@@ -103,7 +92,6 @@ const formatUtils = {
     }
   },
 
-  // Formatage de date sécurisé
   formatDate: (dateString: any): string => {
     try {
       if (!dateString) {
@@ -130,7 +118,6 @@ const formatUtils = {
     }
   },
 
-  // Validation et nettoyage des sessions
   validateSession: (session: any, index: number): any => {
     if (!session || typeof session !== 'object') {
       console.warn(`⚠️ Session ${index} invalide:`, session);
@@ -139,33 +126,28 @@ const formatUtils = {
 
     const validatedSession = {
       ...session,
-      // Validation stricte des nombres
       score: (() => {
         const s = Number(session.score);
-        return isNaN(s) ? 0 : Math.max(0, Math.min(40, s)); // Score entre 0 et 40
+        return isNaN(s) ? 0 : Math.max(0, Math.min(40, s));
       })(),
       successRate: (() => {
         const sr = Number(session.successRate);
-        return isNaN(sr) ? 0 : Math.max(0, Math.min(100, sr)); // Pourcentage entre 0 et 100
+        return isNaN(sr) ? 0 : Math.max(0, Math.min(100, sr));
       })(),
       duration: (() => {
         const d = Number(session.duration);
-        const validDuration = isNaN(d) ? 0 : Math.max(0, d); // Durée positive
+        const validDuration = isNaN(d) ? 0 : Math.max(0, d);
         if (validDuration !== d) {
           console.warn(`⚠️ Session ${index} durée corrigée:`, d, '→', validDuration);
         }
         return validDuration;
       })(),
-      // Validation des booléens
       isPassed: Boolean(session.isPassed),
-      // Validation des dates
       examDate: session.examDate || new Date().toISOString(),
-      // Métadonnées utiles
       originalIndex: index,
       isValid: true
     };
 
-    // Log des corrections appliquées
     if (validatedSession.score !== session.score || 
         validatedSession.successRate !== session.successRate || 
         validatedSession.duration !== session.duration) {
@@ -180,7 +162,6 @@ const formatUtils = {
   }
 };
 
-// Système responsive avancé
 const breakpoints = {
   small: 350,
   medium: 400,
@@ -207,14 +188,12 @@ const responsive = {
 const currentSize = getScreenSize();
 const config = responsive[currentSize];
 
-// === COMPOSANT LISTE COMPLÈTE DES EXAMENS - VERSION CORRIGÉE ===
 const AllExamsList: React.FC<{
   sessions: ExamSession[];
   theme: any;
 }> = ({ sessions, theme }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // ✅ MODIFIÉ : Utilisation des utilitaires unifiés
   const validSessions = useMemo(() => {
     if (!sessions || !Array.isArray(sessions)) {
       console.warn('⚠️ Sessions invalides:', sessions);
@@ -250,7 +229,6 @@ const AllExamsList: React.FC<{
 
   return (
     <View style={[styles.allExamsContainer, { backgroundColor: theme.card }]}>
-      {/* Header premium avec gradient */}
       <View style={[styles.allExamsHeaderPremium, { backgroundColor: theme.primary }]}>
         <View style={styles.allExamsHeaderContent}>
           <View style={styles.allExamsHeaderIcon}>
@@ -277,7 +255,6 @@ const AllExamsList: React.FC<{
         <View style={[styles.allExamsHeaderDecoration, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
       </View>
 
-      {/* Liste des examens avec style premium */}
       {isExpanded && (
         <View style={styles.allExamsListContainer}>
           <ScrollView
@@ -330,7 +307,6 @@ const AllExamsList: React.FC<{
                         <View style={[styles.premiumStatChip, { backgroundColor: theme.primary + '10' }]}>
                           <Icon name="schedule" size={14} color={theme.primary} />
                           <Text style={[styles.premiumStatText, { color: theme.primary }]}>
-                            {/* ✅ CORRIGÉ : Utilisation du formatage unifié */}
                             {formatUtils.formatDurationShort(item.duration)}
                           </Text>
                         </View>
@@ -356,7 +332,6 @@ const AllExamsList: React.FC<{
         </View>
       )}
 
-      {/* Footer avec statistiques */}
       <View style={[styles.allExamsFooter, { backgroundColor: '#FAFBFC' }]}>
         <View style={styles.quickStat}>
           <Text style={[styles.quickStatNumber, { color: theme.success }]}>
@@ -393,7 +368,6 @@ const AllExamsList: React.FC<{
   );
 };
 
-// ✅ MODIFIÉ : Modal avec formatage uniforme
 const ExamDetailModal: React.FC<{
   visible: boolean;
   onClose: () => void;
@@ -454,7 +428,6 @@ const ExamDetailModal: React.FC<{
               <Icon name="schedule" size={18} color={theme.primary} />
               <Text style={[styles.modalLabel, { color: theme.textLight }]}>Durée:</Text>
               <Text style={[styles.modalValue, { color: theme.text }]}>
-                {/* ✅ CORRIGÉ : Utilisation du formatage unifié */}
                 {formatUtils.formatDuration(examData.sessionData?.duration || examData.duration)}
               </Text>
             </View>
@@ -476,7 +449,6 @@ const ExamDetailModal: React.FC<{
   );
 };
 
-// === COMPOSANT GRAPHIQUE ULTRA MODERNE ===
 const ProgressChart: React.FC<{
   sessions: ExamSession[];
   theme: any;
@@ -485,11 +457,9 @@ const ProgressChart: React.FC<{
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // ✅ MODIFIÉ : Utilisation des utilitaires de validation
   const chartData = useMemo(() => {
     if (!sessions.length) return [];
     
-    // Validation des sessions avant traitement
     const validSessions = sessions
       .map((session, index) => formatUtils.validateSession(session, index))
       .filter(Boolean);
@@ -507,7 +477,6 @@ const ProgressChart: React.FC<{
     const maxScore = 40;
     const minScore = 0;
     
-    // Calcul du numéro de départ des examens
     const startExamNumber = Math.max(1, validSessions.length - 5);
     
     return recentSessions.map((session, index) => {
@@ -521,7 +490,7 @@ const ProgressChart: React.FC<{
         successRate: session.successRate,
         examLabel: `E${startExamNumber + index}`,
         fullDate: formatUtils.formatDate(session.examDate),
-        duration: session.duration, // Durée en secondes
+        duration: session.duration,
         isPassed: session.isPassed,
         sessionData: session
       };
@@ -559,7 +528,6 @@ const ProgressChart: React.FC<{
   return (
     <>
       <View style={[styles.modernContainer, { backgroundColor: theme.card }]}>
-        {/* Header moderne avec gradient */}
         <View style={[styles.modernHeader, { backgroundColor: theme.primary }]}>
           <View style={styles.headerContent}>
             <View style={styles.headerIcon}>
@@ -575,7 +543,6 @@ const ProgressChart: React.FC<{
           <View style={[styles.headerDecoration, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
         </View>
         
-        {/* Zone graphique adaptée */}
         <View style={[styles.chartWrapper, { paddingHorizontal: config.margin }]}>
           <ScrollView 
             horizontal 
@@ -585,7 +552,6 @@ const ProgressChart: React.FC<{
             <View style={{ position: 'relative' }}>
               <Svg width={Math.max(chartWidth, screenWidth * 0.8)} height={chartHeight} style={styles.modernChart}>
                 <Defs>
-                  {/* Gradients modernes */}
                   <LinearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <Stop offset="0%" stopColor={theme.primary} stopOpacity="1" />
                     <Stop offset="50%" stopColor={theme.primary} stopOpacity="0.9" />
@@ -602,13 +568,11 @@ const ProgressChart: React.FC<{
                     <Stop offset="100%" stopColor={theme.primary} stopOpacity="0.08" />
                   </LinearGradient>
 
-                  {/* Filtres pour ombres */}
                   <Filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
                     <FeDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.2"/>
                   </Filter>
                 </Defs>
 
-                {/* Grille horizontale élégante */}
                 {[0, 10, 20, 30, 40].map(score => {
                   const y = chartHeight - 80 - ((score - 0) / (40 - 0)) * (chartHeight - padding - 80);
                   const isPassLine = score === 30;
@@ -640,7 +604,6 @@ const ProgressChart: React.FC<{
                   );
                 })}
                 
-                {/* Zone de réussite avec gradient */}
                 <Rect
                   x={padding}
                   y={padding}
@@ -650,7 +613,6 @@ const ProgressChart: React.FC<{
                   rx="8"
                 />
                 
-                {/* Aire sous la courbe */}
                 {chartData.length > 1 && (
                   <Path
                     d={`M ${chartData[0].x} ${chartHeight - 80} 
@@ -660,7 +622,6 @@ const ProgressChart: React.FC<{
                   />
                 )}
                 
-                {/* Lignes verticales pour les examens */}
                 {chartData.map((point, index) => (
                   <Line
                     key={`vertical-${index}`}
@@ -675,7 +636,6 @@ const ProgressChart: React.FC<{
                   />
                 ))}
                 
-                {/* Ligne principale avec style moderne */}
                 {chartData.length > 1 && (
                   <Polyline
                     points={chartData.map(point => `${point.x},${point.y}`).join(' ')}
@@ -688,7 +648,6 @@ const ProgressChart: React.FC<{
                   />
                 )}
                 
-                {/* Axes avec style moderne (placés AVANT les points) */}
                 <Line
                   x1={padding}
                   y1={padding}
@@ -706,10 +665,8 @@ const ProgressChart: React.FC<{
                   strokeWidth="2"
                 />
                 
-                {/* Points de données cliquables (maintenant au-dessus des axes) */}
                 {chartData.map((point, index) => (
                   <React.Fragment key={`point-${index}`}>
-                    {/* Halo extérieur */}
                     <Circle
                       cx={point.x}
                       cy={point.y + 1}
@@ -725,7 +682,6 @@ const ProgressChart: React.FC<{
                       stroke="#FFFFFF"
                       strokeWidth="3"
                     />
-                    {/* Point central lumineux */}
                     <Circle
                       cx={point.x}
                       cy={point.y}
@@ -736,15 +692,13 @@ const ProgressChart: React.FC<{
                   </React.Fragment>
                 ))}
                 
-                {/* Labels d'examens en bas (remontés) */}
                 {chartData.map((point, index) => {
                   const labelWidth = currentSize === 'xs' ? 28 : 32;
                   const labelHeight = config.labelHeight;
-                  const yPosition = chartHeight - 65; // Remonté de 20px (était à -45)
+                  const yPosition = chartHeight - 65;
                   
                   return (
                     <React.Fragment key={`exam-label-${index}`}>
-                      {/* Bulle du label d'examen */}
                       <Rect
                         x={point.x - labelWidth/2}
                         y={yPosition}
@@ -769,19 +723,17 @@ const ProgressChart: React.FC<{
                   );
                 })}
                 
-                {/* Label "Score" moderne (déplacé vers la droite) */}
                 <SvgText
-                  x={padding + 15} // Déplacé de 23px vers la droite (était à padding - 8)
+                  x={padding + 15}
                   y={padding - 15}
                   fontSize={config.fontSize + 1}
                   fill={theme.primary}
-                  textAnchor="start" // Changé de "end" à "start" pour alignement à gauche
+                  textAnchor="start"
                   fontWeight="700"
                 >
                   Score
                 </SvgText>
                 
-                {/* Label "Examens" centré */}
                 <SvgText
                   x={Math.max(chartWidth, screenWidth * 0.8) / 2}
                   y={chartHeight - 8}
@@ -794,7 +746,6 @@ const ProgressChart: React.FC<{
                 </SvgText>
               </Svg>
               
-              {/* Points cliquables en overlay React Native (position ajustée) */}
               {chartData.map((point, index) => (
                 <TouchableOpacity
                   key={`touch-${index}`}
@@ -815,7 +766,6 @@ const ProgressChart: React.FC<{
           </ScrollView>
         </View>
         
-        {/* Footer statistiques premium */}
         <View style={[styles.statsFooter, { backgroundColor: '#FAFBFC' }]}>
           <View style={styles.statCard}>
             <Text style={[styles.statNumber, { color: theme.primary }]}>
@@ -841,7 +791,6 @@ const ProgressChart: React.FC<{
           </View>
         </View>
         
-        {/* Instruction d'utilisation */}
         <View style={[styles.instructionBanner, { backgroundColor: theme.primary + '10' }]}>
           <Icon name="touch-app" size={16} color={theme.primary} />
           <Text style={[styles.instructionText, { color: theme.primary }]}>
@@ -850,7 +799,6 @@ const ProgressChart: React.FC<{
         </View>
       </View>
       
-      {/* Modal de détails d'examen */}
       <ExamDetailModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -861,7 +809,6 @@ const ProgressChart: React.FC<{
   );
 };
 
-// === CARTE STATISTIQUES GÉNÉRALES PREMIUM ===
 export const StatsOverviewCard: React.FC<{
   stats: any;
   sessions: ExamSession[];
@@ -869,11 +816,9 @@ export const StatsOverviewCard: React.FC<{
   insets?: any;
 }> = ({ stats, sessions, theme, insets }) => {
   
-  // ✅ MODIFIÉ : Utilisation des utilitaires de validation
   const additionalStats = useMemo(() => {
     if (!sessions.length) return {};
     
-    // Validation des sessions
     const validSessions = sessions
       .map((session, index) => formatUtils.validateSession(session, index))
       .filter(Boolean);
@@ -886,7 +831,7 @@ export const StatsOverviewCard: React.FC<{
     const recentAvg = recentSessions.reduce((sum, s) => sum + s.successRate, 0) / recentSessions.length;
     
     return {
-      avgDuration: Math.round(avgDuration / 60), // En minutes
+      avgDuration: Math.round(avgDuration / 60),
       bestScore: Math.round(bestScore),
       recentAvg: Math.round(recentAvg),
       improvement: validSessions.length >= 2 ? 
@@ -927,7 +872,6 @@ export const StatsOverviewCard: React.FC<{
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Carte statistiques ultra moderne avec adaptation SafeArea */}
       <View style={[
         styles.overviewCard, 
         { backgroundColor: theme.card },
@@ -946,7 +890,6 @@ export const StatsOverviewCard: React.FC<{
           </View>
         </View>
         
-        {/* Grille statistiques responsive */}
         <View style={[
           styles.statsGrid,
           currentSize === 'xs' && styles.statsGridVertical
@@ -971,7 +914,6 @@ export const StatsOverviewCard: React.FC<{
           ))}
         </View>
 
-        {/* Bannière d'amélioration premium */}
         {additionalStats.improvement !== 0 && (
           <View style={[styles.improvementCard, { 
             backgroundColor: (additionalStats.improvement ?? 0) > 0 ? theme.success + '10' : theme.error + '10' 
@@ -1001,18 +943,14 @@ export const StatsOverviewCard: React.FC<{
         )}
       </View>
 
-      {/* Graphique de progression avec adaptation SafeArea */}
       <ProgressChart sessions={sessions} theme={theme} insets={insets} />
       
-      {/* Liste complète des examens */}
       <AllExamsList sessions={sessions} theme={theme} />
     </View>
   );
 };
 
-// === STYLES ULTRA MODERNES ET RESPONSIVE ===
 const styles = StyleSheet.create({
-  // Container principal moderne avec adaptation responsive
   modernContainer: {
     borderRadius: 20,
     marginHorizontal: config.margin,
@@ -1025,7 +963,6 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
   },
 
-  // Header avec gradient adaptatif
   modernHeader: {
     paddingVertical: currentSize === 'xs' ? spacing.s : spacing.m,
     paddingHorizontal: spacing.s,
@@ -1079,7 +1016,6 @@ const styles = StyleSheet.create({
     ],
   },
 
-  // Zone graphique avec adaptation responsive
   chartWrapper: {
     paddingVertical: spacing.xs,
     backgroundColor: '#FFFFFF',
@@ -1089,7 +1025,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
-  // Bannière d'instruction
   instructionBanner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1107,7 +1042,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // Footer statistiques adaptatif
   statsFooter: {
     flexDirection: 'row',
     paddingVertical: currentSize === 'xs' ? spacing.s : spacing.m,
@@ -1137,7 +1071,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -1222,7 +1155,6 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeightBold,
   },
 
-  // État vide adaptatif
   emptyState: {
     alignItems: 'center',
     paddingVertical: currentSize === 'xs' ? spacing.xl : spacing.xl * 1.5,
@@ -1252,7 +1184,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
 
-  // Carte overview avec adaptation SafeArea
   overviewCard: {
     borderRadius: 20,
     marginBottom: spacing.s,
@@ -1297,7 +1228,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // Grille statistiques responsive
   statsGrid: {
     flexDirection: 'row',
     padding: spacing.s,
@@ -1349,7 +1279,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Bannière d'amélioration responsive
   improvementCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1386,7 +1315,6 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  // === STYLES PREMIUM POUR HISTORIQUE COMPLET ===
   allExamsHeaderPremium: {
     paddingVertical: currentSize === 'xs' ? spacing.s : spacing.m,
     paddingHorizontal: spacing.m,
@@ -1563,7 +1491,6 @@ const styles = StyleSheet.create({
     height: spacing.m,
   },
 
-  // === STYLES POUR LA LISTE COMPLÈTE DES EXAMENS ===
   allExamsContainer: {
     borderRadius: 20,
     marginHorizontal: config.margin,
