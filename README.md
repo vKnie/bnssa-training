@@ -1,4 +1,7 @@
 # BNSSA TRAINING
+
+[![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
 _Application mobile de formation BNSSA développée avec React Native et Expo._
 
 > Ce fichier README.md est destiné aux développeurs souhaitant modifier l’application.
