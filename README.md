@@ -1,6 +1,10 @@
 # BNSSA TRAINING
 
 [![License: CC BY-NC-ND 4.0](https://img.shields.io/badge/License-CC%20BY--NC--ND%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+![Version](https://img.shields.io/github/v/release/vKnie/bnssa-training)
+![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-blue)
+![React Native](https://img.shields.io/badge/React%20Native-Expo-blue.svg)
+![Downloads](https://img.shields.io/github/downloads/vKnie/bnssa-training/total)
 
 _Application mobile de formation BNSSA développée avec React Native et Expo._
 
