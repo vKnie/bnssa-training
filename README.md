@@ -1,15 +1,15 @@
 # BNSSA TRAINING
--------
 _Application mobile de formation BNSSA développée avec React Native et Expo._
 
 > Ce fichier README.md est destiné aux développeurs souhaitant modifier l’application.
 > Pour une utilisation standard, il vous suffit de télécharger le fichier ```bnssa-training.apk``` depuis la dernière release.
 
-
 ### Contact
 Pour toute question ou suggestion, n'hésitez pas à nous contacter :
 - Kévin : [kevin.boillon@free.fr](mailto:kevin.boillon@free.fr)
 - Kelyfane : [kelyfane@gmail.com](mailto:kelyfane@gmail.com)
+
+-------
 
 ### Prérequis (Pour developpement)
 Avant de commencer, assurez-vous d'avoir installé les outils suivants :
