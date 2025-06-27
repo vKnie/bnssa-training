@@ -8,7 +8,8 @@ import {
   StatusBar, 
   ScrollView,
   TouchableOpacity,
-  Switch
+  Switch,
+  Animated
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -31,7 +32,7 @@ import { RootStackParamList, Theme } from '../types';
 // Type pour la navigation de l'écran d'entraînement
 type TrainingScreenNavigationProp = StackNavigationProp<RootStackParamList, 'TrainingScreen'>;
 
-// Composant bouton de thème mémorisé pour optimiser les performances
+// Composant bouton de thème mémorisé avec animation améliorée
 const ThemeButton: React.FC<{
   themeName: string;
   isSelected: boolean;
@@ -40,30 +41,76 @@ const ThemeButton: React.FC<{
   themeIcon: string;
   cardColor: string;
   textColor: string;
-}> = React.memo(({ themeName, isSelected, onPress, themeColor, themeIcon, cardColor, textColor }) => (
-  <View style={styles.themeButtonWrapper}>
-    <TouchableOpacity
-      style={[
-        styles.themeButton, 
-        { 
-          backgroundColor: isSelected ? themeColor : cardColor, // Couleur dynamique selon la sélection
-          borderWidth: 2,
-          borderColor: isSelected ? themeColor : 'transparent', // Bordure visible si sélectionné
-        }
-      ]}
-      onPress={onPress}
-      activeOpacity={0.7} // Effet de transparence au toucher
-    >
-      {/* Texte avec icône du thème */}
-      <Text style={[
-        styles.themeButtonText, 
-        { color: isSelected ? '#fff' : textColor } // Couleur inversée si sélectionné
-      ]}>
-        {themeIcon}  {themeName}
-      </Text>
-    </TouchableOpacity>
-  </View>
-));
+}> = React.memo(({ themeName, isSelected, onPress, themeColor, themeIcon, cardColor, textColor }) => {
+  const scaleValue = React.useRef(new Animated.Value(1)).current;
+  const opacityValue = React.useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.parallel([
+      Animated.spring(scaleValue, {
+        toValue: 0.95,
+        useNativeDriver: true,
+        speed: 20,
+        bounciness: 8,
+      }),
+      Animated.timing(opacityValue, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      })
+    ]).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.parallel([
+      Animated.spring(scaleValue, {
+        toValue: 1,
+        useNativeDriver: true,
+        speed: 20,
+        bounciness: 8,
+      }),
+      Animated.timing(opacityValue, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      })
+    ]).start();
+  };
+
+  return (
+    <View style={styles.themeButtonWrapper}>
+      <Animated.View
+        style={{
+          transform: [{ scale: scaleValue }],
+          opacity: opacityValue,
+        }}
+      >
+        <TouchableOpacity
+          style={[
+            styles.themeButton, 
+            { 
+              backgroundColor: isSelected ? themeColor : cardColor,
+              borderWidth: 2,
+              borderColor: isSelected ? themeColor : 'transparent',
+            }
+          ]}
+          onPress={onPress}
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          activeOpacity={1} // Désactivé car géré manuellement
+        >
+          {/* Texte avec icône du thème */}
+          <Text style={[
+            styles.themeButtonText, 
+            { color: isSelected ? '#fff' : textColor }
+          ]}>
+            {themeIcon}  {themeName}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
+  );
+});
 
 const TrainingScreen: React.FC = () => {
   // États principaux de l'écran
@@ -217,7 +264,7 @@ const TrainingScreen: React.FC = () => {
             onPress={startTraining}
             backgroundColor={canStart ? theme.primary : '#ccc'} // Couleur selon la possibilité de démarrer
             textColor={canStart ? '#fff' : '#999'}
-            width={'90%'}
+            width={'95%'}
             iconName="play-arrow"
             disabled={!canStart} // Désactivé si aucun thème sélectionné
           />
@@ -245,9 +292,9 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
   },
-  // Contenu scrollable avec padding
+  // Contenu scrollable avec padding réduit
   scrollContent: {
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
     paddingTop: spacing.m,
     paddingBottom: spacing.xl * 2, // Espace supplémentaire en bas
   },
@@ -269,12 +316,12 @@ const styles = StyleSheet.create({
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.xs
   },
-  // Texte descriptif sous le titre
+  // Texte descriptif sous le titre avec largeur étendue
   descriptionText: { 
     fontSize: typography.body2, 
     textAlign: 'center', 
     marginBottom: spacing.m,
-    maxWidth: '90%' // Limitation de la largeur pour lisibilité
+    maxWidth: '95%' // Augmenté de 90% à 95%
   },
   // Wrapper des cartes d'information avec ombre
   infoWrapper: {
@@ -326,10 +373,10 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     lineHeight: 18,
   },
-  // Conteneur des boutons de thèmes
+  // Conteneur des boutons de thèmes sans padding
   themesContainer: {
     width: '100%',
-    paddingHorizontal: 8,
+    paddingHorizontal: 0, // Supprimé le padding de 8
   },
   // Wrapper de chaque bouton de thème avec ombre
   themeButtonWrapper: {
@@ -352,12 +399,12 @@ const styles = StyleSheet.create({
     fontSize: typography.body1,
     fontWeight: typography.fontWeightBold,
   },
-  // Wrapper du bouton de démarrage centré
+  // Wrapper du bouton de démarrage centré avec padding réduit
   buttonWrapper: {
     alignItems: 'center',
     marginTop: spacing.l,
     marginBottom: spacing.xl,
-    paddingHorizontal: spacing.m,
+    paddingHorizontal: spacing.s, // Réduit de spacing.m à spacing.s
   },
 });
 
