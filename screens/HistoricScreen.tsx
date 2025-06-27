@@ -13,7 +13,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { 
   getThemeForScreen, 
   shadowStyles, 
@@ -26,22 +25,19 @@ import { databaseService, ExamSession } from '../services/DatabaseService';
 import TouchableButton from '../components/TouchableButton';
 import { StatsOverviewCard } from '../components/HistoricComponents';
 
-// Types
 type HistoricScreenNavigationProp = StackNavigationProp<RootStackParamList, 'HistoricScreen'>;
 
 const HistoricScreen: React.FC = () => {
   const navigation = useNavigation<HistoricScreenNavigationProp>();
   const route = useRoute();
-  const insets = useSafeAreaInsets(); // Gestion des zones sécurisées
+  const insets = useSafeAreaInsets();
   const theme = getThemeForScreen(route.name);
 
-  // États
   const [sessions, setSessions] = useState<ExamSession[]>([]);
   const [generalStats, setGeneralStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Configuration du header
   useLayoutEffect(() => {
     navigation.setOptions({ 
       title: 'Historique des Examens',
@@ -51,7 +47,6 @@ const HistoricScreen: React.FC = () => {
     });
   }, [navigation, theme]);
 
-  // Chargement des données
   const loadData = useCallback(async () => {
     try {
       setLoading(true);
@@ -76,14 +71,12 @@ const HistoricScreen: React.FC = () => {
     loadData();
   }, [loadData]);
 
-  // Rafraîchissement
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     await loadData();
     setRefreshing(false);
   }, [loadData]);
 
-  // État vide avec adaptation SafeArea
   const emptyState = useMemo(() => (
     <View style={[
       styles.emptyContainer,
@@ -115,7 +108,6 @@ const HistoricScreen: React.FC = () => {
     </View>
   ), [theme, navigation, insets]);
 
-  // État de chargement avec adaptation SafeArea
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
@@ -149,7 +141,7 @@ const HistoricScreen: React.FC = () => {
           {
             paddingTop: spacing.s,
             paddingBottom: Math.max(insets.bottom + spacing.m, spacing.xl),
-            paddingHorizontal: spacing.xs, // Padding horizontal minimal
+            paddingHorizontal: spacing.xs,
           }
         ]}
         refreshControl={
@@ -166,12 +158,11 @@ const HistoricScreen: React.FC = () => {
           emptyState
         ) : (
           <View style={styles.contentContainer}>
-            {/* Carte des statistiques générales avec SafeArea */}
             <StatsOverviewCard 
               stats={generalStats} 
               sessions={sessions} 
               theme={theme}
-              insets={insets} // Passage des insets au composant
+              insets={insets}
             />
           </View>
         )}
@@ -184,8 +175,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  
-  // Contenu avec largeur maximale
   scrollContainer: {
     flex: 1,
   },
@@ -193,10 +182,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   contentContainer: {
-    gap: 0, // Suppression du gap pour que les composants gèrent leurs marges
+    gap: 0,
   },
-
-  // Chargement avec adaptation SafeArea
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -221,8 +208,6 @@ const styles = StyleSheet.create({
     fontSize: typography.body1,
     textAlign: 'center',
   },
-
-  // État vide avec adaptation SafeArea
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -248,7 +233,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: spacing.xl,
-    maxWidth: '90%', // Élargi pour une meilleure utilisation de l'espace
+    maxWidth: '90%',
   },
   emptyButtonContainer: {
     marginTop: spacing.l,

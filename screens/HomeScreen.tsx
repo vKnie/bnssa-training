@@ -1,5 +1,5 @@
 // screens/HomeScreen.tsx
-import React, { useCallback, useLayoutEffect, useState, useMemo } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { 
   View, 
   Text, 
@@ -14,15 +14,12 @@ import {
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { getThemeForScreen, spacing, typography, shadowStyles, borderRadius } from '../components/themes';
 import { RootStackParamList } from '../types';
-import { databaseService } from '../services/DatabaseService'; // AJOUT : Import du service de base de données
+import { databaseService } from '../services/DatabaseService';
 
-// Type pour la navigation de l'écran d'accueil
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
-// Composant bouton de navigation mémorisé pour optimiser les performances
 const NavButton: React.FC<{
   title: string;
   onPress: () => void;
@@ -32,35 +29,30 @@ const NavButton: React.FC<{
   <TouchableOpacity 
     style={[styles.button, { backgroundColor: color }, shadowStyles.medium]} 
     onPress={onPress}
-    activeOpacity={0.7} // Effet de transparence au toucher
+    activeOpacity={0.7}
   >
-    {/* Icône du bouton */}
     <Icon name={icon} size={24} color="#FFFFFF" style={styles.buttonIcon} />
-    {/* Texte du bouton */}
     <Text style={styles.buttonText}>{title}</Text>
   </TouchableOpacity>
 ));
 
-// Composant pour chaque élément de paramètre dans la modal
 const SettingItem: React.FC<{
   label: string;
   value?: string;
   hasAction?: boolean;
-  onPress?: () => void; // AJOUT : Fonction de callback pour les actions
+  onPress?: () => void;
   theme: any;
 }> = ({ label, value, hasAction, onPress, theme }) => (
   <TouchableOpacity 
     style={[styles.settingItem, { backgroundColor: theme.card || '#f5f5f5' }]}
-    disabled={!hasAction} // Désactivé si pas d'action associée
-    onPress={onPress} // AJOUT : Gestion du clic
-    activeOpacity={hasAction ? 0.7 : 1} // AJOUT : Effet visuel seulement si cliquable
+    disabled={!hasAction}
+    onPress={onPress}
+    activeOpacity={hasAction ? 0.7 : 1}
   >
     <Text style={[styles.settingLabel, { color: theme.text }]}>{label}</Text>
     {value ? (
-      // Affichage de la valeur si présente
       <Text style={[styles.settingValue, { color: theme.textLight }]}>{value}</Text>
     ) : (
-      // Icône selon le type d'action
       <Icon 
         name={hasAction ? "chevron-right" : "refresh"} 
         size={20} 
@@ -70,10 +62,7 @@ const SettingItem: React.FC<{
   </TouchableOpacity>
 );
 
-// Composant pour afficher les emails de contact
-const ContactInfo: React.FC<{
-  theme: any;
-}> = ({ theme }) => (
+const ContactInfo: React.FC<{ theme: any }> = ({ theme }) => (
   <View style={[styles.contactContainer, { backgroundColor: theme.card || '#f5f5f5' }]}>
     <Text style={[styles.contactLabel, { color: theme.text }]}>Contactez-nous :</Text>
     <Text style={[styles.emailText, { color: theme.primary }]}>kevin.boillon@free.fr</Text>
@@ -81,20 +70,18 @@ const ContactInfo: React.FC<{
   </View>
 );
 
-// Modal des paramètres mémorisée pour éviter les re-renders inutiles
 const SettingsModal: React.FC<{
   visible: boolean;
   onClose: () => void;
   theme: any;
-  onResetExamData: () => void; // AJOUT : Fonction pour réinitialiser les données d'examen
+  onResetExamData: () => void;
 }> = React.memo(({ visible, onClose, theme, onResetExamData }) => {
-  // Configuration des sections de paramètres
   const sections = [
     {
       title: 'Information de l\'application',
       icon: 'info',
       items: [
-        { label: 'Version', value: '2.0.0' },
+        { label: 'Version', value: '2.1.0' },
         { label: 'Développé par', value: 'BNSSA Team' },
       ]
     },
@@ -102,68 +89,50 @@ const SettingsModal: React.FC<{
       title: 'Données',
       icon: 'storage',
       items: [
-        // MODIFICATION : Suppression du bouton d'entraînement, conservation de l'examen
         { 
           label: 'Réinitialiser données d\'examen', 
           hasAction: true,
-          onPress: onResetExamData // AJOUT : Action de réinitialisation
+          onPress: onResetExamData
         },
       ]
     },
     {
       title: 'Support',
       icon: 'help',
-      items: [], // Pas d'items car on affiche le composant ContactInfo séparément
+      items: [],
     }
   ];
 
   return (
-    <Modal
-      animationType="slide" // Animation de glissement depuis le bas
-      transparent // Fond transparent pour l'overlay
-      visible={visible}
-      onRequestClose={onClose} // Gestion du bouton retour Android
-    >
-      {/* Overlay sombre derrière la modal */}
+    <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={[styles.modalContainer, { backgroundColor: theme.background }]}>
-          {/* En-tête de la modal avec titre et bouton fermer */}
           <View style={styles.modalHeader}>
             <Text style={[styles.modalTitle, { color: theme.text }]}>Paramètres</Text>
-            <TouchableOpacity 
-              style={styles.closeButton}
-              onPress={onClose}
-              activeOpacity={0.7}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.7}>
               <Icon name="close" size={24} color={theme.text} />
             </TouchableOpacity>
           </View>
           
-          {/* Contenu scrollable de la modal */}
           <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
             {sections.map((section, index) => (
               <View key={index} style={styles.settingsSection}>
-                {/* Titre de section avec icône */}
                 <Text style={[styles.sectionTitle, { color: theme.text }]}>
                   <Icon name={section.icon} size={20} color={theme.primary} /> {section.title}
                 </Text>
                 
-                {/* Mappage des éléments de la section pour les sections autres que Support */}
                 {section.title !== 'Support' && section.items.map((item, itemIndex) => (
                   <SettingItem
                     key={itemIndex}
                     label={item.label}
                     value={item.value}
                     hasAction={item.hasAction}
-                    onPress={item.onPress} // AJOUT : Passage de la fonction onPress
+                    onPress={item.onPress}
                     theme={theme}
                   />
                 ))}
                 
-                {/* Affichage spécial pour la section Support */}
-                {section.title === 'Support' && (
-                  <ContactInfo theme={theme} />
-                )}
+                {section.title === 'Support' && <ContactInfo theme={theme} />}
               </View>
             ))}
           </ScrollView>
@@ -174,58 +143,37 @@ const SettingsModal: React.FC<{
 });
 
 const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ navigation }) => {
-  const theme = getThemeForScreen('home'); // Récupération du thème pour l'écran d'accueil
-  const [settingsVisible, setSettingsVisible] = useState(false); // État de visibilité de la modal
+  const theme = getThemeForScreen('home');
+  const [settingsVisible, setSettingsVisible] = useState(false);
 
-  // Configuration des boutons de navigation principaux
   const buttons = [
     { title: "Examen", screen: "ExamenScreen" as const, icon: "assignment" },
     { title: "Entrainement", screen: "TrainingScreen" as const, icon: "fitness-center" },
     { title: "Historiques", screen: "HistoricScreen" as const, icon: "history" },
   ];
 
-  // Gestionnaire de navigation optimisé avec useCallback
   const handleNavigation = useCallback((screen: keyof RootStackParamList) => {
     navigation.navigate(screen);
   }, [navigation]);
 
-  // AJOUT : Fonction pour réinitialiser les données d'examen
   const handleResetExamData = useCallback(async () => {
     Alert.alert(
       'Réinitialiser les données d\'examen',
       'Cette action supprimera définitivement toutes vos données d\'examen (historique, scores, statistiques). Cette action est irréversible.\n\nÊtes-vous absolument sûr de vouloir continuer ?',
       [
-        {
-          text: 'Annuler',
-          style: 'cancel'
-        },
+        { text: 'Annuler', style: 'cancel' },
         {
           text: 'Confirmer',
           style: 'destructive',
           onPress: async () => {
             try {
-              // Fermeture de la modal
               setSettingsVisible(false);
-              
-              // Initialisation de la base de données
               await databaseService.initDatabase();
-              
-              // Suppression de toutes les données
               await databaseService.clearAllData();
-              
-              // Confirmation de succès
               Alert.alert(
                 'Réinitialisation terminée',
                 'Toutes les données d\'examen ont été supprimées avec succès.',
-                [
-                  {
-                    text: 'OK',
-                    onPress: () => {
-                      // Optionnel : Naviguer vers l'écran d'accueil pour "rafraîchir"
-                      console.log('Données d\'examen réinitialisées');
-                    }
-                  }
-                ]
+                [{ text: 'OK', onPress: () => console.log('Données d\'examen réinitialisées') }]
               );
             } catch (error) {
               console.error('Erreur lors de la réinitialisation:', error);
@@ -241,27 +189,19 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
     );
   }, []);
 
-  // Configuration de l'écran au montage
   useLayoutEffect(() => {
-    // Configuration de la barre de statut
     StatusBar.setBarStyle('dark-content');
     if (Platform.OS === 'android') {
-      StatusBar.setTranslucent(true); // Transparence de la barre de statut
+      StatusBar.setTranslucent(true);
       StatusBar.setBackgroundColor('transparent');
     }
-    navigation.setOptions({ headerShown: false }); // Masquage de l'en-tête de navigation
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Configuration de la barre de statut */}
-      <StatusBar 
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       
-      {/* Bouton paramètres positionné en absolu en haut à droite */}
       <TouchableOpacity 
         style={styles.settingsButton}
         onPress={() => setSettingsVisible(true)}
@@ -270,7 +210,6 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         <Icon name="settings" size={28} color={theme.primary} />
       </TouchableOpacity>
       
-      {/* Section d'en-tête avec logo et textes */}
       <View style={styles.header}>
         <Image 
           source={require('../assets/icons/playstore.png')} 
@@ -283,7 +222,6 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         </Text>
       </View>
 
-      {/* Conteneur des boutons de navigation principaux */}
       <View style={styles.buttonContainer}>
         {buttons.map(({ title, screen, icon }) => (
           <NavButton
@@ -296,68 +234,58 @@ const HomeScreen: React.FC<{ navigation: HomeScreenNavigationProp }> = ({ naviga
         ))}
       </View>
 
-      {/* Modal des paramètres */}
       <SettingsModal 
         visible={settingsVisible}
         onClose={() => setSettingsVisible(false)}
         theme={theme}
-        onResetExamData={handleResetExamData} // AJOUT : Passage de la fonction de réinitialisation
+        onResetExamData={handleResetExamData}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // Conteneur principal centré avec padding adaptatif selon la plateforme
   container: { 
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center',
     paddingHorizontal: spacing.m,
-    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0, // Gestion des zones sécurisées
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0,
   },
-  // Bouton paramètres positionné en absolu sans fond gris
   settingsButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 50 : (StatusBar.currentHeight || 0) + 10,
     right: spacing.m,
     padding: spacing.s,
     borderRadius: 20,
-    // Suppression du backgroundColor et des shadowStyles
-    zIndex: 1000, // Au-dessus de tous les autres éléments
+    zIndex: 1000,
   },
-  // En-tête centré avec logo et textes
   header: {
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
-  // Logo de l'application
   logo: { 
     width: 128, 
     height: 128, 
     marginBottom: spacing.m,
   },
-  // Titre principal de l'application
   title: { 
     fontSize: typography.heading1, 
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.xs,
   },
-  // Sous-titre descriptif
   subtitle: {
     fontSize: typography.body2,
     textAlign: 'center',
     marginBottom: spacing.m,
   },
-  // Conteneur des boutons de navigation
   buttonContainer: { 
     width: '100%',
     alignItems: 'center',
     marginBottom: spacing.xl,
   },
-  // Style des boutons de navigation avec icône et texte
   button: {
-    width: 250, // Largeur fixe pour l'uniformité
+    width: 250,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -366,67 +294,53 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.medium,
     marginBottom: spacing.m,
   },
-  // Icône des boutons avec marge droite
   buttonIcon: {
     marginRight: spacing.s,
   },
-  // Texte des boutons de navigation
   buttonText: {
     color: '#FFFFFF',
     fontSize: typography.button,
     fontWeight: typography.fontWeightBold,
   },
-  
-  // === Styles de la modal des paramètres ===
-  
-  // Overlay sombre de fond de la modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fond semi-transparent noir
-    justifyContent: 'flex-end', // Modal depuis le bas
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
   },
-  // Conteneur principal de la modal avec coins arrondis
   modalContainer: {
     borderTopLeftRadius: borderRadius.large,
     borderTopRightRadius: borderRadius.large,
-    maxHeight: '80%', // Hauteur maximale
-    minHeight: '60%', // Hauteur minimale
+    maxHeight: '80%',
+    minHeight: '60%',
     ...shadowStyles.large,
   },
-  // En-tête de la modal avec titre et bouton fermer
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: spacing.m,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0', // Séparateur visuel
+    borderBottomColor: '#e0e0e0',
   },
-  // Titre de la modal
   modalTitle: {
     fontSize: typography.heading2,
     fontWeight: typography.fontWeightBold,
   },
-  // Bouton de fermeture de la modal
   closeButton: {
     padding: spacing.xs,
   },
-  // Contenu scrollable de la modal
   modalContent: {
     flex: 1,
     padding: spacing.m,
   },
-  // Section de paramètres avec espacement
   settingsSection: {
     marginBottom: spacing.l,
   },
-  // Titre de section avec icône intégrée
   sectionTitle: {
     fontSize: typography.heading3,
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.m,
   },
-  // Élément de paramètre avec layout horizontal
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -436,36 +350,28 @@ const styles = StyleSheet.create({
     marginBottom: spacing.s,
     ...shadowStyles.small,
   },
-  // Label des éléments de paramètre
   settingLabel: {
     fontSize: typography.body1,
-    flex: 1, // Prend l'espace disponible
+    flex: 1,
   },
-  // Valeur affichée pour les éléments informatifs
   settingValue: {
     fontSize: typography.body2,
   },
-  
-  // === Styles pour la section contact ===
-  
-  // Conteneur pour les informations de contact
   contactContainer: {
     padding: spacing.m,
     borderRadius: borderRadius.medium,
     marginBottom: spacing.s,
     ...shadowStyles.small,
   },
-  // Label pour la section contact
   contactLabel: {
     fontSize: typography.body1,
     fontWeight: typography.fontWeightBold,
     marginBottom: spacing.s,
   },
-  // Style pour les adresses email
   emailText: {
     fontSize: typography.body2,
     marginBottom: spacing.xs,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', // Police monospace pour les emails
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
   },
 });
 

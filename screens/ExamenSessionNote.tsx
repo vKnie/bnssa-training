@@ -5,7 +5,6 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { 
   typography, 
   spacing, 
@@ -16,12 +15,10 @@ import {
 import { RootStackParamList, Question } from '../types';
 import { databaseService } from '../services/DatabaseService';
 
-// Types pour la navigation et les routes
 type ExamenSessionNoteScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ExamenSessionNote'>;
 type ExamenSessionNoteScreenRouteProp = RouteProp<RootStackParamList, 'ExamenSessionNote'>;
 type TabType = 'all' | 'correct' | 'incorrect' | 'unanswered';
 
-// Composant pour afficher chaque option de réponse avec son statut
 const AnswerItem: React.FC<{
   option: string;
   isCorrect: boolean;
@@ -47,7 +44,6 @@ const AnswerItem: React.FC<{
   </View>
 );
 
-// Composant pour afficher une question complète avec toutes ses réponses
 const QuestionItem: React.FC<{
   question: Question;
   index: number;
@@ -98,7 +94,6 @@ const QuestionItem: React.FC<{
   </View>
 );
 
-// Composant puce de filtre cliquable avec compteur
 const FilterChip: React.FC<{
   title: string;
   count: number;
@@ -142,24 +137,20 @@ const ExamenSessionNote: React.FC = () => {
   const navigation = useNavigation<ExamenSessionNoteScreenNavigationProp>();
   const route = useRoute<ExamenSessionNoteScreenRouteProp>();
   
-  // ✅ MODIFIÉ : Récupération de la durée depuis les paramètres
   const { 
     score, 
     totalQuestions, 
     selectedQuestions, 
     selectedAnswers,
-    examDuration, // ✅ NOUVEAU : Durée réelle de l'examen passée en paramètre
-    examStartTime // ✅ NOUVEAU : Temps de début réel passé en paramètre
+    examDuration,
+    examStartTime
   } = route.params;
   
   const insets = useSafeAreaInsets();
-  
   const theme = getThemeForScreen(route.name);
   const [activeTab, setActiveTab] = useState<TabType>('all');
-  
-  // ✅ NOUVEAU : Système de sauvegarde unique et robuste
   const [saveStatus, setSaveStatus] = useState<'pending' | 'saving' | 'saved' | 'error'>('pending');
-  const saveAttemptRef = useRef(false); // Protection contre les appels multiples
+  const saveAttemptRef = useRef(false);
   
   const successPercentage = (score / totalQuestions) * 100;
   
@@ -171,14 +162,12 @@ const ExamenSessionNote: React.FC = () => {
 
   const scoreStatus = getScoreStatus();
 
-  // ✅ NOUVEAU : Fonction pour formater la durée d'affichage
   const formatDuration = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${String(remainingSeconds).padStart(2, '0')}`;
   };
 
-  // Mémoisation des catégories de questions
   const questionCategories = useMemo(() => {
     const correct: number[] = [];
     const incorrect: number[] = [];
@@ -204,7 +193,6 @@ const ExamenSessionNote: React.FC = () => {
     return { correct, incorrect, unanswered };
   }, [selectedQuestions, selectedAnswers]);
 
-  // Filtrage des questions selon l'onglet actif
   const filteredQuestions = useMemo(() => {
     if (activeTab === 'all') {
       return selectedQuestions.map((question, index) => ({ question, index }));
@@ -234,9 +222,7 @@ const ExamenSessionNote: React.FC = () => {
     return icons[activeTab];
   };
 
-  // ✅ MODIFIÉ : Fonction de sauvegarde avec durée correcte
   const saveExamData = useCallback(async (): Promise<boolean> => {
-    // Protection contre les appels multiples
     if (saveAttemptRef.current || saveStatus === 'saving' || saveStatus === 'saved') {
       console.log('⚠️ Sauvegarde déjà en cours ou terminée');
       return saveStatus === 'saved';
@@ -247,28 +233,22 @@ const ExamenSessionNote: React.FC = () => {
       setSaveStatus('saving');
       console.log('🔄 Début de la sauvegarde...');
       
-      // ✅ CORRIGÉ : Utilisation de la durée réelle passée en paramètre
-      let actualDuration = examDuration || 0; // Durée en secondes
+      let actualDuration = examDuration || 0;
       
-      // Validation de la durée
       if (actualDuration <= 0) {
         console.warn('⚠️ Durée invalide, calcul de fallback...');
-        // Fallback : calcul basé sur les timestamps si disponibles
         if (examStartTime) {
           const calculatedDuration = Math.floor((Date.now() - examStartTime) / 1000);
-          actualDuration = Math.min(calculatedDuration, 45 * 60); // Max 45 minutes
+          actualDuration = Math.min(calculatedDuration, 45 * 60);
         } else {
-          // Durée par défaut basée sur le score (estimation)
-          actualDuration = Math.floor(totalQuestions * 60); // 1 minute par question
+          actualDuration = Math.floor(totalQuestions * 60);
         }
       }
       
-      // Limitation à 45 minutes maximum
       actualDuration = Math.min(actualDuration, 45 * 60);
       
       console.log(`⏱️ Durée utilisée: ${actualDuration} secondes (${formatDuration(actualDuration)})`);
       
-      // Initialisation et sauvegarde
       await databaseService.initDatabase();
       const sessionId = await databaseService.saveExamSession(
         actualDuration,
@@ -291,12 +271,9 @@ const ExamenSessionNote: React.FC = () => {
         'Les données de l\'examen n\'ont pas pu être sauvegardées. Vous pouvez réessayer.'
       );
       return false;
-    } finally {
-      // Ne pas réinitialiser saveAttemptRef pour éviter les nouvelles tentatives
     }
   }, [saveStatus, score, totalQuestions, selectedQuestions, selectedAnswers, examDuration, examStartTime]);
 
-  // ✅ NOUVELLE : Sauvegarde unique au montage
   useEffect(() => {
     console.log('🚀 Composant monté, lancement de la sauvegarde...');
     console.log('📊 Paramètres reçus:', {
@@ -306,14 +283,11 @@ const ExamenSessionNote: React.FC = () => {
       examStartTime: examStartTime ? new Date(examStartTime).toLocaleString() : 'non fourni'
     });
     saveExamData();
-  }, []); // Dépendances vides pour une seule exécution
+  }, []);
 
-  // ✅ NOUVEAU : Gestionnaire de retour simplifié
   const handleReturnHome = useCallback(async () => {
-    // Attendre la fin de la sauvegarde si en cours
     if (saveStatus === 'saving') {
       console.log('⏳ Attente de la fin de sauvegarde...');
-      // Attendre que la sauvegarde se termine
       while (saveStatus === 'saving') {
         await new Promise(resolve => setTimeout(resolve, 100));
       }
@@ -323,12 +297,10 @@ const ExamenSessionNote: React.FC = () => {
     navigation.navigate('HomeScreen');
   }, [saveStatus, navigation]);
 
-  // ✅ NOUVEAU : Gestion simplifiée du beforeRemove
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', async (e) => {
       e.preventDefault();
       
-      // Attendre la sauvegarde si nécessaire
       if (saveStatus === 'saving') {
         console.log('⏳ Attente sauvegarde avant navigation...');
         while (saveStatus === 'saving') {
@@ -343,12 +315,10 @@ const ExamenSessionNote: React.FC = () => {
     return unsubscribe;
   }, [navigation, saveStatus]);
 
-  // Configuration du titre de l'écran
   useLayoutEffect(() => {
     navigation.setOptions({ title: 'Récapitulatif Examen' });
   }, [navigation]);
 
-  // Configuration des filtres
   const filters = [
     { title: 'Tout afficher', count: totalQuestions, tab: 'all' as TabType, color: '#6366F1' },
     { title: 'Correctes', count: questionCategories.correct.length, tab: 'correct' as TabType, color: '#059669' },
@@ -358,14 +328,12 @@ const ExamenSessionNote: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* En-tête avec score et statut de sauvegarde */}
       <View style={styles.headerWrapper}>
         <View style={[styles.header, { backgroundColor: '#fff' }]}>
           <Text style={[styles.title, { color: theme.text }]}>Examen terminé !</Text>
           <Text style={[styles.scoreText, { color: theme.text }]}>
             Votre score est de <Text style={{ fontWeight: 'bold' }}>{score}/{totalQuestions}</Text>
           </Text>
-          {/* ✅ NOUVEAU : Affichage de la durée */}
           {(examDuration || examStartTime) && (
             <Text style={[styles.durationText, { color: theme.textLight }]}>
               Durée : {formatDuration(examDuration || Math.floor((Date.now() - (examStartTime || Date.now())) / 1000))}
@@ -375,7 +343,6 @@ const ExamenSessionNote: React.FC = () => {
             {scoreStatus.text}
           </Text>
           
-          {/* ✅ NOUVEAU : Indicateurs de statut de sauvegarde */}
           {saveStatus === 'saving' && (
             <Text style={[styles.savingText, { color: theme.textLight }]}>
               💾 Sauvegarde en cours...
@@ -400,7 +367,6 @@ const ExamenSessionNote: React.FC = () => {
         </View>
       </View>
 
-      {/* Section des filtres */}
       <View style={styles.filtersContainer}>
         <Text style={[styles.filtersTitle, { color: theme.textLight }]}>Filtrer les résultats</Text>
         <View style={styles.chipsContainer}>
@@ -417,7 +383,6 @@ const ExamenSessionNote: React.FC = () => {
         </View>
       </View>
 
-      {/* Liste des questions */}
       <ScrollView 
         contentContainerStyle={styles.scrollContainer} 
         showsVerticalScrollIndicator={false}
@@ -442,7 +407,6 @@ const ExamenSessionNote: React.FC = () => {
         )}
       </ScrollView>
       
-      {/* Bouton de retour */}
       <View style={[styles.footerContainer, { paddingBottom: Math.max(insets.bottom, spacing.m) }]}>
         <TouchableOpacity 
           style={[
@@ -490,7 +454,6 @@ const styles = StyleSheet.create({
     fontSize: typography.body2,
     marginBottom: spacing.xs / 2
   },
-  // ✅ NOUVEAU : Style pour la durée
   durationText: {
     fontSize: typography.body2,
     marginBottom: spacing.xs / 2,
